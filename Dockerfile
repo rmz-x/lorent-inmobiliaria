@@ -19,8 +19,14 @@ RUN a2enmod rewrite
 COPY . /var/www/html/
 WORKDIR /var/www/html
 
+
+
 # PHP deps
 RUN composer install --no-dev --optimize-autoloader
+
+#--------------------
+RUN php artisan storage:link
+#---------------------
 
 # JS deps + build
 RUN npm install --legacy-peer-deps
@@ -37,9 +43,6 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' \
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Apache escucha el puerto de Render
-#RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf \
-# && sed -i 's/:80/:${PORT}/g' /etc/apache2/sites-available/000-default.conf
 
  # Laravel Apache config
 RUN echo '<Directory /var/www/html/public>' > /etc/apache2/conf-available/laravel.conf && \
