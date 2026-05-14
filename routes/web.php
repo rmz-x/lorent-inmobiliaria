@@ -32,9 +32,6 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'sendForgotPassword'])->name('password.email');
-
-Route::get('/forgot-password/verify', [AuthController::class, 'showVerifyCode'])->name('password.verify');
-Route::post('/forgot-password/verify', [AuthController::class, 'verifyCode'])->name('password.verify.post');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
@@ -216,6 +213,9 @@ Route::middleware(['auth'])
             ->name('calendario');
         Route::get('/calendario/eventos', [SolicitudController::class, 'eventosCliente'])
             ->name('calendario.eventos');
+
+        Route::post('/subir-imagen', [ImagenController::class, 'subir']);
+
     });
 
 /*
