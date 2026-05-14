@@ -25,7 +25,7 @@ class PropiedadController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'titulo carajo'      => 'required|min:5',
+            'titulo'      => 'required|min:5',
             'tipo'        => 'required|in:Venta,Alquiler,Anticretico',
             'zona'        => 'required',
             'precio'      => 'required|numeric|min:1',
