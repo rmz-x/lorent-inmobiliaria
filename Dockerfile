@@ -63,6 +63,6 @@ EXPOSE 10000
 
 # PROCESO PRINCIPAL (CLAVE)
 
-#CMD ["apache2-foreground"]
+CMD ["apache2-foreground"]
 
-CMD php artisan migrate --force || true && apache2-foreground
+#CMD php artisan migrate --force || true && apache2-foreground
