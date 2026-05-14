@@ -9,7 +9,8 @@
         <span class="card-title">Lista de usuarios</span>
         <button class="btn-primary" onclick="abrirModal()">+ Agregar usuario</button>
     </div>
-    <table>
+<div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+<table class="min-w-[600px] w-full text-sm text-left">
         <thead><tr><th>#</th><th>Nombre</th><th>Correo</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr></thead>
         <tbody>
         @forelse($usuarios as $u)
@@ -30,31 +31,31 @@
             <td>
                 <div class="action-btns">
                     <button
-    type="button"
-    class="btn-edit btn-editar-usuario"
+                        type="button"
+                        class="btn-edit btn-editar-usuario"
 
-    data-id="{{ $u->id }}"
-    data-nombre="{{ $u->nombre }}"
-    data-correo="{{ $u->correo }}"
-    data-usuario="{{ $u->usuario }}"
-    data-rol="{{ $u->rol }}"
->
-    Editar
-</button>
+                        data-id="{{ $u->id }}"
+                        data-nombre="{{ $u->nombre }}"
+                        data-correo="{{ $u->correo }}"
+                        data-usuario="{{ $u->usuario }}"
+                        data-rol="{{ $u->rol }}"
+                    >
+                        Editar
+                    </button>
                     <form method="POST"
-      action="{{ route('admin.propiedades.destroy', $p) }}"
-      class="form-eliminar"
-      data-title="{{ $p->titulo }}">
+                        action="{{ route('admin.propiedades.destroy', $p) }}"
+                        class="form-eliminar"
+                        data-title="{{ $p->titulo }}">
 
-    @csrf
-    @method('DELETE')
+                        @csrf
+                        @method('DELETE')
 
-    <button type="button"
-            class="btn-delete open-delete-modal"
-            data-name="{{ $p->titulo }}">
-        Eliminar
-    </button>
-</form>
+                        <button type="button"
+                                class="btn-delete open-delete-modal"
+                                data-name="{{ $p->titulo }}">
+                            Eliminar
+                        </button>
+                    </form>
                         @csrf @method('DELETE')
                         <button type="submit" class="btn-delete">Eliminar</button>
                     </form>
@@ -68,8 +69,10 @@
     </table>
 </div>
 
+</div>
+
 <div class="modal-overlay" id="modalOverlay">
-<div class="modal">
+<div class="modal w-[95%] max-w-lg mx-auto sm:w-full">
     <h2 id="modalTitulo">Agregar usuario</h2>
     <form id="formUsuario" method="POST" action="{{ route('admin.usuarios.store') }}">
         @csrf <span id="methodField"></span>

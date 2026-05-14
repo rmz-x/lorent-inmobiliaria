@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/PropiedadController.php — REEMPLAZA el tuyo
 namespace App\Http\Controllers;
 
 use App\Models\Propiedad;
@@ -7,6 +6,7 @@ use App\Models\Usuario;
 use App\Models\RegistroActividad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PropiedadController extends Controller
 {
@@ -25,22 +25,29 @@ class PropiedadController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'titulo'      => 'required|min:5',
+            'titulo carajo'      => 'required|min:5',
             'tipo'        => 'required|in:Venta,Alquiler,Anticretico',
             'zona'        => 'required',
             'precio'      => 'required|numeric|min:1',
             'area'        => 'required|numeric|min:1',
             'descripcion' => 'required|min:10',
             'estado'      => 'required|in:Disponible,Reservado,Vendido',
+            'imagen'      => 'nullable|image|max:2048',
         ]);
-        $data = $request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']);
+        $data = $request->only(['titulo carajo','tipo','zona','precio','area','descripcion','estado','agente_id']);
         if (Auth::user()->esAgente()) $data['agente_id'] = Auth::id();
+        if ($request->hasFile('imagen')) {
+            $data['imagen'] = $request->file('imagen')->store('propiedades', 'public');
+        }
+        $data['latitud']  = $request->latitud  ?: null;
+        $data['longitud'] = $request->longitud ?: null;
         $prop = Propiedad::create($data);
         RegistroActividad::log('Propiedad registrada', "Se registró: \"{$prop->titulo}\" ({$prop->tipo}) en {$prop->zona}.");
         return back()->with('success','Propiedad registrada correctamente.');
     }
 
-    public function update(Request $request, Propiedad $propiedad)
+
+    public function update(Request $request, $id)
     {
         $request->validate([
             'titulo'      => 'required|min:5',
@@ -50,11 +57,24 @@ class PropiedadController extends Controller
             'area'        => 'required|numeric|min:1',
             'descripcion' => 'required|min:10',
             'estado'      => 'required|in:Disponible,Reservado,Vendido',
+            'imagen'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
-        $propiedad->update($request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']));
+
+        $propiedad = Propiedad::findOrFail($id);
+        $datos = $request->except('imagen');
+
+        if ($request->hasFile('imagen')) {
+            if ($propiedad->imagen) {
+                Storage::disk('public')->delete($propiedad->imagen);
+            }
+            $datos['imagen'] = $request->file('imagen')->store('propiedades', 'public');
+        }
+
+        $propiedad->update($datos);
         RegistroActividad::log('Propiedad modificada', "Se modificó ID {$propiedad->id}: \"{$propiedad->titulo}\".");
         return back()->with('success','Propiedad actualizada correctamente.');
     }
+
 
     public function destroy(Propiedad $propiedad)
     {
@@ -75,7 +95,7 @@ class PropiedadController extends Controller
         return view('cliente.propiedades', compact('propiedades','filtro'));
     }
 
-    // ─── CU8: BUSCAR PROPIEDADES ─────────────────────────────
+    //buscar propiedades
     public function buscar(Request $request)
     {
         $q         = trim($request->query('q', ''));
@@ -121,7 +141,7 @@ class PropiedadController extends Controller
         return view('cliente.detalle', compact('propiedad'));
     }
 
-    // ─── CU8: BUSCAR PROPIEDADES — ADMINISTRADOR ────────────────
+    //buscar propiedades para el administrador
     public function buscarAdmin(Request $request)
     {
         $q         = trim($request->query('q', ''));
@@ -167,7 +187,7 @@ class PropiedadController extends Controller
         ));
     }
  
-    // ─── CU8: BUSCAR PROPIEDADES — AGENTE ───────────────────────
+    //bucar propiedades para el agente
     public function buscarAgente(Request $request)
     {
         $q         = trim($request->query('q', ''));
@@ -209,7 +229,7 @@ class PropiedadController extends Controller
         ));
     }
  
-    // ─── CU8: BUSCAR PROPIEDADES — ASISTENTE ────────────────────
+    //buscar propiedades para el asistente
     public function buscarAsistente(Request $request)
     {
         $q         = trim($request->query('q', ''));

@@ -4,10 +4,7 @@
 
 @section('contenido')
 
-{{-- ═══════════════════════════════════════
-     TARJETAS DE ESTADÍSTICAS
-════════════════════════════════════════ --}}
-<div class="stats">
+<div class="stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
     {{-- Card 1: Total propiedades (destacada) --}}
     <div class="stat-card">
@@ -39,9 +36,6 @@
 
 </div>
 
-{{-- ═══════════════════════════════════════
-     ACTIVIDAD RECIENTE
-════════════════════════════════════════ --}}
 <div class="activity-card">
     <p class="section-title">Actividad reciente</p>
 
@@ -63,6 +57,7 @@
         </div>
 
         {{-- Ventas registradas --}}
+
         <div class="activity-item">
             <div class="activity-icon gold">💲</div>
             <div class="activity-body">
@@ -83,9 +78,6 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════
-     ÚLTIMAS PROPIEDADES REGISTRADAS
-════════════════════════════════════════ --}}
 <div class="card">
     <div class="card-header">
         <span class="card-title">Últimas propiedades registradas</span>
@@ -93,7 +85,8 @@
     </div>
 
     <div class="table-responsive">
-        <table>
+<div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+<table class="min-w-[600px] w-full text-sm text-left">
             <thead>
                 <tr>
                     <th>Título</th>
@@ -138,7 +131,8 @@
             @endforelse
             </tbody>
         </table>
-    </div>
+</div>
+ </div>
 </div>
 
 @endsection

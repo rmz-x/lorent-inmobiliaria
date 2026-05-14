@@ -1,0 +1,195 @@
+/* =====================================================
+   public/css/compartido/topbar.css
+   Dropdown de usuario en el topbar
+   ===================================================== */
+
+/* Wrapper con posición relativa para el dropdown */
+.user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 12px;
+    transition: background .2s;
+}
+
+.user-info:hover {
+    background: rgba(91,76,240,0.08);
+}
+
+/* Detalles nombre + rol */
+.user-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a2540;
+}
+
+.user-role {
+    font-size: 11px;
+    color: #fff;
+    background: linear-gradient(135deg, #5B4CF0, #7B61FF);
+    padding: 1px 7px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+/* Chevron */
+.user-chevron {
+    width: 16px;
+    height: 16px;
+    stroke: #9ea6bf;
+    transition: transform .25s;
+    flex-shrink: 0;
+}
+
+.user-info.open .user-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── DROPDOWN ── */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 240px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 20px 45px rgba(15,23,42,0.12);
+    border: 1px solid #eef0f6;
+    z-index: 999;
+    animation: dropIn .2s ease both;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.user-info.open .user-dropdown {
+    display: block;
+}
+
+@keyframes dropIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Header del dropdown */
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(
+135deg,
+rgba(91,76,240,0.08),
+rgba(123,97,255,0.08)
+);
+}
+
+.dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5B4CF0, #7B61FF);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dropdown-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a2540;
+}
+
+.dropdown-email {
+    font-size: 12px;
+    color: #9ea6bf;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+}
+
+/* Divider */
+.dropdown-divider {
+    height: 1px;
+    background: #eef0f6;
+    margin: 0;
+}
+
+/* Items */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #3a4260;
+    text-decoration: none;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s, color .15s;
+}
+
+.dropdown-item svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    stroke: #9ea6bf;
+    transition: stroke .15s;
+}
+
+.dropdown-item:hover {
+    background: rgba(91,76,240,0.08);
+color: #5B4CF0;
+}
+
+.dropdown-item:hover svg {
+    stroke: #4d6fff;
+}
+
+/* Logout en rojo */
+.dropdown-logout {
+    color: #e53935;
+}
+
+.dropdown-logout svg {
+    stroke: #e53935;
+}
+
+.dropdown-logout:hover {
+    background: #fff5f5;
+    color: #c62828;
+}
+
+.dropdown-logout:hover svg {
+    stroke: #c62828;
+}
+
+/* ── MÓVIL ── */
+@media (max-width: 768px) {
+    .user-details { display: none; }
+    .user-chevron  { display: none; }
+
+    .user-dropdown {
+        right: -8px;
+        width: 220px;
+    }
+}

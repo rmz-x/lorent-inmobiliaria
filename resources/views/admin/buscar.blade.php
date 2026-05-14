@@ -4,7 +4,6 @@
 
 @section('contenido')
 
-{{-- Mensajes de error de validación --}}
 @if($errors->any())
     <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:8px;padding:12px 16px;margin-bottom:16px">
         <p style="font-weight:600;color:#991b1b;margin-bottom:6px">Errores al guardar:</p>
@@ -22,7 +21,6 @@
     </div>
 @endif
 
-{{-- ══════════ BUSCADOR PRINCIPAL ══════════ --}}
 <div style="
     background: linear-gradient(135deg, #1e3a5f 0%, #0f2a4a 100%);
     border-radius: 14px;
@@ -98,7 +96,7 @@
     </form>
 </div>
 
-{{-- ══════════ FILTROS + RESULTADOS ══════════ --}}
+
 <div style="display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start">
 
     {{-- PANEL FILTROS --}}
@@ -279,16 +277,20 @@
         <div class="card" style="margin-bottom:12px;transition:box-shadow .2s"
              onmouseover="this.style.boxShadow='0 4px 20px rgba(79,110,247,0.12)'"
              onmouseout="this.style.boxShadow=''">
-            <div style="display:flex;gap:0;overflow:hidden;border-radius:12px">
+            <div class="flex flex-col sm:flex-row gap-0 overflow-hidden rounded-xl">
 
                 {{-- Color por tipo --}}
                 <div style="
                     width:130px; flex-shrink:0;
                     background :{{ $p->tipo==='Venta' ? '#1e3a5f' : ($p->tipo==='Alquiler' ? '#0f4c35' : '#2e1a5f') }};
                     display:flex; align-items:center; justify-content:center;
-                    position:relative;
+                    position:relative; overflow:hidden;
                 ">
-                    <i class="ti ti-building-estate" style="font-size:32px;color:rgba(255,255,255,0.2)"></i>
+                    @if($p->imagen)
+                        <img src="{{ asset('storage/' . $p->imagen) }}" alt="{{ $p->titulo }}" class="w-full h-48 object-cover rounded-t-lg sm:h-full sm:rounded-l-lg sm:rounded-tr-none">
+                    @else
+                        <i class="ti ti-building-estate" style="font-size:32px;color:rgba(255,255,255,0.2)"></i>
+                    @endif
                     <span style="
                         position:absolute; bottom:8px; left:8px;
                         font-size:10px; font-weight:600; padding:3px 8px; border-radius:20px;
@@ -297,7 +299,7 @@
                 </div>
 
                 {{-- Cuerpo --}}
-                <div style="flex:1;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                <div class="flex-1 p-4 flex flex-col justify-between gap-3 sm:gap-4">
                     <div style="flex:1;min-width:150px">
                         <p style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px">
                             {{ $p->titulo }}
@@ -330,30 +332,31 @@
                             ${{ number_format($p->precio,0,',','.') }}
                         </p>
                         {{-- EXCLUSIVO ADMIN: botones editar y eliminar --}}
-                        <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+                        <div class="flex flex-col sm:flex-row gap-2 justify-end w-full sm:w-auto mt-2">
                             <button
-    type="button"
-    onclick="editarPropiedad(
-        {{ $p->id }},
-        '{{ addslashes($p->titulo) }}',
-        '{{ $p->tipo }}',
-        '{{ addslashes($p->zona) }}',
-        '{{ $p->precio }}',
-        '{{ $p->area }}',
-        '{{ addslashes($p->descripcion) }}',
-        '{{ $p->estado }}',
-        '{{ $p->agente_id }}'
-    )"
-    style="
-        padding:7px 14px;
-        background:#f1f5f9; color:#475569;
-        border:1px solid #e2e8f0; border-radius:8px;
-        font-size:12px; font-weight:600; font-family:inherit;
-        cursor:pointer;
-    ">
-    <i class="ti ti-pencil" style="font-size:13px"></i>
-    Editar
-</button>
+                                type="button"
+                                onclick="editarPropiedad(
+                                    {{ $p->id }},
+                                    '{{ addslashes($p->titulo) }}',
+                                    '{{ $p->tipo }}',
+                                    '{{ addslashes($p->zona) }}',
+                                    '{{ $p->precio }}',
+                                    '{{ $p->area }}',
+                                    '{{ addslashes($p->descripcion) }}',
+                                    '{{ $p->estado }}',
+                                    '{{ $p->agente_id }}',
+                                    '{{ $p->imagen }}'
+                                )"
+                                style="
+                                    padding:7px 14px;
+                                    background:#f1f5f9; color:#475569;
+                                    border:1px solid #e2e8f0; border-radius:8px;
+                                    font-size:12px; font-weight:600; font-family:inherit;
+                                    cursor:pointer;
+                                ">
+                                <i class="ti ti-pencil" style="font-size:13px"></i>
+                                Editar
+                            </button>
                             <form method="POST"
                                   action="{{ route('admin.propiedades.destroy', $p) }}"
                                   class="form-eliminar"
@@ -361,13 +364,7 @@
                                   style="display:inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn-delete open-delete-modal" style="
-                                    padding:7px 14px;
-                                    background:#fee2e2; color:#991b1b;
-                                    border:1px solid #fecaca; border-radius:8px;
-                                    font-size:12px; font-weight:600; font-family:inherit;
-                                    cursor:pointer;
-                                ">
+                                <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto px-4 py-2 bg-red-100 text-red-800 border border-red-200 rounded-lg text-xs font-semibold cursor-pointer">
                                     <i class="ti ti-trash" style="font-size:13px"></i>
                                     Eliminar
                                 </button>
@@ -404,9 +401,9 @@
 
 {{-- MODAL EDITAR (mismo que admin/propiedades.blade.php) --}}
 <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
+    <div class="modal w-[95%] max-w-lg mx-auto sm:w-full">
         <h2 id="modalTitulo">Editar propiedad</h2>
-        <form id="formEditar" method="POST" action="#">
+        <form id="formEditar" method="POST" action="#" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-grid">
@@ -437,8 +434,14 @@
                     </select>
                 </div>
                 <div class="form-group full"><label>Descripción</label><textarea name="descripcion" id="eDescripcion" rows="3" required></textarea></div>
+                <div class="form-group full">
+                    <label>Imagen <small style="color:#6c757d;font-weight:400">(dejar vacío para mantener la actual)</small></label>
+                    <img id="bImgActual" src="" alt="Foto actual" style="display:none;max-height:80px;border-radius:6px;object-fit:cover;margin-bottom:6px">
+                    <input type="file" name="imagen" id="bImagen" accept="image/jpeg,image/png,image/jpg,image/webp">
+                    <img id="bPreview" src="" alt="Vista previa" style="display:none;margin-top:6px;max-height:80px;border-radius:6px;object-fit:cover">
+                </div>
             </div>
-            <div class="form-actions">
+            <div class="form-actions flex flex-col sm:flex-row gap-2 mt-4">
                 <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
                 <button type="button" class="btn-primary" onclick="guardarEdicion()">Guardar cambios</button>
             </div>
@@ -466,7 +469,7 @@ function cerrarModal() { overlay.classList.remove('open'); }
 
 overlay.addEventListener('click', e => { if (e.target === overlay) cerrarModal(); });
 
-function editarPropiedad(id, titulo, tipo, zona, precio, area, descripcion, estado, agente) {
+function editarPropiedad(id, titulo, tipo, zona, precio, area, descripcion, estado, agente, imagen) {
     document.getElementById('formEditar').action = `/admin/propiedades/${id}`;
     document.getElementById('eTitulo').value      = titulo;
     document.getElementById('eTipo').value        = tipo;
@@ -476,6 +479,11 @@ function editarPropiedad(id, titulo, tipo, zona, precio, area, descripcion, esta
     document.getElementById('eDescripcion').value = descripcion;
     document.getElementById('eEstado').value      = estado;
     document.getElementById('eAgente').value      = agente || '';
+    const imgActual = document.getElementById('bImgActual');
+    if (imagen) { imgActual.src = '/storage/' + imagen; imgActual.style.display = 'block'; }
+    else { imgActual.src = ''; imgActual.style.display = 'none'; }
+    document.getElementById('bPreview').style.display = 'none';
+    document.getElementById('bImagen').value = '';
     overlay.classList.add('open');
 }
 
@@ -485,5 +493,10 @@ function guardarEdicion() {
         form.submit();
     }
 }
+
+document.getElementById('bImagen').addEventListener('change', function(){
+    const prev = document.getElementById('bPreview');
+    if (this.files && this.files[0]) { prev.src = URL.createObjectURL(this.files[0]); prev.style.display = 'block'; }
+});
 </script>
 @endpush

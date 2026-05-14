@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/SolicitudController.php
 namespace App\Http\Controllers;
 
 use App\Models\Solicitud;
@@ -48,7 +47,7 @@ class SolicitudController extends Controller
     public function visitasAgente(Request $request)
     {
         $filtro  = $request->query('estado','todas');
-        $estados = ['Pendiente','Confirmada','Cancelada'];
+        $estados = ['Pendiente','Aceptada','Rechazada'];
 
         $query = SolicitudVisita::with(['propiedad','cliente'])
             ->whereHas('propiedad', fn($q) => $q->where('agente_id', Auth::id()));
@@ -89,13 +88,117 @@ class SolicitudController extends Controller
     }
 
     public function cambiarEstado(Request $request, $id)
-{
-    $solicitud = SolicitudVisita::findOrFail($id);
+    {
+        $solicitud = SolicitudVisita::findOrFail($id);
+        $solicitud->estado = $request->estado;
+        $solicitud->save();
+        return back()->with('success', 'Estado actualizado correctamente');
+    }
 
-    $solicitud->estado = $request->estado;
+    public function cancelar(Request $request, $id)
+    {
+        $solicitud = SolicitudVisita::where('id', $id)
+            ->where('cliente_id', Auth::id())
+            ->where('estado', 'Pendiente')
+            ->firstOrFail();
 
-    $solicitud->save();
+        $solicitud->update(['estado' => 'Rechazada']);
+        RegistroActividad::log('Visita cancelada', 'El cliente canceló la solicitud #'.$id);
 
-    return back()->with('success', 'Estado actualizado correctamente');
-}
+        return back()->with('success', 'Solicitud cancelada.');
+    }
+
+    public function reagendar(Request $request, $id)
+    {
+        $request->validate([
+            'fecha_solicitada' => 'required|date|after_or_equal:today',
+        ], [
+            'fecha_solicitada.required'        => 'La nueva fecha es obligatoria.',
+            'fecha_solicitada.after_or_equal'  => 'La fecha no puede ser anterior a hoy.',
+        ]);
+
+        $solicitud = SolicitudVisita::where('id', $id)
+            ->where('cliente_id', Auth::id())
+            ->where('estado', 'Pendiente')
+            ->firstOrFail();
+
+        $solicitud->update(['fecha_solicitada' => $request->fecha_solicitada]);
+
+        RegistroActividad::log(
+            'Visita reagendada',
+            'El cliente reagendó la solicitud #'.$id.' para '.$request->fecha_solicitada
+        );
+
+        return back()->with('success', 'Visita reagendada correctamente.');
+    }
+
+    //agente
+    public function calendarioAgente()
+    {
+        return view('agente.calendario');
+    }
+
+    public function eventosAgente()
+    {
+        $visitas = SolicitudVisita::with(['propiedad','cliente'])
+            ->whereHas('propiedad', fn($q) => $q->where('agente_id', Auth::id()))
+            ->get();
+
+        return response()->json($this->formatearEventos($visitas));
+    }
+
+    //asistente
+    public function calendarioAsistente()
+    {
+        return view('asistente.calendario');
+    }
+
+    public function eventosAsistente()
+    {
+        $visitas = SolicitudVisita::with(['propiedad','cliente'])->get();
+        return response()->json($this->formatearEventos($visitas));
+    }
+
+    //cliente
+    public function calendarioCliente()
+    {
+        return view('cliente.calendario');
+    }
+
+    public function eventosCliente()
+    {
+        $visitas = SolicitudVisita::with('propiedad')
+            ->where('cliente_id', Auth::id())
+            ->get();
+
+        return response()->json($this->formatearEventos($visitas));
+    }
+
+    private function formatearEventos($visitas)
+    {
+        $colores = [
+            'Pendiente'  => ['background' => '#f59e0b', 'border' => '#d97706'],
+            'Aceptada'   => ['background' => '#10b981', 'border' => '#059669'],
+            'Rechazada'  => ['background' => '#ef4444', 'border' => '#dc2626'],
+            'Completada' => ['background' => '#6366f1', 'border' => '#4f46e5'],
+        ];
+
+        return $visitas->map(function($v) use ($colores) {
+            $color = $colores[$v->estado] ?? ['background' => '#94a3b8', 'border' => '#64748b'];
+            return [
+                'id'               => $v->id,
+                'title'            => $v->propiedad->titulo ?? 'Propiedad',
+                'start'            => $v->fecha_solicitada,
+                'backgroundColor'  => $color['background'],
+                'borderColor'      => $color['border'],
+                'textColor'        => '#ffffff',
+                'extendedProps'    => [
+                    'estado'   => $v->estado,
+                    'cliente'  => $v->cliente->nombre ?? null,
+                    'zona'     => $v->propiedad->zona ?? '—',
+                    'mensaje'  => $v->mensaje ?? '—',
+                ],
+            ];
+        });
+    }
 }
