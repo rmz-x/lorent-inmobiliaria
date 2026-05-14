@@ -34,7 +34,7 @@ class PropiedadController extends Controller
             'estado'      => 'required|in:Disponible,Reservado,Vendido',
             'imagen'      => 'nullable|image|max:2048',
         ]);
-        $data = $request->only(['titulo carajo','tipo','zona','precio','area','descripcion','estado','agente_id']);
+        $data = $request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']);
         if (Auth::user()->esAgente()) $data['agente_id'] = Auth::id();
         if ($request->hasFile('imagen')) {
             $data['imagen'] = $request->file('imagen')->store('propiedades', 'public');
