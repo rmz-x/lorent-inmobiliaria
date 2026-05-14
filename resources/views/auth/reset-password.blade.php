@@ -1,8 +1,3 @@
-{{-- resources/views/auth/reset-password.blade.php --}}
-{{--
-    Vista para restablecer la contraseña del usuario.
-    Se muestra después de que el usuario hace clic en el enlace enviado por correo.
---}}
 <!DOCTYPE html>
 <html lang="es">
 <head>

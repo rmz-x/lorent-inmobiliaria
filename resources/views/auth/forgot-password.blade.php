@@ -1,4 +1,3 @@
-{{-- resources/views/auth/forgot-password.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,7 +36,7 @@
             <div class="panel active">
                 <h2>Recuperar contraseña</h2>
                 <p class="subtitle">
-                    Ingresa tu correo y te enviaremos el enlace.
+                    Ingresa tu correo y te enviaremos un código de verificación.
                 </p>
                 @if($errors->any())
                     <div class="alert error">
@@ -61,7 +60,7 @@
                         >
                     </div>
                     <button type="submit" class="btn-primary">
-                        Enviar enlace
+                        Enviar código
                     </button>
                 </form>
                 <div class="forgot-password">

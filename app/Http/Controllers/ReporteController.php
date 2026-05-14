@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/ReporteController.php
 namespace App\Http\Controllers;
 
 use App\Models\RegistroActividad;

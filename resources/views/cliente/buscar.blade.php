@@ -4,7 +4,6 @@
 
 @section('contenido')
 
-{{-- ══════════ BUSCADOR PRINCIPAL ══════════ --}}
 <div style="
     background: linear-gradient(135deg, #1e3a5f 0%, #0f2a4a 100%);
     border-radius: 14px;

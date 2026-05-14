@@ -15,9 +15,9 @@
     <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
         <span style="font-size:13px;color:#6c757d;margin-right:6px">Filtrar:</span>
         <a href="{{ route('agente.visitas') }}" class="filter-tag {{ $filtro=='todas'?'active':'' }}">Todas</a>
-        <a href="{{ route('agente.visitas') }}?estado=pendiente" class="filter-tag {{ $filtro=='pendiente'?'active':'' }}">Pendientes</a>
-        <a href="{{ route('agente.visitas') }}?estado=confirmada" class="filter-tag {{ $filtro=='confirmada'?'active':'' }}">Confirmadas</a>
-        <a href="{{ route('agente.visitas') }}?estado=cancelada" class="filter-tag {{ $filtro=='cancelada'?'active':'' }}">Canceladas</a>
+        <a href="{{ route('agente.visitas') }}?estado=Pendiente" class="filter-tag {{ $filtro=='Pendiente'?'active':'' }}">Pendientes</a>
+        <a href="{{ route('agente.visitas') }}?estado=Aceptada"  class="filter-tag {{ $filtro=='Aceptada'?'active':'' }}">Confirmadas</a>
+        <a href="{{ route('agente.visitas') }}?estado=Rechazada" class="filter-tag {{ $filtro=='Rechazada'?'active':'' }}">Canceladas</a>
     </div>
 </div>
 

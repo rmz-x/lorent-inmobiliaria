@@ -258,7 +258,7 @@ document.querySelectorAll('.btn-editar-usuario')
 
 });
 
-// ── ELIMINAR USUARIO ──────────────────────────────────
+//ELIMINAR USUARIO
 let pendingUserForm = null;
 
 document.querySelectorAll('.open-delete-modal-user').forEach(btn => {

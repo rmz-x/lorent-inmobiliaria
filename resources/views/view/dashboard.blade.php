@@ -1,4 +1,3 @@
-{{-- resources/views/admin/dashboard.blade.php --}}
 @extends('layouts.panel')
 @section('titulo', 'Dashboard — Admin')
 @section('titulo_pagina', 'Dashboard')

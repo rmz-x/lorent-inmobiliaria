@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/SolicitudController.php
 namespace App\Http\Controllers;
 
 use App\Models\Solicitud;
@@ -48,7 +47,7 @@ class SolicitudController extends Controller
     public function visitasAgente(Request $request)
     {
         $filtro  = $request->query('estado','todas');
-        $estados = ['Pendiente','Confirmada','Cancelada'];
+        $estados = ['Pendiente','Aceptada','Rechazada'];
 
         $query = SolicitudVisita::with(['propiedad','cliente'])
             ->whereHas('propiedad', fn($q) => $q->where('agente_id', Auth::id()));
@@ -133,7 +132,7 @@ class SolicitudController extends Controller
         return back()->with('success', 'Visita reagendada correctamente.');
     }
 
-    // ── AGENTE ────────────────────────────────────────────
+    //agente
     public function calendarioAgente()
     {
         return view('agente.calendario');
@@ -148,7 +147,7 @@ class SolicitudController extends Controller
         return response()->json($this->formatearEventos($visitas));
     }
 
-    // ── ASISTENTE ─────────────────────────────────────────
+    //asistente
     public function calendarioAsistente()
     {
         return view('asistente.calendario');
@@ -160,7 +159,7 @@ class SolicitudController extends Controller
         return response()->json($this->formatearEventos($visitas));
     }
 
-    // ── CLIENTE ───────────────────────────────────────────
+    //cliente
     public function calendarioCliente()
     {
         return view('cliente.calendario');
@@ -175,7 +174,6 @@ class SolicitudController extends Controller
         return response()->json($this->formatearEventos($visitas));
     }
 
-    // ── HELPER ────────────────────────────────────────────
     private function formatearEventos($visitas)
     {
         $colores = [

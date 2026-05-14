@@ -4,9 +4,6 @@
 
 @section('contenido')
 
-{{-- ═══════════════════════════════════════
-     TARJETAS DE ESTADÍSTICAS
-════════════════════════════════════════ --}}
 <div class="stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
     {{-- Card 1: Total propiedades (destacada) --}}
@@ -39,9 +36,6 @@
 
 </div>
 
-{{-- ═══════════════════════════════════════
-     ACTIVIDAD RECIENTE
-════════════════════════════════════════ --}}
 <div class="activity-card">
     <p class="section-title">Actividad reciente</p>
 
@@ -63,6 +57,7 @@
         </div>
 
         {{-- Ventas registradas --}}
+
         <div class="activity-item">
             <div class="activity-icon gold">💲</div>
             <div class="activity-body">
@@ -83,9 +78,6 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════
-     ÚLTIMAS PROPIEDADES REGISTRADAS
-════════════════════════════════════════ --}}
 <div class="card">
     <div class="card-header">
         <span class="card-title">Últimas propiedades registradas</span>

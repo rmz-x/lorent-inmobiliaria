@@ -43,9 +43,6 @@
 
 </div>
 
-{{-- ═══════════════════════════════════════
-     PROPIEDADES DISPONIBLES
-════════════════════════════════════════ --}}
 <div class="card">
     <div class="card-header">
         <span class="card-title">Propiedades disponibles</span>

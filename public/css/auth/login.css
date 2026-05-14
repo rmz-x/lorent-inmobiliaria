@@ -15,7 +15,7 @@ body{
     grid-template-columns:1fr 1fr;
 }
 
-/* LEFT */
+/* izquierda */
 
 .auth-left{
     position:relative;
@@ -84,7 +84,7 @@ body{
     color:rgba(255,255,255,.7);
 }
 
-/* RIGHT */
+/* rigth */
 
 .auth-right{
     display:flex;
@@ -103,7 +103,7 @@ body{
     0 10px 40px rgba(0,0,0,.08);
 }
 
-/* LOGO */
+/* logo */
 
 .logo-area{
     display:flex;
@@ -134,7 +134,7 @@ body{
     color:#4d6fff;
 }
 
-/* TABS */
+/* tabs */
 
 .tabs{
     display:flex;
@@ -161,7 +161,7 @@ body{
     box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-/* PANELS */
+/* paneles */
 
 .panel{
     display:none;
@@ -182,7 +182,7 @@ h2{
     margin-bottom:30px;
 }
 
-/* INPUTS */
+/* inputs */
 
 .input-group{
     margin-bottom:20px;

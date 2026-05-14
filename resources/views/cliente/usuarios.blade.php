@@ -31,31 +31,31 @@
             <td>
                 <div class="action-btns">
                     <button
-    type="button"
-    class="btn-edit btn-editar-usuario"
+                        type="button"
+                        class="btn-edit btn-editar-usuario"
 
-    data-id="{{ $u->id }}"
-    data-nombre="{{ $u->nombre }}"
-    data-correo="{{ $u->correo }}"
-    data-usuario="{{ $u->usuario }}"
-    data-rol="{{ $u->rol }}"
->
-    Editar
-</button>
+                        data-id="{{ $u->id }}"
+                        data-nombre="{{ $u->nombre }}"
+                        data-correo="{{ $u->correo }}"
+                        data-usuario="{{ $u->usuario }}"
+                        data-rol="{{ $u->rol }}"
+                    >
+                        Editar
+                    </button>
                     <form method="POST"
-      action="{{ route('admin.propiedades.destroy', $p) }}"
-      class="form-eliminar"
-      data-title="{{ $p->titulo }}">
+                        action="{{ route('admin.propiedades.destroy', $p) }}"
+                        class="form-eliminar"
+                        data-title="{{ $p->titulo }}">
 
-    @csrf
-    @method('DELETE')
+                        @csrf
+                        @method('DELETE')
 
-    <button type="button"
-            class="btn-delete open-delete-modal"
-            data-name="{{ $p->titulo }}">
-        Eliminar
-    </button>
-</form>
+                        <button type="button"
+                                class="btn-delete open-delete-modal"
+                                data-name="{{ $p->titulo }}">
+                            Eliminar
+                        </button>
+                    </form>
                         @csrf @method('DELETE')
                         <button type="submit" class="btn-delete">Eliminar</button>
                     </form>

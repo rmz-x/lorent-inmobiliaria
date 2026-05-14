@@ -18,9 +18,6 @@
 
 @section('contenido')
 
-{{-- ═══════════════════════════════════════
-     TARJETAS DE ESTADÍSTICAS
-════════════════════════════════════════ --}}
 <div class="stats grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
     <div class="stat-card">
@@ -49,9 +46,6 @@
 
 </div>
 
-{{-- ═══════════════════════════════════════
-     PRÓXIMAS VISITAS
-════════════════════════════════════════ --}}
 <div class="card" style="margin-bottom:20px">
     <div class="card-header">
         <span class="card-title">Próximas visitas</span>
@@ -102,9 +96,6 @@
  </div>
 </div>
 
-{{-- ═══════════════════════════════════════
-     ÚLTIMOS CLIENTES REGISTRADOS
-════════════════════════════════════════ --}}
 <div class="card">
     <div class="card-header">
         <span class="card-title">Últimos clientes registrados</span>

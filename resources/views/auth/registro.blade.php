@@ -1,4 +1,3 @@
-{{-- resources/views/auth/registro.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>

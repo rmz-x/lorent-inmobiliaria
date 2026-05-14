@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/DashboardController.php — REEMPLAZA el tuyo actual
 namespace App\Http\Controllers;
 
 use App\Models\{Propiedad, Usuario, SolicitudVisita, RegistroActividad};
@@ -8,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    // dashboard para el administrador, muestra estadísticas generales del sistema como total de propiedades, usuarios, ventas y las últimas propiedades registradas.
     public function admin()
     {
         $totalProps    = Propiedad::count();
@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'totalProps','disponibles','totalUsuarios','totalVentas','ultimas'
         ));
     }
-
+// dashboard para el agente, muestra estadísticas de sus propiedades, visitas pendientes y las últimas visitas solicitadas por los clientes.
     public function agente()
     {
         $id          = Auth::id();
@@ -38,7 +38,7 @@ class DashboardController extends Controller
             'misProps','disponibles','vendidas','visitasPend','ultimas','visitas'
         ));
     }
-
+// dashboard para el asistente, muestra estadísticas de clientes, visitas pendientes, visitas programadas para hoy y las últimas actividades realizadas en el sistema.
     public function asistente(Request $request)
     {
         // Stats
@@ -62,7 +62,7 @@ class DashboardController extends Controller
             'clientes','visitas'
         ));
     }
-
+// dashboard para el cliente, muestra estadísticas de propiedades disponibles, ventas, alquileres y las últimas propiedades registradas en el sistema.
     public function cliente()
     {
         $totalDisp     = Propiedad::where('estado','Disponible')->count();

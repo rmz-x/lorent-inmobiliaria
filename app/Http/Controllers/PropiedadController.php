@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/PropiedadController.php — REEMPLAZA el tuyo
 namespace App\Http\Controllers;
 
 use App\Models\Propiedad;
@@ -26,7 +25,7 @@ class PropiedadController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'titulo'      => 'required|min:5',
+            'titulo carajo'      => 'required|min:5',
             'tipo'        => 'required|in:Venta,Alquiler,Anticretico',
             'zona'        => 'required',
             'precio'      => 'required|numeric|min:1',
@@ -35,7 +34,7 @@ class PropiedadController extends Controller
             'estado'      => 'required|in:Disponible,Reservado,Vendido',
             'imagen'      => 'nullable|image|max:2048',
         ]);
-        $data = $request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']);
+        $data = $request->only(['titulo carajo','tipo','zona','precio','area','descripcion','estado','agente_id']);
         if (Auth::user()->esAgente()) $data['agente_id'] = Auth::id();
         if ($request->hasFile('imagen')) {
             $data['imagen'] = $request->file('imagen')->store('propiedades', 'public');
@@ -96,7 +95,7 @@ class PropiedadController extends Controller
         return view('cliente.propiedades', compact('propiedades','filtro'));
     }
 
-    // ─── CU8: BUSCAR PROPIEDADES ─────────────────────────────
+    //buscar propiedades
     public function buscar(Request $request)
     {
         $q         = trim($request->query('q', ''));
@@ -142,7 +141,7 @@ class PropiedadController extends Controller
         return view('cliente.detalle', compact('propiedad'));
     }
 
-    // ─── CU8: BUSCAR PROPIEDADES — ADMINISTRADOR ────────────────
+    //buscar propiedades para el administrador
     public function buscarAdmin(Request $request)
     {
         $q         = trim($request->query('q', ''));
@@ -188,7 +187,7 @@ class PropiedadController extends Controller
         ));
     }
  
-    // ─── CU8: BUSCAR PROPIEDADES — AGENTE ───────────────────────
+    //bucar propiedades para el agente
     public function buscarAgente(Request $request)
     {
         $q         = trim($request->query('q', ''));
@@ -230,7 +229,7 @@ class PropiedadController extends Controller
         ));
     }
  
-    // ─── CU8: BUSCAR PROPIEDADES — ASISTENTE ────────────────────
+    //buscar propiedades para el asistente
     public function buscarAsistente(Request $request)
     {
         $q         = trim($request->query('q', ''));

@@ -137,7 +137,7 @@ tr:hover td{background:#f8f9fa}
 
 @push('scripts')
 <script>
-// ── CANCELAR ──────────────────────────────────────────
+//CANCELAR
 let pendingCancelForm = null;
 
 document.querySelectorAll('.btn-cancelar-solicitud').forEach(btn => {
@@ -162,7 +162,7 @@ document.getElementById('cancelOverlay').addEventListener('click', function(e) {
     if (e.target === this) cerrarCancelModal();
 });
 
-// ── REAGENDAR ─────────────────────────────────────────
+//REAGENDAR
 document.querySelectorAll('.btn-reagendar-solicitud').forEach(btn => {
     btn.addEventListener('click', function() {
         document.getElementById('reagendarMsg').textContent =

@@ -61,20 +61,23 @@
                 <i class="ti ti-search" style="font-size:15px"></i>
                 Buscar
             </button>
-            {{-- Botón nueva propiedad --}}
-            <button type="button" onclick="abrirModal()" style="
+
+            {{-- Botón nueva propiedad — redirige a Mis propiedades --}}
+            <a href="{{ route('agente.propiedades') }}" style="
                 padding:12px 18px;
                 background:rgba(255,255,255,0.12); color:#fff;
                 border:1.5px solid rgba(255,255,255,0.2); border-radius:10px;
                 font-size:13px; font-weight:600; font-family:inherit;
                 cursor:pointer; transition:background .18s;
                 display:flex; align-items:center; gap:7px; white-space:nowrap;
+                text-decoration:none;
             "
             onmouseover="this.style.background='rgba(255,255,255,0.2)'"
             onmouseout="this.style.background='rgba(255,255,255,0.12)'">
                 <i class="ti ti-plus" style="font-size:15px"></i>
                 Nueva propiedad
-            </button>
+            </a>
+
             @if($q || $tipo !== 'Todas' || $estado !== 'Todas' || $precioMax)
             <a href="{{ route('agente.buscar') }}" style="
                 padding:12px 18px;
@@ -278,7 +281,6 @@
                         <p style="font-size:18px;font-weight:700;color:#1a9e5c;margin-bottom:10px">
                             ${{ number_format($p->precio,0,',','.') }}
                         </p>
-                        {{-- Agente: puede editar y eliminar sus propias propiedades --}}
                         <div class="flex flex-col sm:flex-row gap-2 justify-end w-full sm:w-auto mt-2">
                             <button
                                 type="button"

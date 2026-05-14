@@ -72,37 +72,37 @@
                     <div class="action-btns flex flex-col sm:flex-row gap-2">
 
                         <button
-    class="btn-edit w-full sm:w-auto"
-    data-id="{{ $p->id }}"
-    data-titulo="{{ $p->titulo }}"
-    data-tipo="{{ $p->tipo }}"
-    data-zona="{{ $p->zona }}"
-    data-precio="{{ $p->precio }}"
-    data-area="{{ $p->area }}"
-    data-descripcion="{{ $p->descripcion }}"
-    data-estado="{{ $p->estado }}"
-    data-agente="{{ $p->agente_id }}"
-    data-imagen="{{ $p->imagen }}"
-    data-lat="{{ $p->latitud }}"
-    data-lng="{{ $p->longitud }}"
->
-    Editar
-</button>
+                            class="btn-edit w-full sm:w-auto"
+                            data-id="{{ $p->id }}"
+                            data-titulo="{{ $p->titulo }}"
+                            data-tipo="{{ $p->tipo }}"
+                            data-zona="{{ $p->zona }}"
+                            data-precio="{{ $p->precio }}"
+                            data-area="{{ $p->area }}"
+                            data-descripcion="{{ $p->descripcion }}"
+                            data-estado="{{ $p->estado }}"
+                            data-agente="{{ $p->agente_id }}"
+                            data-imagen="{{ $p->imagen }}"
+                            data-lat="{{ $p->latitud }}"
+                            data-lng="{{ $p->longitud }}"
+                        >
+                            Editar
+                        </button>
 
                         <form method="POST"
-      action="{{ route('admin.propiedades.destroy', $p) }}"
-      class="form-eliminar"
-      data-title="{{ $p->titulo }}"
-      style="display:inline">
+                            action="{{ route('admin.propiedades.destroy', $p) }}"
+                            class="form-eliminar"
+                            data-title="{{ $p->titulo }}"
+                            style="display:inline">
 
-    @csrf
-    @method('DELETE')
+                            @csrf
+                            @method('DELETE')
 
-    <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto">
-        Eliminar
-    </button>
+                            <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto">
+                                Eliminar
+                            </button>
 
-</form>
+                        </form>
                         
 
                     </div>
@@ -130,8 +130,6 @@
 </div>
 
 </div>
-
-{{-- MODAL --}}
 
 @if($errors->any())
 <div style="background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:13px">
@@ -674,10 +672,7 @@ document.getElementById('deleteOverlay').addEventListener('click', function(e) {
     if (e.target === this) cerrarDeleteModal();
 });
 
-// ── LEAFLET ───────────────────────────────────────────
-// Centro Santa Cruz
-
-// ── MAPA REGISTRAR ────────────────────────────────────
+//MAPA REGISTRAR
 let mapaR = null, marcadorR = null;
 
 function iniciarMapaRegistro() {
@@ -721,7 +716,7 @@ function buscarUbicacionR() {
         });
 }
 
-// ── MAPA EDITAR ───────────────────────────────────────
+//MAPA EDITAR
 let mapaE = null, marcadorE = null;
 
 function iniciarMapaEditar(lat, lng) {

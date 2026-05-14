@@ -4,7 +4,6 @@
 
 @section('contenido')
 
-{{-- Mensajes de error de validación --}}
 @if($errors->any())
     <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:8px;padding:12px 16px;margin-bottom:16px">
         <p style="font-weight:600;color:#991b1b;margin-bottom:6px">Errores al guardar:</p>
@@ -22,7 +21,6 @@
     </div>
 @endif
 
-{{-- ══════════ BUSCADOR PRINCIPAL ══════════ --}}
 <div style="
     background: linear-gradient(135deg, #1e3a5f 0%, #0f2a4a 100%);
     border-radius: 14px;
@@ -98,7 +96,7 @@
     </form>
 </div>
 
-{{-- ══════════ FILTROS + RESULTADOS ══════════ --}}
+
 <div style="display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start">
 
     {{-- PANEL FILTROS --}}
@@ -336,29 +334,29 @@
                         {{-- EXCLUSIVO ADMIN: botones editar y eliminar --}}
                         <div class="flex flex-col sm:flex-row gap-2 justify-end w-full sm:w-auto mt-2">
                             <button
-    type="button"
-    onclick="editarPropiedad(
-        {{ $p->id }},
-        '{{ addslashes($p->titulo) }}',
-        '{{ $p->tipo }}',
-        '{{ addslashes($p->zona) }}',
-        '{{ $p->precio }}',
-        '{{ $p->area }}',
-        '{{ addslashes($p->descripcion) }}',
-        '{{ $p->estado }}',
-        '{{ $p->agente_id }}',
-        '{{ $p->imagen }}'
-    )"
-    style="
-        padding:7px 14px;
-        background:#f1f5f9; color:#475569;
-        border:1px solid #e2e8f0; border-radius:8px;
-        font-size:12px; font-weight:600; font-family:inherit;
-        cursor:pointer;
-    ">
-    <i class="ti ti-pencil" style="font-size:13px"></i>
-    Editar
-</button>
+                                type="button"
+                                onclick="editarPropiedad(
+                                    {{ $p->id }},
+                                    '{{ addslashes($p->titulo) }}',
+                                    '{{ $p->tipo }}',
+                                    '{{ addslashes($p->zona) }}',
+                                    '{{ $p->precio }}',
+                                    '{{ $p->area }}',
+                                    '{{ addslashes($p->descripcion) }}',
+                                    '{{ $p->estado }}',
+                                    '{{ $p->agente_id }}',
+                                    '{{ $p->imagen }}'
+                                )"
+                                style="
+                                    padding:7px 14px;
+                                    background:#f1f5f9; color:#475569;
+                                    border:1px solid #e2e8f0; border-radius:8px;
+                                    font-size:12px; font-weight:600; font-family:inherit;
+                                    cursor:pointer;
+                                ">
+                                <i class="ti ti-pencil" style="font-size:13px"></i>
+                                Editar
+                            </button>
                             <form method="POST"
                                   action="{{ route('admin.propiedades.destroy', $p) }}"
                                   class="form-eliminar"
