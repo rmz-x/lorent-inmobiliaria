@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/AuthController.php
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http; //add para API
 
 /**
  * Controlador de autenticación.
@@ -18,11 +20,9 @@ use Illuminate\Support\Carbon;
  * Este controlador maneja el inicio de sesión, registro, recuperación de contraseña
  * y cierre de sesión de los usuarios del sistema.
  */
-
-
 class AuthController extends Controller
 {
-    // Mostrar login, cierra cualquier sesión activa para evitar conflictos y muestra el formulario de inicio de sesión.
+    // Mostrar login
     public function showLogin()
     {
         Auth::logout();
@@ -31,7 +31,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Procesar login, valida las credenciales, inicia sesión y redirige según el rol del usuario. También registra la actividad de inicio de sesión.
+    // Procesar login
     public function login(Request $request)
     {
         // Validar que el correo y la contraseña se envíen al servidor.
@@ -77,7 +77,7 @@ class AuthController extends Controller
 
         return back()->withErrors(['correo' => 'Correo o contraseña incorrectos.']);
     }
-    // Mostrar registro, muestra el formulario para que un nuevo usuario se registre en el sistema.
+    // Mostrar registro
     public function showRegistro()
     {
         return view('auth.registro');
@@ -89,20 +89,7 @@ class AuthController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function showVerifyCode(Request $request)
-    {
-        $email = $request->query('email');
-
-        if (!$email) {
-            return redirect()->route('password.request')->withErrors(['correo' => 'Correo inválido.']);
-        }
-
-        return view('auth.verify-code', [
-            'email' => $email,
-        ]);
-    }
-
-    // Enviar código de recuperación
+    // Enviar enlace de recuperación
     public function sendForgotPassword(Request $request)
     {
         $request->validate([
@@ -115,21 +102,48 @@ class AuthController extends Controller
         $usuario = Usuario::where('correo', $request->correo)->first();
 
         if ($usuario) {
-            $codigo = random_int(100000, 999999);
+            $token = Str::random(64);
 
             DB::table('password_reset_tokens')->updateOrInsert(
                 ['email' => $usuario->correo],
                 [
-                    'token' => Hash::make($codigo),
+                    'token' => Hash::make($token),
                     'created_at' => now(),
                 ]
             );
 
-            Mail::to($usuario->correo)->send(new PasswordResetMail((string) $codigo, $usuario->nombre));
+            $resetUrl = route('password.reset', [
+                'token' => $token,
+                'email' => $usuario->correo,
+            ]);
+
+            // Mail::to($usuario->correo)->send(new PasswordResetMail($resetUrl, $usuario->nombre));
+            //NEW API BREVO
+            Http::withHeaders([
+                'api-key' => env('BREVO_API_KEY'),
+                'Content-Type' => 'application/json',
+            ])->post('https://api.brevo.com/v3/smtp/email', [
+                'sender' => [
+                    'name' => 'Lorent Inmobiliaria',
+                    'email' => 'lorent.proyecto@gmail.com',
+                ],
+                'to' => [
+                    [
+                        'email' => $usuario->correo,
+                        'name' => $usuario->nombre,
+                    ]
+                ],
+                'subject' => 'Recuperación de contraseña',
+                'htmlContent' => "
+                    <h3>Recuperación de contraseña</h3>
+                    <p>Hola {$usuario->nombre},</p>
+                    <p>Haz clic aquí para recuperar tu contraseña:</p>
+                    <a href='{$resetUrl}'>Restablecer contraseña</a>
+                ",
+            ]);
         }
 
-        return redirect()->route('password.verify', ['email' => $request->correo])
-            ->with('success', 'Si ese correo existe, te enviamos un código de verificación.');
+        return back()->with('success', 'Si ese correo existe, te enviamos un enlace para recuperar la contraseña.');
     }
 
     // Mostrar formulario para crear nueva contraseña
@@ -147,55 +161,16 @@ class AuthController extends Controller
         ]);
     }
 
-    public function verifyCode(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'codigo' => 'required|digits:6',
-        ], [
-            'email.required' => 'El correo es obligatorio.',
-            'email.email' => 'Ingresa un correo válido.',
-            'codigo.required' => 'El código es obligatorio.',
-            'codigo.digits' => 'El código debe tener 6 dígitos.',
-        ]);
-
-        $record = DB::table('password_reset_tokens')->where('email', $request->email)->first();
-
-        if (!$record || !Hash::check($request->codigo, $record->token)) {
-            return back()->withErrors(['codigo' => 'Código inválido o expirado.'])->withInput();
-        }
-
-        $expires = now()->subMinutes(config('auth.passwords.usuarios.expire'));
-        $createdAt = Carbon::parse($record->created_at);
-
-        if ($createdAt->lt($expires)) {
-            return back()->withErrors(['codigo' => 'Código inválido o expirado.'])->withInput();
-        }
-
-        return redirect()->route('password.reset', [
-            'token' => $request->codigo,
-            'email' => $request->email,
-        ]);
-    }
-
     // Guardar nueva contraseña
     public function resetPassword(Request $request)
     {
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'contrasena' => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-                'confirmed',
-            ],
+            'contrasena' => 'required|min:6|confirmed',
         ], [
             'contrasena.required' => 'La contraseña es obligatoria.',
-            'contrasena.string' => 'La contraseña debe ser un texto válido.',
             'contrasena.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'contrasena.regex' => 'La contraseña debe contener mayúscula, minúscula y número.',
             'contrasena.confirmed' => 'Las contraseñas no coinciden.',
         ]);
 
@@ -236,7 +211,7 @@ class AuthController extends Controller
                 'contrasena'=> [
                     'required',
                     'string',
-                    'min:8',
+                    'min:6',
                     'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
                 ],
             ],
