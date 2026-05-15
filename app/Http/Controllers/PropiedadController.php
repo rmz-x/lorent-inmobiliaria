@@ -35,13 +35,11 @@ class PropiedadController extends Controller
             'imagen'      => 'nullable|image|max:2048',
         ]);
         $data = $request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']);
-        if (Auth::user()->esAgente()) $data['agente_id'] = Auth::id();
-        if ($request->hasFile('imagen')) {
-            $ruta = $request->file('imagen')
-            ->store('propiedades', env('FILESYSTEM_DISK'));
-
-            dd($ruta);
-        }
+        if (Auth::user()->esAgente()) {$data['agente_id'] = Auth::id();}
+            if ($request->hasFile('imagen')) {
+                $data['imagen'] = $request->file('imagen')->store('propiedades');
+            }
+        
         $data['latitud']  = $request->latitud  ?: null;
         $data['longitud'] = $request->longitud ?: null;
         $prop = Propiedad::create($data);
@@ -67,12 +65,12 @@ class PropiedadController extends Controller
         $datos = $request->except('imagen');
 
         if ($request->hasFile('imagen')) {
+
             if ($propiedad->imagen) {
-                Storage::disk(env('FILESYSTEM_DISK'))
-                ->delete($propiedad->imagen);
+                Storage::delete($propiedad->imagen);
             }
-            $datos['imagen'] = $request->file('imagen')
-            ->store('propiedades', env('FILESYSTEM_DISK'));
+
+            $datos['imagen'] = $request->file('imagen')->store('propiedades');
         }
 
         $propiedad->update($datos);
