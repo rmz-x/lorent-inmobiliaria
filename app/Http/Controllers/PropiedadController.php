@@ -37,7 +37,7 @@ class PropiedadController extends Controller
         $data = $request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']);
         if (Auth::user()->esAgente()) $data['agente_id'] = Auth::id();
         if ($request->hasFile('imagen')) {
-            $data['imagen'] = $request->file('imagen')->store('propiedades', 'public');
+            $data['imagen'] = $request->file('imagen')->store('propiedades', 's3');
         }
         $data['latitud']  = $request->latitud  ?: null;
         $data['longitud'] = $request->longitud ?: null;
@@ -65,9 +65,9 @@ class PropiedadController extends Controller
 
         if ($request->hasFile('imagen')) {
             if ($propiedad->imagen) {
-                Storage::disk('public')->delete($propiedad->imagen);
+                Storage::disk('s3')->delete($propiedad->imagen);
             }
-            $datos['imagen'] = $request->file('imagen')->store('propiedades', 'public');
+            $datos['imagen'] = $request->file('imagen')->store('propiedades', 's3');
         }
 
         $propiedad->update($datos);
