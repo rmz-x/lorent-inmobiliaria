@@ -15,12 +15,6 @@
     </div>
 @endif
 
-@if(session('success'))
-    <div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:12px 16px;margin-bottom:16px">
-        <p style="color:#065f46;font-weight:600">{{ session('success') }}</p>
-    </div>
-@endif
-
 <div style="
     background: linear-gradient(135deg, #1e3a5f 0%, #0f2a4a 100%);
     border-radius: 14px;
