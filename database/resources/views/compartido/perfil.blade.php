@@ -43,6 +43,15 @@
                    style="padding:9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa">
         </div>
 
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+            <label style="font-size:12px;color:#6c757d;font-weight:500">Estado de la cuenta</label>
+            <select name="estado"
+                    style="padding:9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa">
+                <option value="activo"   {{ $usuario->estado === 'activo' ? 'selected' : '' }}>Activo</option>
+                <option value="inactivo" {{ $usuario->estado === 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+            </select>
+        </div>
+
         <hr style="border:none;border-top:1px solid #e2e6ea;margin:20px 0">
         <p style="font-size:13px;font-weight:600;color:#1a3a6b;margin-bottom:14px">Cambiar contraseña</p>
 

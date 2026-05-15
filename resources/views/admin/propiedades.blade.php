@@ -82,7 +82,7 @@
                             data-descripcion="{{ $p->descripcion }}"
                             data-estado="{{ $p->estado }}"
                             data-agente="{{ $p->agente_id }}"
-                            data-imagen="{{ $p->imagen }}"
+                            data-imagen="{{ $p->imagen ? \Illuminate\Support\Facades\Storage::url($p->imagen) : '' }}"
                             data-lat="{{ $p->latitud }}"
                             data-lng="{{ $p->longitud }}"
                         >
@@ -579,7 +579,7 @@ function editarPropiedad(
 
     const imgActual = document.getElementById('eImgActual');
     if (imagen) {
-        imgActual.src = '/storage/' + imagen;
+        imgActual.src = imagen;
         imgActual.style.display = 'block';
     } else {
         imgActual.src = '';

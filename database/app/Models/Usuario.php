@@ -10,7 +10,7 @@ class Usuario extends Authenticatable
     public $timestamps    = false;
 
     protected $fillable = [
-        'nombre','correo','usuario','contrasena','rol',
+        'nombre','correo','usuario','contrasena','rol','estado'
     ];
 
     public function getAuthPassword() { return $this->contrasena; }

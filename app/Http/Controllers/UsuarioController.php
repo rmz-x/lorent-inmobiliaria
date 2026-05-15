@@ -73,9 +73,14 @@ class UsuarioController extends Controller
         $request->validate([
             'nombre'  => 'required|min:3',
             'usuario' => 'required|min:3|unique:usuarios,usuario,'.$usuario->id,
+            'estado'  => 'required|in:activo,inactivo',
         ]);
 
-        $data = ['nombre' => $request->nombre, 'usuario' => $request->usuario];
+        $data = [
+            'nombre'  => $request->nombre,
+            'usuario' => $request->usuario,
+            'estado'  => $request->estado,
+        ];
         if ($request->filled('contrasena_nueva')) {
             $data['contrasena'] = $request->contrasena_nueva;
         }

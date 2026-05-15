@@ -11,7 +11,17 @@
     </div>
 <div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
 <table class="min-w-[600px] w-full text-sm text-left">
-        <thead><tr><th>#</th><th>Nombre</th><th>Correo</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr></thead>
+        <thead>
+<tr>
+    <th>#</th>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Usuario</th>
+    <th>Rol</th>
+    <th>Estado</th>
+    <th>Acciones</th>
+</tr>
+</thead>
         <tbody>
         @forelse($usuarios as $u)
         @php
@@ -29,35 +39,36 @@
             <td>{{ $u->usuario }}</td>
             <td><span class="badge {{ $rolClass }}">{{ ucfirst($u->rol) }}</span></td>
             <td>
+    <span class="badge {{ strtolower($u->estado) == 'activo' ? 'badge-green' : 'badge-red' }}">
+        {{ ucfirst(strtolower($u->estado)) }}
+    </span>
+</td>
+            <td>
                 <div class="action-btns">
                     <button
                         type="button"
-                        class="btn-edit btn-editar-usuario"
+                        class="btn-edit"
 
-                        data-id="{{ $u->id }}"
-                        data-nombre="{{ $u->nombre }}"
-                        data-correo="{{ $u->correo }}"
-                        data-usuario="{{ $u->usuario }}"
-                        data-rol="{{ $u->rol }}"
+                        onclick="editarUsuario(
+                            '{{ $u->id }}',
+                            '{{ $u->nombre }}',
+                            '{{ $u->correo }}',
+                            '{{ $u->usuario }}',
+                            '{{ $u->rol }}',
+                            '{{ strtolower($u->estado) }}'
+                        )"
                     >
                         Editar
                     </button>
                     <form method="POST"
-                        action="{{ route('admin.propiedades.destroy', $p) }}"
-                        class="form-eliminar"
-                        data-title="{{ $p->titulo }}">
+                        action="{{ route('admin.usuarios.destroy', $u->id) }}">
 
                         @csrf
                         @method('DELETE')
 
-                        <button type="button"
-                                class="btn-delete open-delete-modal"
-                                data-name="{{ $p->titulo }}">
+                        <button type="submit" class="btn-delete">
                             Eliminar
                         </button>
-                    </form>
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn-delete">Eliminar</button>
                     </form>
                 </div>
             </td>
@@ -81,14 +92,25 @@
             <div class="form-group"><label>Correo</label><input type="email" name="correo" id="userCorreo" required></div>
             <div class="form-group"><label>Usuario</label><input type="text" name="usuario" id="userUsuario" required></div>
             <div class="form-group"><label>Contraseña <span id="passNote" style="font-weight:400;color:#6c757d">(requerida)</span></label><input type="password" name="contrasena" id="userPass"></div>
-            <div class="form-group"><label>Rol</label>
-                <select name="rol" id="userRol">
-                    <option value="agente">Agente</option>
-                    <option value="administrador">Administrador</option>
-                    <option value="asistente">Asistente</option>
-                    <option value="cliente">Cliente</option>
-                </select>
-            </div>
+            <div class="form-group">
+    <label>Rol</label>
+
+    <select name="rol" id="userRol">
+        <option value="agente">Agente</option>
+        <option value="administrador">Administrador</option>
+        <option value="asistente">Asistente</option>
+        <option value="cliente">Cliente</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label>Estado</label>
+
+    <select name="estado" id="userEstado">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+    </select>
+</div>
         </div>
         <div class="form-actions">
             <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
@@ -113,13 +135,14 @@ function abrirModal(){
 }
 function cerrarModal(){ overlay.classList.remove('open'); }
 overlay.addEventListener('click',e=>{ if(e.target===overlay) cerrarModal(); });
-function editarUsuario(id,nombre,correo,usuario,rol){
+function editarUsuario(id,nombre,correo,usuario,rol,estado){
     form.action=`/admin/usuarios/${id}`;
     document.getElementById('methodField').innerHTML='<input type="hidden" name="_method" value="PUT">';
     document.getElementById('userName').value=nombre;
     document.getElementById('userCorreo').value=correo;
     document.getElementById('userUsuario').value=usuario;
     document.getElementById('userRol').value=rol;
+    document.getElementById('userEstado').value=estado;
     document.getElementById('userPass').value='';
     document.getElementById('passNote').textContent='(dejar vacío para no cambiar)';
     document.getElementById('modalTitulo').textContent='Editar usuario';

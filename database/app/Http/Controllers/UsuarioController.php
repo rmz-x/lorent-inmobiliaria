@@ -23,9 +23,19 @@ class UsuarioController extends Controller
             'usuario'   => 'required|min:3|unique:usuarios,usuario',
             'contrasena'=> 'required|min:3',
             'rol'       => 'required|in:administrador,agente,asistente,cliente',
+            'estado'  => 'nullable|in:activo,inactivo',
         ]);
 
-        $user = Usuario::create($request->only(['nombre','correo','usuario','contrasena','rol']));
+        $user = Usuario::create(
+            $request->only([
+                'nombre',
+                'correo',
+                'usuario',
+                'contrasena',
+                'rol',
+                'estado'
+            ])
+        );
         RegistroActividad::log('Usuario creado',
             "Se creó el usuario {$user->nombre} con rol {$user->rol}.");
 
@@ -39,9 +49,16 @@ class UsuarioController extends Controller
             'correo'  => 'required|email|unique:usuarios,correo,'.$usuario->id,
             'usuario' => 'required|min:3|unique:usuarios,usuario,'.$usuario->id,
             'rol'     => 'required|in:administrador,agente,asistente,cliente',
+            'estado' => 'nullable|in:activo,inactivo',
         ]);
 
-        $data = $request->only(['nombre','correo','usuario','rol']);
+        $data = $request->only([
+            'nombre',
+            'correo',
+            'usuario',
+            'rol',
+            'estado'
+        ]);
         if ($request->filled('contrasena')) {
             $data['contrasena'] = $request->contrasena;
         }
@@ -71,16 +88,23 @@ class UsuarioController extends Controller
     public function actualizarPerfil(Request $request)
     {
         $usuario = Auth::user();
+
         $request->validate([
             'nombre'  => 'required|min:3',
             'usuario' => 'required|min:3|unique:usuarios,usuario,'.$usuario->id,
+            'estado'  => 'required|in:activo,inactivo',
         ]);
 
-        $data = ['nombre' => $request->nombre, 'usuario' => $request->usuario];
+        $usuario->nombre = $request->nombre;
+        $usuario->usuario = $request->usuario;
+        $usuario->estado = strtolower($request->estado);
+
         if ($request->filled('contrasena_nueva')) {
-            $data['contrasena'] = $request->contrasena_nueva;
+            $usuario->contrasena = $request->contrasena_nueva;
         }
-        $usuario->update($data);
+
+        $usuario->save();
+
         return back()->with('success','Perfil actualizado correctamente.');
     }
 }
