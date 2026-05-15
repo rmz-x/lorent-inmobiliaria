@@ -8,10 +8,11 @@ RUN apt-get update && apt-get install -y \
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Node.js
+# Node.js (para Vite)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
+# Apache rewrite
 RUN a2enmod rewrite
 
 # Copiar proyecto
@@ -21,34 +22,40 @@ WORKDIR /var/www/html
 # PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
-# CACHE LARAVEL (IMPORTANTE)
-RUN php artisan config:cache
-RUN php artisan route:cache || true
-RUN php artisan view:cache || true
+#RUN php artisan storage:link
 
-# ❌ QUITADO: storage:link (NO VA EN BUILD PARA RENDER)
 
 # JS deps + build
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
-# Apache config
+#Js deeps + build
+RUN ls -la public
+RUN ls -la public/build
+RUN cat public/build/manifest.json
+
+# Apache apunta a public/
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' \
     /etc/apache2/sites-available/000-default.conf
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+
+ # Laravel Apache config
 RUN echo '<Directory /var/www/html/public>' > /etc/apache2/conf-available/laravel.conf && \
     echo 'AllowOverride All' >> /etc/apache2/conf-available/laravel.conf && \
     echo 'Require all granted' >> /etc/apache2/conf-available/laravel.conf && \
     echo '</Directory>' >> /etc/apache2/conf-available/laravel.conf && \
     a2enconf laravel
 
-# Permisos
+
+# Permisos Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/public \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Puerto
 EXPOSE 10000
+#EXPOSE ${PORT}
 
 CMD ["apache2-foreground"]
