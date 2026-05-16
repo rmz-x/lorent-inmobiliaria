@@ -5,6 +5,46 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
+/* Barra de búsqueda global */
+.card-search { background: transparent; display:block !important; padding:8px 12px; }
+.card-search form input[type="search"] { min-height:44px; }
+.card-search .btn-primary { height:44px; border-radius:10px; }
+.card-search #btnOpenFilters { height:44px; }
+/* ensure search and filters are visible on small screens */
+@media (max-width:640px) {
+    .card-search { display:block !important; }
+    .card-search form { display:flex; gap:8px; align-items:center; }
+    .card-search form input[type="search"] { flex:1; min-width:0; }
+    .card-search .btn-primary, .card-search #btnOpenFilters { flex:0 0 auto; }
+}
+
+/* Panel lateral de filtros (off-canvas) */
+.filter-backdrop {
+    position: fixed; inset: 0; background: rgba(2,6,23,0.45); display: none; z-index: 80;
+}
+.filter-backdrop.open { display:block; }
+.filter-panel {
+    position: fixed; top: 0; right: 0; height: 100%; width: 92%; max-width: 380px;
+    background: #ffffff; border-left: 1px solid #e6eef6; box-shadow: -12px 0 34px rgba(2,6,23,0.12);
+    border-radius: 12px 0 0 12px; padding: 18px; transform: translateX(110%);
+    transition: transform 260ms ease-in-out; z-index: 90; overflow:auto;
+}
+.filter-panel.open { transform: translateX(0); }
+.filter-panel h3 { margin:0 0 10px 0; font-size:16px; color:#0f172a }
+.filter-panel .field { margin-bottom:12px }
+.filter-panel label { display:block;font-size:12px;color:#64748b;margin-bottom:6px }
+.filter-panel select, .filter-panel input[type="number"] { width:100%; padding:12px;border:1px solid #e6eef6;border-radius:10px;font-size:14px }
+.filter-panel .filter-actions { display:flex;gap:10px;margin-top:14px }
+.filter-panel .filter-actions button { flex:1;padding:12px;border-radius:10px;font-size:15px }
+.filter-panel .btn-apply { background: linear-gradient(135deg,#10b981,#059669); color:#fff;border:none }
+.filter-panel .btn-reset { background:#f8fafc;border:1px solid #e6eef6 }
+
+/* Make buttons more touch-friendly on small screens */
+@media (max-width:640px) {
+    .filter-panel { width:100%; max-width:100%; border-radius:12px 12px 0 0; right:0; bottom:0; top:auto; height:auto; transform: translateY(110%); border-left:none; border-top:1px solid #e6eef6 }
+    .filter-panel.open { transform: translateY(0); }
+    .filter-backdrop.open { display:block }
+}
 .mobile-only-badge { display: none; }
 
 /* Mobile card design */
@@ -195,6 +235,7 @@
         <span class="card-title">Lista de mis propiedades</span>
         <button class="btn-primary" onclick="abrirModal()">+ Registrar propiedad</button>
     </div>
+    
 <div class="table-container w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
 <table class="min-w-[600px] w-full text-sm text-left">
         <thead><tr><th>#</th><th>Título</th><th>Tipo</th><th>Zona</th><th>Precio</th><th>Área</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -318,6 +359,7 @@
     </form>
 </div>
 </div>
+
 @endsection
 
 @push('scripts')
@@ -442,5 +484,7 @@ function buscarUbicacionA() {
             } else alert('Ubicación no encontrada.');
         });
 }
+
+// (filters removed from this view)
 </script>
 @endpush

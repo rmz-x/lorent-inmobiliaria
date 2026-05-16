@@ -63,6 +63,12 @@
                 Buscar
             </button>
 
+            <!-- Botón filtros (visible en móvil) -->
+            <button type="button" id="btnOpenFiltersMobile" onclick="openFiltersMobile()" style="padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff;font-size:13px;display:none;align-items:center;gap:8px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v2l-7 7v5l-4 2v-7L3 7V5z" fill="#fff"/></svg>
+                Filtros
+            </button>
+
             <a href="{{ route('agente.propiedades') }}" style="
                 padding:12px 18px;
                 background:rgba(255,255,255,0.1); color:#fff;
@@ -98,6 +104,9 @@
 
 {{-- ══════════ FILTROS + RESULTADOS ══════════ --}}
 <div id="gridBuscar" style="display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start">
+
+<!-- Backdrop para filtros en móvil -->
+<div id="filtersBackdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900"></div>
 
     {{-- PANEL FILTROS --}}
     <div class="card" style="padding:0;overflow:hidden" id="panelFiltros">
@@ -212,6 +221,20 @@
         </form>
     </div>
 
+<style>
+@media (max-width:640px) {
+    #panelFiltros { display:none; }
+    #panelFiltros.mobile-open {
+        display:block !important;
+        position:fixed; left:0; right:0; bottom:0; top:auto;
+        width:100%; max-height:80vh; overflow:auto; z-index:1000;
+        border-radius:12px 12px 0 0; box-shadow: 0 -10px 30px rgba(2,6,23,0.2);
+        background:#fff;
+    }
+    #btnOpenFiltersMobile { display:inline-flex !important; }
+}
+</style>
+
     {{-- RESULTADOS --}}
     <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
@@ -236,6 +259,27 @@
                 @endif
             </div>
         </div>
+
+    <script>
+    function openFiltersMobile(){
+        const p = document.getElementById('panelFiltros');
+        const b = document.getElementById('filtersBackdrop');
+        if(!p||!b) return;
+        p.classList.add('mobile-open');
+        b.style.display='block';
+        b.addEventListener('click', closeFiltersMobile);
+        document.body.style.overflow='hidden';
+    }
+    function closeFiltersMobile(){
+        const p = document.getElementById('panelFiltros');
+        const b = document.getElementById('filtersBackdrop');
+        if(!p||!b) return;
+        p.classList.remove('mobile-open');
+        b.style.display='none';
+        document.body.style.overflow='';
+    }
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeFiltersMobile(); });
+    </script>
 
         @forelse($propiedades as $p)
         <div class="card" style="margin-bottom:12px;transition:box-shadow .2s"
