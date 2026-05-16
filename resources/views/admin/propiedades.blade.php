@@ -17,6 +17,163 @@
         height: 100%;
         border-radius: 8px;
     }
+
+    /* ── Tarjetas móvil compactas — grid 2 columnas ── */
+    @media (max-width: 768px) {
+        .wrap-tabla {
+            overflow-x: unset !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        .tabla-propiedades { display: block; width: 100%; min-width: unset !important; }
+        .tabla-propiedades thead { display: none; }
+        .tabla-propiedades tbody { display: flex; flex-direction: column; gap: 10px; }
+
+        /* Card: grid con áreas definidas */
+        .tabla-propiedades tr {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "titulo  titulo"
+                "tipo    zona"
+                "precio  area"
+                "estado  agente"
+                "acciones acciones";
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0;
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(15,23,42,0.08);
+            overflow: hidden;
+        }
+
+        /* Ocultar # */
+        .tabla-propiedades td[data-label="#"] { display: none !important; }
+
+        /* Título — banda completa arriba */
+        .tabla-propiedades td[data-label="Título"] {
+            grid-area: titulo;
+            background: linear-gradient(135deg, #1e3a5f, #0f2a4a);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 12px;
+            border: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .tabla-propiedades td[data-label="Título"]::before { display: none; }
+
+        /* Celdas de datos: columna izquierda y derecha */
+        .tabla-propiedades td[data-label="Tipo"]   { grid-area: tipo; }
+        .tabla-propiedades td[data-label="Zona"]   { grid-area: zona; }
+        .tabla-propiedades td[data-label="Precio"] { grid-area: precio; }
+        .tabla-propiedades td[data-label="Área"]   { grid-area: area; }
+        .tabla-propiedades td[data-label="Estado"] { grid-area: estado; }
+        .tabla-propiedades td[data-label="Agente"] { grid-area: agente; }
+
+        .tabla-propiedades td[data-label="Tipo"],
+        .tabla-propiedades td[data-label="Zona"],
+        .tabla-propiedades td[data-label="Precio"],
+        .tabla-propiedades td[data-label="Área"],
+        .tabla-propiedades td[data-label="Estado"],
+        .tabla-propiedades td[data-label="Agente"] {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            padding: 6px 12px;
+            border: none;
+            border-top: 1px solid #f1f5f9;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        /* Separador entre izq y der */
+        .tabla-propiedades td[data-label="Zona"],
+        .tabla-propiedades td[data-label="Área"],
+        .tabla-propiedades td[data-label="Agente"] {
+            border-left: 1px solid #f1f5f9;
+        }
+
+        .tabla-propiedades td[data-label="Tipo"]::before,
+        .tabla-propiedades td[data-label="Zona"]::before,
+        .tabla-propiedades td[data-label="Precio"]::before,
+        .tabla-propiedades td[data-label="Área"]::before,
+        .tabla-propiedades td[data-label="Estado"]::before,
+        .tabla-propiedades td[data-label="Agente"]::before {
+            content: attr(data-icon) " " attr(data-label);
+            font-size: 9px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        /* Acciones — banda inferior centrada */
+        .tabla-propiedades td[data-label="Acciones"] {
+            grid-area: acciones;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-top: 1px solid #f1f5f9;
+            border: none;
+            border-top: 1px solid #f1f5f9;
+        }
+        .tabla-propiedades td[data-label="Acciones"]::before { display: none; }
+
+        .tabla-propiedades .action-btns {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 8px !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+
+        /* Botones — misma altura, más compactos */
+        .tabla-propiedades .btn-edit,
+        .tabla-propiedades .btn-delete {
+            flex: 1 !important;
+            height: 34px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 6px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            transition: opacity .15s !important;
+            white-space: nowrap;
+        }
+        .tabla-propiedades .btn-edit {
+            background: linear-gradient(135deg, #38bdf8, #0369a1) !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(3,105,161,0.3) !important;
+        }
+        .tabla-propiedades .btn-delete {
+            background: linear-gradient(135deg, #f87171, #dc2626) !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(220,38,38,0.3) !important;
+        }
+        .tabla-propiedades .btn-edit:active,
+        .tabla-propiedades .btn-delete:active { opacity: 0.8 !important; }
+
+        .tabla-propiedades .action-btns > form {
+            flex: 1 !important;
+            display: flex !important;
+        }
+        .tabla-propiedades .action-btns > form .btn-delete {
+            width: 100% !important;
+        }
+        .tabla-propiedades .action-btns > button {
+            flex: 1 !important;
+        }
+    }
+
 </style>
 @endpush
 
@@ -31,8 +188,8 @@
             + Registrar propiedad
         </button>
     </div>
-<div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
-<table class="min-w-[600px] w-full text-sm text-left">
+<div class="wrap-tabla w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+<table class="tabla-propiedades min-w-[600px] w-full text-sm text-left">
 
         <thead>
             <tr>
@@ -54,33 +211,33 @@
 
             <tr>
 
-                <td>{{ $p->id }}</td>
+                <td data-label="#">{{ $p->id }}</td>
 
-                <td>{{ $p->titulo }}</td>
+                <td data-label="Título">{{ $p->titulo }}</td>
 
-                <td>{{ $p->tipo }}</td>
+                <td data-label="Tipo" data-icon="🏠">{{ $p->tipo }}</td>
 
-                <td>{{ $p->zona }}</td>
+                <td data-label="Zona" data-icon="📍">{{ $p->zona }}</td>
 
-                <td>
+                <td data-label="Precio" data-icon="💲">
                     ${{ number_format($p->precio, 0, ',', '.') }}
                 </td>
 
-                <td>
+                <td data-label="Área" data-icon="📐">
                     {{ $p->area ? $p->area . ' m²' : '—' }}
                 </td>
 
-                <td>
+                <td data-label="Estado" data-icon="📌">
                     <span class="badge badge-{{ strtolower($p->estado) }}">
                         {{ $p->estado }}
                     </span>
                 </td>
 
-                <td>
+                <td data-label="Agente" data-icon="👤">
                     {{ $p->agente->nombre ?? 'Sin asignar' }}
                 </td>
 
-                <td>
+                <td data-label="Acciones">
 
                     <div class="action-btns flex flex-col sm:flex-row gap-2">
 
@@ -99,7 +256,7 @@
                             data-lat="{{ $p->latitud }}"
                             data-lng="{{ $p->longitud }}"
                         >
-                            Editar
+                            ✏️ Editar
                         </button>
 
                         <form method="POST"
@@ -113,11 +270,10 @@
 
                             <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto"
                                 data-name="{{ $p->titulo }}">
-                                Eliminar
+                                🗑️ Eliminar
                             </button>
 
                         </form>
-                        
 
                     </div>
 

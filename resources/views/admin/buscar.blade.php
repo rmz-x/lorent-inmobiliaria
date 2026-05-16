@@ -91,7 +91,7 @@
 </div>
 
 
-<div style="display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start">
+<div id="gridBuscar">
 
     {{-- PANEL FILTROS --}}
     <div class="card" style="padding:0;overflow:hidden" id="panelFiltros">
@@ -274,12 +274,7 @@
             <div class="flex flex-col sm:flex-row gap-0 overflow-hidden rounded-xl">
 
                 {{-- Color por tipo --}}
-                <div style="
-                    width:130px; flex-shrink:0;
-                    background :{{ $p->tipo==='Venta' ? '#1e3a5f' : ($p->tipo==='Alquiler' ? '#0f4c35' : '#2e1a5f') }};
-                    display:flex; align-items:center; justify-content:center;
-                    position:relative; overflow:hidden;
-                ">
+                <div class="w-full sm:w-32 flex-shrink-0 relative" style="background:{{ $p->tipo==='Venta' ? '#1e3a5f' : ($p->tipo==='Alquiler' ? '#0f4c35' : '#2e1a5f') }};display:flex;align-items:center;justify-content:center;overflow:hidden;">
                     @if($p->imagen)
                         <img src="{{ \Illuminate\Support\Facades\Storage::url($p->imagen) }}" alt="{{ $p->titulo }}" class="w-full h-48 object-cover rounded-t-lg sm:h-full sm:rounded-l-lg sm:rounded-tr-none">
                     @else
@@ -448,9 +443,18 @@
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
+#gridBuscar {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    align-items: start;
+}
 @media (max-width: 768px) {
     #panelFiltros { display: none; }
     #panelFiltros.abierto { display: block; }
+    #gridBuscar {
+        grid-template-columns: 1fr !important;
+    }
 }
 </style>
 @endpush

@@ -96,7 +96,7 @@
 </div>
 
 {{-- ══════════ FILTROS + RESULTADOS ══════════ --}}
-<div style="display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start">
+<div id="gridBuscar" style="display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start">
 
     {{-- PANEL FILTROS --}}
     <div class="card" style="padding:0;overflow:hidden" id="panelFiltros">
@@ -398,6 +398,7 @@
 @media (max-width: 768px) {
     #panelFiltros { display: none; }
     #panelFiltros.abierto { display: block; }
+    #gridBuscar { grid-template-columns: 1fr !important; }
 }
 </style>
 @endpush

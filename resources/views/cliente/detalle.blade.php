@@ -16,13 +16,34 @@
 .form-group label{font-size:12px;color:#6c757d;font-weight:500}
 .form-group input,.form-group textarea{padding:9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa}
 .form-group input:focus,.form-group textarea:focus{border-color:#64b5f6;background:#fff}
+
+/* ── Responsive ── */
+#detalle-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    padding: 15px;
+}
+#detalle-info  { flex: 0 0 360px; max-width: 360px; }
+#detalle-form  { flex: 1; min-width: 0; }
+
+@media (max-width: 768px) {
+    #detalle-layout {
+        flex-direction: column;
+        padding: 12px;
+    }
+    #detalle-info  { flex: none; width: 100%; max-width: 100%; }
+    #detalle-form  { width: 100%; }
+}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endpush
 
 @section('contenido')
-<div style="width:100%; padding:15px; display:flex; flex-direction:row; gap:20px; align-items:flex-start;">
-    <div class="card" style="flex:0 0 360px; max-width:360px;">
+<div id="detalle-layout">
+    <div class="card" id="detalle-info">
         <div class="w-full relative overflow-hidden bg-slate-100 mb-5 rounded-lg" style="height:220px;">
             @if($propiedad->imagen)
                 <img src="{{ \Illuminate\Support\Facades\Storage::url($propiedad->imagen) }}" alt="{{ $propiedad->titulo }}" style="width:100%;height:100%;object-fit:cover;">
@@ -55,7 +76,7 @@
     </div>
 
     @if(auth()->user()->rol === 'cliente')
-    <div class="card" style="flex:1; min-width:0;">
+    <div class="card" id="detalle-form">
         <p style="font-size:15px;font-weight:600;color:#0f4c75;margin-bottom:16px">Solicitar visita</p>
         <form method="POST" action="{{ route('cliente.solicitudes.store') }}">
             @csrf
@@ -72,7 +93,7 @@
         </form>
     </div>
     @else
-    <div class="card" style="flex:1; min-width:0; text-align:center;color:#6c757d;padding:30px">
+    <div class="card" id="detalle-form" style="text-align:center;color:#6c757d;padding:30px">
         <p style="font-size:13px">Solo los clientes pueden solicitar visitas.</p>
     </div>
     @endif
