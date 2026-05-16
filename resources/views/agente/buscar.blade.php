@@ -410,7 +410,7 @@ function cerrarModal() { overlay.classList.remove('open'); }
 
 overlay.addEventListener('click', e => { if (e.target === overlay) cerrarModal(); });
 
-function editarPropiedad(id, titulo, tipo, zona, precio, area, descripcion, estado, imagen) {
+function editarPropiedad(id, titulo, tipo, zona, precio, area, descripcion, estado, agenteId, imagen) {
     document.getElementById('formEditar').action = `/agente/propiedades/${id}`;
     document.getElementById('eTitulo').value      = titulo;
     document.getElementById('eTipo').value        = tipo;
