@@ -84,6 +84,69 @@
     border-radius: 20px;
     white-space: nowrap;
 }
+
+/* Mobile card design */
+@media (max-width: 640px) {
+    .table-container {
+        display: block !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+    thead {
+        display: none !important;
+    }
+    tr {
+        background: #fff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 10px !important;
+        margin-bottom: 12px !important;
+        padding: 14px 12px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+    }
+    td {
+        padding: 6px 0 !important;
+        border: none !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+    }
+    td::before {
+        content: attr(data-label);
+        font-weight: 600 !important;
+        color: #6b7280 !important;
+        font-size: 12px !important;
+        width: 90px !important;
+        flex-shrink: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+    .td-value {
+        flex: 1 !important;
+        min-width: 0 !important;
+        text-align: left !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        color: #1f2937 !important;
+        font-weight: 500 !important;
+    }
+}
 </style>
 @endpush
 
@@ -174,7 +237,7 @@
     </div>
 
     <div class="table-responsive">
-<div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+    <div class="table-container w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
 <table class="min-w-[600px] w-full text-sm text-left">
             <thead>
                 <tr>
@@ -200,37 +263,37 @@
                 else                                        $cls = 'badge-accion-default';
             @endphp
             <tr>
-                <td style="color:#8a94a6;font-size:12px">{{ $r->id }}</td>
+                <td data-label="ID" style="color:#8a94a6;font-size:12px"><span class="td-value">{{ $r->id }}</span></td>
 
-                <td style="white-space:nowrap;font-size:12px">
+                <td data-label="Fecha" style="white-space:nowrap;font-size:12px"><span class="td-value">
                     <strong>{{ \Carbon\Carbon::parse($r->fecha_hora)->format('d/m/Y') }}</strong><br>
                     <span style="color:#8a94a6">{{ \Carbon\Carbon::parse($r->fecha_hora)->format('H:i:s') }}</span>
-                </td>
+                </span></td>
 
-                <td>
+                <td data-label="Usuario"><span class="td-value">
                     <div style="font-size:13px;font-weight:500;color:#0f1e3c">{{ $r->nombre ?? '—' }}</div>
                     <div style="font-size:11px;color:#8a94a6">{{ $r->correo ?? '' }}</div>
-                </td>
+                </span></td>
 
-                <td>
+                <td data-label="Rol"><span class="td-value">
                     @if($r->rol)
                         <span class="rol-badge rol-{{ $r->rol }}">{{ ucfirst($r->rol) }}</span>
                     @else
                         <span style="color:#8a94a6">—</span>
                     @endif
-                </td>
+                </span></td>
 
-                <td>
+                <td data-label="Acción"><span class="td-value">
                     <span class="accion-badge {{ $cls }}">{{ $r->accion }}</span>
-                </td>
+                </span></td>
 
-                <td style="font-size:12px;color:#6c757d;max-width:260px">
+                <td data-label="Detalle" style="font-size:12px;color:#6c757d;max-width:260px"><span class="td-value">
                     {{ $r->descripcion }}
-                </td>
+                </span></td>
 
-                <td style="font-size:11px;color:#8a94a6;font-family:monospace">
+                <td data-label="IP" style="font-size:11px;color:#8a94a6;font-family:monospace"><span class="td-value">
                     {{ $r->ip ?? '—' }}
-                </td>
+                </span></td>
             </tr>
             @empty
             <tr>

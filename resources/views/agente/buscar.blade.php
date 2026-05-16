@@ -50,30 +50,31 @@
             </div>
             <button type="submit" style="
                 padding:12px 22px;
-                background:#1a9e5c; color:#fff;
-                border:none; border-radius:10px;
-                font-size:13px; font-weight:600; font-family:inherit;
-                cursor:pointer; transition:background .18s;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color:#fff; border:none; border-radius:10px;
+                font-size:13px; font-weight:700; font-family:inherit;
+                cursor:pointer; transition:all .2s ease;
                 display:flex; align-items:center; gap:7px; white-space:nowrap;
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
             "
-            onmouseover="this.style.background='#138348'"
-            onmouseout="this.style.background='#1a9e5c'">
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 15px rgba(16, 185, 129, 0.35)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.25)'">
                 <i class="ti ti-search" style="font-size:15px"></i>
                 Buscar
             </button>
 
-            {{-- Botón nueva propiedad — redirige a Mis propiedades --}}
             <a href="{{ route('agente.propiedades') }}" style="
                 padding:12px 18px;
-                background:rgba(255,255,255,0.12); color:#fff;
+                background:rgba(255,255,255,0.1); color:#fff;
                 border:1.5px solid rgba(255,255,255,0.2); border-radius:10px;
-                font-size:13px; font-weight:600; font-family:inherit;
-                cursor:pointer; transition:background .18s;
+                font-size:13px; font-weight:700; font-family:inherit;
+                cursor:pointer; transition:all .2s ease;
                 display:flex; align-items:center; gap:7px; white-space:nowrap;
                 text-decoration:none;
+                backdrop-filter: blur(4px);
             "
-            onmouseover="this.style.background='rgba(255,255,255,0.2)'"
-            onmouseout="this.style.background='rgba(255,255,255,0.12)'">
+            onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(-1px)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)'">
                 <i class="ti ti-plus" style="font-size:15px"></i>
                 Nueva propiedad
             </a>
@@ -197,14 +198,15 @@
             </div>
 
             <button type="submit" style="
-                width:100%; padding:10px;
-                background:#1a9e5c; color:#fff;
-                border:none; border-radius:8px;
-                font-size:13px; font-weight:600; font-family:inherit;
-                cursor:pointer; transition:background .15s;
+                width:100%; padding:11px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color:#fff; border:none; border-radius:8px;
+                font-size:13px; font-weight:700; font-family:inherit;
+                cursor:pointer; transition:all .2s ease;
+                box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
             "
-            onmouseover="this.style.background='#138348'"
-            onmouseout="this.style.background='#1a9e5c'">
+            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 12px rgba(16, 185, 129, 0.3)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(16, 185, 129, 0.2)'">
                 Aplicar filtros
             </button>
         </form>
@@ -281,7 +283,7 @@
                         <p style="font-size:18px;font-weight:700;color:#1a9e5c;margin-bottom:10px">
                             ${{ number_format($p->precio,0,',','.') }}
                         </p>
-                        <div class="flex flex-col sm:flex-row gap-2 justify-end w-full sm:w-auto mt-2">
+                        <div class="prop-actions-container">
                             <button
                                 type="button"
                                 onclick="editarPropiedad(
@@ -297,12 +299,16 @@
                                     '{{ $p->imagen ? \Illuminate\Support\Facades\Storage::url($p->imagen) : '' }}'
                                     )"
                                 style="
-                                    padding:7px 14px;
-                                    background:#f1f5f9; color:#475569;
-                                    border:1px solid #e2e8f0; border-radius:8px;
-                                    font-size:12px; font-weight:600; font-family:inherit;
-                                    cursor:pointer;
-                                ">
+                                    padding:8px 16px;
+                                    background: linear-gradient(135deg, #10b981, #059669);
+                                    color:#fff; border:none; border-radius:8px;
+                                    font-size:12px; font-weight:700; font-family:inherit;
+                                    cursor:pointer; transition:all .2s;
+                                    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.2);
+                                    flex: 1; max-width: 120px;
+                                "
+                                onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 5px 12px rgba(16, 185, 129, 0.3)'"
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 8px rgba(16, 185, 129, 0.2)'">
                                 <i class="ti ti-pencil" style="font-size:13px"></i>
                                 Editar
                             </button>
@@ -310,10 +316,21 @@
                                   action="{{ route('agente.propiedades.destroy', $p) }}"
                                   class="form-eliminar"
                                   data-title="{{ $p->titulo }}"
-                                  style="display:inline">
+                                  style="display:contents">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto px-4 py-2 bg-red-100 text-red-800 border border-red-200 rounded-lg text-xs font-semibold cursor-pointer">
+                                <button type="button" class="btn-delete open-delete-modal"
+                                    style="
+                                        padding:8px 16px;
+                                        background: linear-gradient(135deg, #ef4444, #dc2626);
+                                        color:#fff; border:none; border-radius:8px;
+                                        font-size:12px; font-weight:700; font-family:inherit;
+                                        cursor:pointer; transition:all .2s;
+                                        box-shadow: 0 3px 8px rgba(239, 68, 68, 0.2);
+                                        flex: 1; max-width: 120px;
+                                    "
+                                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 5px 12px rgba(239, 68, 68, 0.3)'"
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 8px rgba(239, 68, 68, 0.2)'">
                                     <i class="ti ti-trash" style="font-size:13px"></i>
                                     Eliminar
                                 </button>
@@ -395,10 +412,21 @@
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
+.prop-actions-container {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 8px;
+}
 @media (max-width: 768px) {
     #panelFiltros { display: none; }
     #panelFiltros.abierto { display: block; }
     #gridBuscar { grid-template-columns: 1fr !important; }
+    .prop-actions-container {
+        justify-content: center !important;
+        margin-top: 14px !important;
+    }
 }
 </style>
 @endpush

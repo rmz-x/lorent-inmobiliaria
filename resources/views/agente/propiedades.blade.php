@@ -4,6 +4,189 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+.mobile-only-badge { display: none; }
+
+/* Mobile card design */
+@media (max-width: 640px) {
+    @keyframes badge-pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6), inset 0 1px 3px rgba(255,255,255,0.9); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0), inset 0 1px 3px rgba(255,255,255,0.9); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), inset 0 1px 3px rgba(255,255,255,0.9); }
+    }
+    .table-container {
+        display: block !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+    thead {
+        display: none !important;
+    }
+    tr {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "titulo titulo"
+            "tipo zona"
+            "precio area"
+            "acciones acciones";
+        background: #fff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 16px !important;
+        margin-bottom: 18px !important;
+        padding: 16px !important; /* Estandarizado a 16px */
+        box-shadow: 0 6px 18px rgba(15,23,42,0.06) !important;
+        gap: 12px !important;
+    }
+    
+    /* Ocultar ID y Estado (se mueve al título) */
+    td[data-label="ID"], 
+    td[data-label="Estado"] { display: none !important; }
+
+    /* Título - Destacado (Header azul) */
+    td[data-label="Título"] {
+        grid-area: titulo;
+        background: linear-gradient(135deg, #1d4ed8, #2563eb) !important; /* Azul vibrante */
+        margin: -16px -16px 12px -16px !important; /* Compensa el padding del tr exacto */
+        width: calc(100% + 32px) !important; /* Fuerza a llenar el 100% + el padding compensado */
+        max-width: none !important; /* IMPORTANTE: evita que se corte a la derecha */
+        padding: 12px 16px !important; /* Barra más delgada */
+        border-radius: 14px 14px 0 0 !important;
+        border-bottom: none !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 16px !important; /* Mayor separación con el título */
+    }
+    td[data-label="Título"]::before { display: none !important; }
+    td[data-label="Título"] .td-value {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        line-height: 1.3 !important;
+    }
+
+    .mobile-only-badge {
+        display: inline-flex !important;
+        flex-shrink: 0 !important;
+        padding: 4px 10px !important;
+        font-size: 9.5px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .06em !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(255,255,255,0.6) !important; /* Borde más brillante */
+        backdrop-filter: blur(6px) saturate(1.8) !important; /* Efecto cristal más fuerte */
+        animation: badge-pulse 2s infinite !important; /* Pulso más notorio y brillo interno */
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important; /* Texto legible sobre fondos claros */
+    }
+    /* Fondos súper claros y brillantes (tipo neón/lechuga) para un efecto "re pro" */
+    .mobile-only-badge.badge-disponible { background: linear-gradient(135deg, rgba(74,222,128,0.95), rgba(34,197,94,0.95)) !important; }
+    .mobile-only-badge.badge-reservado  { background: linear-gradient(135deg, rgba(251,191,36,0.95), rgba(245,158,11,0.95)) !important; }
+    .mobile-only-badge.badge-vendido    { background: linear-gradient(135deg, rgba(248,113,113,0.95), rgba(239,68,68,0.95)) !important; }
+
+    /* Bloques verticales */
+    td[data-label="Tipo"] { grid-area: tipo; }
+    td[data-label="Zona"] { grid-area: zona; }
+    td[data-label="Precio"] { grid-area: precio; }
+    td[data-label="Área"] { grid-area: area; }
+
+    td[data-label="Tipo"],
+    td[data-label="Zona"],
+    td[data-label="Precio"],
+    td[data-label="Área"] {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 10px !important;
+        border: none !important;
+        background: #f8fafc !important;
+        border-radius: 8px !important;
+    }
+    td::before {
+        content: attr(data-label);
+        font-weight: 700 !important;
+        color: #94a3b8 !important;
+        font-size: 10px !important;
+        text-transform: uppercase !important;
+        letter-spacing: .06em !important;
+        margin-bottom: 4px !important;
+        width: auto !important;
+    }
+    .td-value {
+        font-size: 14px !important;
+        color: #334155 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Acciones - Botones juntos */
+    td[data-label="Acciones"] {
+        grid-area: acciones;
+        padding-top: 12px !important;
+        border-top: 1px solid #f1f5f9 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding-bottom: 0 !important;
+    }
+    td[data-label="Acciones"]::before { display: none !important; }
+    
+    .action-btns {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 12px !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+    }
+    .action-btns > button, 
+    .action-btns > form {
+        width: calc(50% - 6px) !important; /* Exactamente 50% menos la mitad del gap */
+        flex: 0 0 calc(50% - 6px) !important; /* Fuerza a no crecer ni encoger */
+        margin: 0 !important;
+    }
+    .action-btns form button {
+        width: 100% !important;
+    }
+
+    /* Colores vibrantes para los botones en móvil */
+    .btn-edit {
+        background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
+        color: #fff !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
+        height: 38px !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+    }
+    .btn-delete {
+        background: linear-gradient(135deg, #f43f5e, #e11d48) !important;
+        color: #fff !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3) !important;
+        height: 38px !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+    }
+}
+</style>
 @endpush
 
 @section('contenido')
@@ -12,20 +195,25 @@
         <span class="card-title">Lista de mis propiedades</span>
         <button class="btn-primary" onclick="abrirModal()">+ Registrar propiedad</button>
     </div>
-<div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+<div class="table-container w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
 <table class="min-w-[600px] w-full text-sm text-left">
         <thead><tr><th>#</th><th>Título</th><th>Tipo</th><th>Zona</th><th>Precio</th><th>Área</th><th>Estado</th><th>Acciones</th></tr></thead>
         <tbody>
         @forelse($propiedades as $p)
         <tr>
-            <td>{{ $p->id }}</td>
-            <td>{{ $p->titulo }}</td>
-            <td>{{ $p->tipo }}</td>
-            <td>{{ $p->zona }}</td>
-            <td>${{ number_format($p->precio,0,',','.') }}</td>
-            <td>{{ $p->area ? $p->area.' m²' : '—' }}</td>
-            <td><span class="badge badge-{{ strtolower($p->estado) }}">{{ $p->estado }}</span></td>
-            <td>
+            <td data-label="ID"><span class="td-value">{{ $p->id }}</span></td>
+            <td data-label="Título">
+                <span class="td-value">{{ $p->titulo }}</span>
+                <span class="badge badge-{{ strtolower($p->estado) }} mobile-only-badge">
+                    {{ $p->estado }}
+                </span>
+            </td>
+            <td data-label="Tipo"><span class="td-value">{{ $p->tipo }}</span></td>
+            <td data-label="Zona"><span class="td-value">{{ $p->zona }}</span></td>
+            <td data-label="Precio"><span class="td-value">${{ number_format($p->precio,0,',','.') }}</span></td>
+            <td data-label="Área"><span class="td-value">{{ $p->area ? $p->area.' m²' : '—' }}</span></td>
+            <td data-label="Estado"><span class="td-value"><span class="badge badge-{{ strtolower($p->estado) }}">{{ $p->estado }}</span></span></td>
+            <td data-label="Acciones">
                 <div class="action-btns">
                     <button
                         type="button"
@@ -41,7 +229,7 @@
                         data-imagen="{{ $p->imagen ? \Illuminate\Support\Facades\Storage::url($p->imagen) : '' }}"
                         data-lat="{{ $p->latitud }}"
                         data-lng="{{ $p->longitud }}">
-                        Editar
+                        ✏️ Editar
                     </button>
                     <form method="POST"
                         action="{{ route('admin.propiedades.destroy', $p) }}"
@@ -52,7 +240,7 @@
                         <button type="button"
                                 class="btn-delete open-delete-modal w-full sm:w-auto"
                                 data-name="{{ $p->titulo }}">
-                            Eliminar
+                            🗑️ Eliminar
                         </button>
                     </form>
                 </div>

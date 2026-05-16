@@ -9,6 +9,213 @@ th{text-align:left;color:#6c757d;font-weight:500;padding:10px 14px;border-bottom
 td{padding:11px 14px;border-bottom:1px solid #f0f2f5;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#f8f9fa}
+
+/* Badge colors */
+.badge-pendiente {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.badge-confirmada {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.badge-cancelada {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Button actions */
+.btn-reagendar-solicitud {
+    background: #f0f7ff;
+    color: #0ea5e9;
+    border: 1px solid transparent;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-reagendar-solicitud:hover {
+    background: #e0f2fe;
+    border-color: #7dd3fc;
+    box-shadow: 0 4px 8px rgba(14,165,233,0.15);
+    transform: translateY(-1px);
+}
+
+.btn-cancelar-solicitud {
+    background: #fff5f5;
+    color: #ef4444;
+    border: 1px solid transparent;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-cancelar-solicitud:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    box-shadow: 0 4px 8px rgba(239,68,68,0.15);
+    transform: translateY(-1px);
+}
+
+.acciones-wrapper {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.form-cancelar {
+    display: inline-flex;
+}
+
+/* Mobile card design */
+@media (max-width: 640px) {
+    .table-container {
+        display: block !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+    thead {
+        display: none !important;
+    }
+    tr {
+        background: #fff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 10px !important;
+        margin-bottom: 12px !important;
+        padding: 14px 12px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+    }
+    td {
+        padding: 6px 0 !important;
+        border: none !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+    }
+    td::before {
+        content: attr(data-label);
+        font-weight: 600 !important;
+        color: #6b7280 !important;
+        font-size: 12px !important;
+        width: 90px !important;
+        flex-shrink: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+    .td-value {
+        flex: 1 !important;
+        min-width: 0 !important;
+        text-align: left !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        color: #1f2937 !important;
+        font-weight: 500 !important;
+    }
+    td[data-label="Mensaje"] {
+        flex-direction: column !important;
+        margin-top: 8px !important;
+        padding-top: 8px !important;
+        border-top: 1px solid #f3f4f6 !important;
+    }
+    td[data-label="Mensaje"]::before {
+        margin-bottom: 6px !important;
+        width: 100% !important;
+    }
+    .mensaje-container {
+        background: #f9fafb !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        font-size: 13px !important;
+        color: #4b5563 !important;
+        line-height: 1.5 !important;
+        word-break: break-word !important;
+        box-sizing: border-box !important;
+        margin-top: 4px !important;
+    }
+    td[data-label="Acciones"] {
+        margin-top: 12px !important;
+        padding-top: 12px !important;
+        border-top: 1px solid #f3f4f6 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    td[data-label="Acciones"]::before {
+        display: none !important;
+    }
+    td[data-label="Acciones"] .acciones-wrapper {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 12px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+    }
+    td[data-label="Acciones"] .acciones-wrapper > button,
+    td[data-label="Acciones"] .acciones-wrapper > .form-cancelar {
+        width: auto !important;
+        flex: none !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+    td[data-label="Acciones"] .acciones-wrapper button {
+        width: auto !important;
+        padding: 8px 20px !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+    }
+    td .badge {
+        font-size: 11px !important;
+        padding: 4px 10px !important;
+        display: inline-block !important;
+    }
+}
 </style>
 @endpush
 
@@ -18,7 +225,7 @@ tr:hover td{background:#f8f9fa}
         <span class="card-title">Historial de solicitudes</span>
         <a href="{{ route('cliente.propiedades') }}" class="btn-primary">+ Nueva solicitud</a>
     </div>
-    <div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
+    <div class="table-container w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
         <table class="w-full text-sm text-left">
             <thead>
                 <tr>
@@ -35,40 +242,41 @@ tr:hover td{background:#f8f9fa}
             @forelse($solicitudes as $s)
             @php
                 $cls = match($s->estado) {
-                    'Aceptada'   => 'badge-disponible',
-                    'Completada' => 'badge-disponible',
-                    'Rechazada'  => 'badge-vendido',
-                    'Pendiente'  => 'badge-reservado',
-                    default      => 'badge-reservado'
+                    'Pendiente'  => 'badge-pendiente',
+                    'Aceptada'   => 'badge-confirmada',
+                    'Completada' => 'badge-confirmada',
+                    'Rechazada'  => 'badge-cancelada',
+                    default      => 'badge-pendiente'
                 };
                 $label = $s->estado === 'Rechazada' ? 'Cancelada' : $s->estado;
             @endphp
             <tr>
-                <td>{{ $s->propiedad->titulo ?? '—' }}</td>
-                <td class="hidden sm:table-cell">{{ $s->propiedad->zona ?? '—' }}</td>
-                <td class="hidden sm:table-cell">{{ $s->propiedad->tipo ?? '—' }}</td>
-                <td>{{ \Carbon\Carbon::parse($s->fecha_solicitada)->format('d/m/Y') }}</td>
-                <td class="hidden md:table-cell" style="max-width:200px;color:#6c757d">{{ Str::limit($s->mensaje, 60) }}</td>
-                <td><span class="badge {{ $cls }}">{{ $label }}</span></td>
-                <td>
+                <td data-label="Propiedad"><span class="td-value">{{ $s->propiedad->titulo ?? '—' }}</span></td>
+                <td class="hidden sm:table-cell" data-label="Zona"><span class="td-value">{{ $s->propiedad->zona ?? '—' }}</span></td>
+                <td class="hidden sm:table-cell" data-label="Tipo"><span class="td-value">{{ $s->propiedad->tipo ?? '—' }}</span></td>
+                <td data-label="Fecha"><span class="td-value">{{ \Carbon\Carbon::parse($s->fecha_solicitada)->format('d/m/Y') }}</span></td>
+                <td data-label="Mensaje">
+                    <span class="hidden md:inline" style="max-width:200px;color:#6c757d">{{ Str::limit($s->mensaje, 60) }}</span>
+                    <div class="block md:hidden mensaje-container">{{ $s->mensaje ?? 'Sin mensaje' }}</div>
+                </td>
+                <td data-label="Estado"><span class="td-value"><span class="badge {{ $cls }}">{{ $label }}</span></span></td>
+                <td data-label="Acciones">
                     @if($s->estado === 'Pendiente')
-                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <div class="acciones-wrapper">
                         <button
                             type="button"
                             class="btn-reagendar-solicitud"
                             data-id="{{ $s->id }}"
                             data-fecha="{{ \Carbon\Carbon::parse($s->fecha_solicitada)->format('Y-m-d') }}"
                             data-titulo="{{ $s->propiedad->titulo ?? 'esta solicitud' }}"
-                            style="background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;"
                         >Reagendar</button>
-                        <form method="POST" action="{{ route('cliente.solicitudes.cancelar', $s->id) }}" style="display:inline">
+                        <form method="POST" action="{{ route('cliente.solicitudes.cancelar', $s->id) }}" class="form-cancelar">
                             @csrf @method('PATCH')
                             <button
                                 type="button"
                                 class="btn-cancelar-solicitud"
                                 data-id="{{ $s->id }}"
                                 data-titulo="{{ $s->propiedad->titulo ?? 'esta solicitud' }}"
-                                style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;"
                             >Cancelar</button>
                         </form>
                     </div>
