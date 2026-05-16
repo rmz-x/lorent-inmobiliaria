@@ -91,12 +91,11 @@
             </div>
             <div class="form-group">
                 <label>Contraseña <span style="font-weight:400;color:#6c757d">(requerida)</span></label>
-                <div style="position:relative">
+                <div class="password-wrapper">
                     <input type="password" name="contrasena" id="aPass" required
-                           style="padding-right:40px;width:100%;padding:9px 40px 9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa;box-sizing:border-box">
-                    <button type="button" onclick="togglePass('aPass','eyeA')"
-                            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#6c757d;font-size:16px;padding:0">
-                        <span id="eyeA">👁</span>
+                           style="width:100%;padding:9px 40px 9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa;box-sizing:border-box">
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                        <span class="eye-icon"></span>
                     </button>
                 </div>
             </div>
@@ -134,12 +133,11 @@
             </div>
             <div class="form-group">
                 <label>Contraseña <span style="font-weight:400;color:#6c757d">(Opcional)</span></label>
-                <div style="position:relative">
+                <div class="password-wrapper">
                     <input type="password" name="contrasena" id="ePass"
-                           style="padding-right:40px;width:100%;padding:9px 40px 9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa;box-sizing:border-box">
-                    <button type="button" onclick="togglePass('ePass','eyeE')"
-                            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#6c757d;font-size:16px;padding:0">
-                        <span id="eyeE">👁</span>
+                           style="width:100%;padding:9px 40px 9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa;box-sizing:border-box">
+                    <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                        <span class="eye-icon"></span>
                     </button>
                 </div>
             </div>
@@ -184,24 +182,9 @@ const overlay     = document.getElementById('modalOverlay');
 const formAgregar = document.getElementById('formAgregar');
 const formEditar  = document.getElementById('formEditar');
 
-// Toggle ver/ocultar contraseña — funciona siempre
-function togglePass(inputId, eyeId) {
-    const input = document.getElementById(inputId);
-    const eye   = document.getElementById(eyeId);
-    if (input.type === 'password') {
-        input.type  = 'text';
-        eye.textContent = '🙈';
-    } else {
-        input.type  = 'password';
-        eye.textContent = '👁';
-    }
-}
-
 function abrirModal() {
     formAgregar.reset();
-    // Asegurarse de que el campo contraseña vuelve a tipo password
-    document.getElementById('aPass').type = 'password';
-    document.getElementById('eyeA').textContent = '👁';
+    resetPasswordWrappers(document.getElementById('modalOverlay'));
     formAgregar.style.display = 'block';
     formEditar.style.display  = 'none';
     document.getElementById('modalTitulo').textContent = 'Agregar usuario';
@@ -212,11 +195,7 @@ function cerrarModal() {
     overlay.classList.remove('open');
     formAgregar.reset();
     formEditar.reset();
-    // Restablecer tipos de contraseña al cerrar
-    document.getElementById('aPass').type = 'password';
-    document.getElementById('ePass').type = 'password';
-    document.getElementById('eyeA').textContent = '👁';
-    document.getElementById('eyeE').textContent = '👁';
+    resetPasswordWrappers(document.getElementById('modalOverlay'));
     formAgregar.style.display = 'block';
     formEditar.style.display  = 'none';
 }
@@ -231,9 +210,8 @@ function editarUsuario(id, nombre, correo, usuario, rol) {
     document.getElementById('eCorreo').value  = correo;
     document.getElementById('eUsuario').value = usuario;
     document.getElementById('eRol').value     = rol;
-    document.getElementById('ePass').value    = '';
-    document.getElementById('ePass').type     = 'password';
-    document.getElementById('eyeE').textContent = '👁';
+    document.getElementById('ePass').value = '';
+    resetPasswordWrappers(document.getElementById('modalOverlay'));
     formAgregar.style.display = 'none';
     formEditar.style.display  = 'block';
     document.getElementById('modalTitulo').textContent = 'Editar usuario';
@@ -258,7 +236,7 @@ document.querySelectorAll('.btn-editar-usuario')
 
 });
 
-// ── ELIMINAR USUARIO ──────────────────────────────────
+//ELIMINAR USUARIO
 let pendingUserForm = null;
 
 document.querySelectorAll('.open-delete-modal-user').forEach(btn => {

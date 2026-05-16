@@ -136,12 +136,21 @@
                 </span>
             </label>
 
-            <input
-                type="password"
-                name="contrasena_nueva"
-                placeholder="Nueva contraseña"
-                style="padding:9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa"
-            >
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    name="contrasena_nueva"
+                    placeholder="Nueva contraseña"
+                    style="padding:9px 40px 9px 12px;border:1px solid #dee2e6;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#f8f9fa;box-sizing:border-box"
+                >
+                <button
+                    type="button"
+                    class="toggle-password"
+                    aria-label="Mostrar contraseña"
+                >
+                    <span class="eye-icon"></span>
+                </button>
+            </div>
         </div>
 
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">

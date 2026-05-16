@@ -55,21 +55,41 @@
                     <input type="hidden" name="email" value="{{ $email }}">
                     <div class="input-group">
                         <label>Nueva contraseña</label>
-                        <input
-                            type="password"
-                            name="contrasena"
-                            placeholder="********"
-                            required
-                        >                                   
-                    </div>                    
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                name="contrasena"
+                                id="resetPassword"
+                                placeholder="********"
+                                required
+                            >
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                aria-label="Mostrar contraseña"
+                            >
+                                <span class="eye-icon"></span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="input-group">
                         <label>Confirmar contraseña</label>
-                        <input
-                            type="password"
-                            name="contrasena_confirmation"
-                            placeholder="********"
-                            required
-                        >                                                                                              
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                name="contrasena_confirmation"
+                                id="resetPasswordConfirmation"
+                                placeholder="********"
+                                required
+                            >
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                aria-label="Mostrar contraseña"
+                            >
+                                <span class="eye-icon"></span>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" class="btn-primary">
                         Guardar contraseña

@@ -83,6 +83,7 @@
 
 
 <script src="{{ asset('js/compartido/topbar.js') }}"></script>
+<script src="{{ asset('js/compartido/password-toggle.js') }}"></script>
 @stack('scripts')
 
 {{-- MODAL ELIMINAR GLOBAL --}}

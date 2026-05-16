@@ -15,7 +15,7 @@ body{
     grid-template-columns:1fr 1fr;
 }
 
-/* LEFT */
+/* izquierda */
 
 .auth-left{
     position:relative;
@@ -84,7 +84,7 @@ body{
     color:rgba(255,255,255,.7);
 }
 
-/* RIGHT */
+/* rigth */
 
 .auth-right{
     display:flex;
@@ -103,7 +103,7 @@ body{
     0 10px 40px rgba(0,0,0,.08);
 }
 
-/* LOGO */
+/* logo */
 
 .logo-area{
     display:flex;
@@ -134,7 +134,7 @@ body{
     color:#4d6fff;
 }
 
-/* TABS */
+/* tabs */
 
 .tabs{
     display:flex;
@@ -161,7 +161,7 @@ body{
     box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-/* PANELS */
+/* paneles */
 
 .panel{
     display:none;
@@ -182,7 +182,7 @@ h2{
     margin-bottom:30px;
 }
 
-/* INPUTS */
+/* inputs */
 
 .input-group{
     margin-bottom:20px;
@@ -214,14 +214,71 @@ h2{
     position:relative;
 }
 
+.password-wrapper input{
+    padding-right:54px;
+}
+
+.password-wrapper input[type="password"]::-ms-reveal,
+.password-wrapper input[type="password"]::-ms-clear{
+    display:none;
+}
+
+.password-wrapper input[type="password"]::-webkit-credentials-auto-fill-button,
+.password-wrapper input[type="password"]::-webkit-contacts-auto-fill-button{
+    visibility:hidden;
+    display:none !important;
+    pointer-events:none;
+}
+
+.password-wrapper input[type="password"]::-webkit-textfield-decoration-container{
+    visibility:hidden;
+    pointer-events:none;
+}
+
 .toggle-password{
     position:absolute;
-    right:15px;
+    right:16px;
     top:50%;
     transform:translateY(-50%);
     border:none;
     background:none;
     cursor:pointer;
+    padding:8px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:#111;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .2s ease, visibility .2s ease;
+    z-index:2;
+    font-size:0;
+    line-height:0;
+}
+
+.toggle-password:hover{
+    color:#000;
+}
+
+.toggle-password:focus{
+    outline:none;
+    box-shadow:0 0 0 4px rgba(0,0,0,.12);
+    border-radius:50%;
+}
+
+
+.toggle-password .eye-icon{
+    display:inline-flex;
+    width:20px;
+    height:20px;
+    align-items:center;
+    justify-content:center;
+}
+
+.password-wrapper.focus .toggle-password,
+.password-wrapper.has-value .toggle-password{
+    opacity:1;
+    visibility:visible;
 }
 
 .forgot-password{

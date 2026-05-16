@@ -5,6 +5,19 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+    #mapaRegistro,
+    #mapaEditar {
+        min-height: 260px;
+        width: 100%;
+        z-index: 1;
+    }
+    .modal .leaflet-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+    }
+</style>
 @endpush
 
 @section('contenido')
@@ -98,7 +111,8 @@
                             @csrf
                             @method('DELETE')
 
-                            <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto">
+                            <button type="button" class="btn-delete open-delete-modal w-full sm:w-auto"
+                                data-name="{{ $p->titulo }}">
                                 Eliminar
                             </button>
 
@@ -144,7 +158,7 @@
 
 <div class="modal-overlay" id="modalOverlay">
 
-    <div class="modal w-[95%] max-w-lg mx-auto sm:w-full">
+    <div class="modal w-[95%] max-w-2xl mx-auto sm:w-full">
 
         <h2 id="modalTitulo">
             Registrar propiedad
@@ -294,7 +308,7 @@
                             Buscar
                         </button>
                     </div>
-                    <div id="mapaRegistro" style="height:260px;border-radius:8px;border:1px solid #dee2e6;"></div>
+                    <div id="mapaRegistro" style="height:260px;border-radius:8px;border:1px solid #dee2e6;background:#e9ecef;"></div>
                     <input type="hidden" name="latitud"  id="rLatitud">
                     <input type="hidden" name="longitud" id="rLongitud">
                     <p id="rCoordsTexto" style="font-size:11px;color:#6c757d;margin-top:5px;"></p>
@@ -527,7 +541,17 @@ function abrirModal() {
 
     titulo.textContent = 'Registrar propiedad';
 
+    document.getElementById('rLatitud').value = '';
+    document.getElementById('rLongitud').value = '';
+    document.getElementById('rCoordsTexto').textContent = '';
+    document.getElementById('rMapBuscar').value = '';
+
     overlay.classList.add('open');
+
+    setTimeout(() => {
+        iniciarMapaRegistro();
+        setTimeout(() => { if (mapaR) mapaR.invalidateSize(); }, 300);
+    }, 350);
 }
 
 function cerrarModal() {
@@ -645,45 +669,29 @@ document.getElementById('eImagen').addEventListener('change', function(){
     }
 });
 
-let pendingDeleteForm = null;
-
-document.querySelectorAll('.open-delete-modal').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const form  = this.closest('.form-eliminar');
-        const title = form.dataset.title || 'este registro';
-        pendingDeleteForm = form;
-        document.getElementById('deleteMsg').textContent =
-            `¿Seguro que deseas eliminar "${title}"? Esta acción no se puede deshacer.`;
-        const overlay = document.getElementById('deleteOverlay');
-        overlay.style.display = 'flex';
-    });
-});
-
-function cerrarDeleteModal() {
-    document.getElementById('deleteOverlay').style.display = 'none';
-    pendingDeleteForm = null;
-}
-
-document.getElementById('btnConfirmarEliminar').addEventListener('click', function() {
-    if (pendingDeleteForm) pendingDeleteForm.submit();
-});
-
-document.getElementById('deleteOverlay').addEventListener('click', function(e) {
-    if (e.target === this) cerrarDeleteModal();
-});
-
 //MAPA REGISTRAR
 let mapaR = null, marcadorR = null;
 
-function iniciarMapaRegistro() {
-    if (mapaR) return;
+function iniciarMapaRegistro(lat = null, lng = null) {
+    if (typeof L === 'undefined') {
+        console.error('Leaflet no cargó. Revisa la conexión o recarga la página.');
+        return;
+    }
+    const el = document.getElementById('mapaRegistro');
+    if (!el) return;
+
+    const centro = (lat && lng) ? [lat, lng] : SCZ;
+    const zoom   = (lat && lng) ? 16 : 13;
+
     setTimeout(() => {
-        mapaR = L.map('mapaRegistro', { preferCanvas: true }).setView(SCZ, 13);
+        if (mapaR) { mapaR.remove(); mapaR = null; marcadorR = null; }
+        mapaR = L.map(el, { preferCanvas: true }).setView(centro, zoom);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             { attribution: '© OpenStreetMap' }).addTo(mapaR);
+        if (lat && lng) colocarMarcadorR(lat, lng);
         mapaR.on('click', e => colocarMarcadorR(e.latlng.lat, e.latlng.lng));
         setTimeout(() => mapaR.invalidateSize(), 200);
-    }, 500);
+    }, 350);
 }
 
 function colocarMarcadorR(lat, lng) {
@@ -720,17 +728,21 @@ function buscarUbicacionR() {
 let mapaE = null, marcadorE = null;
 
 function iniciarMapaEditar(lat, lng) {
+    if (typeof L === 'undefined') return;
+    const el = document.getElementById('mapaEditar');
+    if (!el) return;
+
     const centro = (lat && lng) ? [lat, lng] : SCZ;
     const zoom   = (lat && lng) ? 16 : 13;
 
     setTimeout(() => {
         if (mapaE) { mapaE.remove(); mapaE = null; marcadorE = null; }
-        mapaE = L.map('mapaEditar').setView(centro, zoom);
+        mapaE = L.map(el, { preferCanvas: true }).setView(centro, zoom);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             { attribution: '© OpenStreetMap' }).addTo(mapaE);
         if (lat && lng) colocarMarcadorE(lat, lng);
         mapaE.on('click', e => colocarMarcadorE(e.latlng.lat, e.latlng.lng));
-        mapaE.invalidateSize();
+        setTimeout(() => mapaE.invalidateSize(), 200);
     }, 350);
 }
 
@@ -763,16 +775,6 @@ function buscarUbicacionE() {
             } else alert('Ubicación no encontrada.');
         });
 }
-
-// Iniciar mapa registrar al abrir modal
-document.querySelector('[onclick="abrirModal()"]').addEventListener('click', () => {
-    setTimeout(() => {
-        iniciarMapaRegistro();
-        setTimeout(() => {
-            if (mapaR) mapaR.invalidateSize();
-        }, 300);
-    }, 500);
-});
 
 </script>
 

@@ -86,6 +86,7 @@
 
 
 <script src="{{ asset('js/compartido/topbar.js') }}"></script>
+<script src="{{ asset('js/compartido/password-toggle.js') }}"></script>
 @stack('scripts')
 
 {{-- MODAL ELIMINAR GLOBAL --}}
@@ -93,8 +94,8 @@
 
     <div class="delete-modal w-[95%] max-w-md mx-auto">
 
-        <button class="delete-close" id="closeDeleteModal">
-            ×
+        <button class="delete-close" id="closeDeleteModal" aria-label="Cerrar">
+            <span class="delete-close-icon" aria-hidden="true"></span>
         </button>
 
         <div class="delete-icon">

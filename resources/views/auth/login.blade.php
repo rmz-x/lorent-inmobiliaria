@@ -128,9 +128,9 @@
                             <button
                                 type="button"
                                 class="toggle-password"
-                                onclick="togglePassword('loginPassword')"
+                                aria-label="Mostrar contraseña"
                             >
-                                👁
+                                <span class="eye-icon"></span>
                             </button>
 
                         </div>
@@ -230,9 +230,9 @@
                             <button
                                 type="button"
                                 class="toggle-password"
-                                onclick="togglePassword('registerPassword')"
+                                aria-label="Mostrar contraseña"
                             >
-                                👁
+                                <span class="eye-icon"></span>
                             </button>
 
                         </div>
@@ -254,6 +254,7 @@
 </div>
 
 {{-- JS --}}
+<script src="{{ asset('js/compartido/password-toggle.js') }}"></script>
 <script src="{{ asset('js/auth/login.js') }}"></script>
 
 <script>

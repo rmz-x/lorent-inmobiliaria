@@ -6,6 +6,7 @@
     <title>Registro — Lorent Inmobiliaria</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -39,7 +40,22 @@
                 @endif
 
                 <input type="text"     name="correo"    placeholder="Correo Electrónico" value="{{ old('correo') }}">
-                <input type="password" name="contrasena" placeholder="Contraseña">
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        name="contrasena"
+                        id="loginPassword"
+                        placeholder="Contraseña"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        aria-label="Mostrar contraseña"
+                    >
+                        <span class="eye-icon"></span>
+                    </button>
+                </div>
                 <button type="submit">Entrar</button>
             </form>
 
@@ -66,7 +82,22 @@
                 <input type="text"     name="nombre"    placeholder="Nombre Completo" value="{{ old('nombre') }}">
                 <input type="text"     name="usuario"   placeholder="Nombre de Usuario" value="{{ old('usuario') }}">
                 <input type="email"    name="correo"    placeholder="Correo Electrónico" value="{{ old('correo') }}">
-                <input type="password" name="contrasena" placeholder="Contraseña">
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        name="contrasena"
+                        id="registerPassword"
+                        placeholder="Contraseña"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        aria-label="Mostrar contraseña"
+                    >
+                        <span class="eye-icon"></span>
+                    </button>
+                </div>
                 <button type="submit">Registrarse</button>
             </form>
 
@@ -75,6 +106,8 @@
 </main>
 
 <script src="{{ asset('js/scrip.js') }}"></script>
+<script src="{{ asset('js/compartido/password-toggle.js') }}"></script>
+<script src="{{ asset('js/auth/login.js') }}"></script>
 <script>
     // Si hay errores de validación, activar automáticamente el formulario de registro
     @if($errors->any())
