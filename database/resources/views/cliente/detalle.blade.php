@@ -25,7 +25,7 @@
     <div class="card" style="flex:0 0 360px; max-width:360px;">
         <div class="w-full relative overflow-hidden bg-slate-100 mb-5 rounded-lg" style="height:220px;">
             @if($propiedad->imagen)
-                <img src="{{ \Illuminate\Support\Facades\Storage::url($propiedad->imagen) }}" alt="{{ $propiedad->titulo }}" style="width:100%;height:100%;object-fit:cover;">
+                <img src="{{ $propiedad->imagen_url }}" alt="{{ $propiedad->titulo }}" style="width:100%;height:100%;object-fit:cover;">
             @else
                 <span style="color:#aaa;font-size:14px">Sin foto disponible</span>
             @endif

@@ -35,11 +35,14 @@ class PropiedadController extends Controller
             'imagen'      => 'nullable|image|max:2048',
         ]);
         $data = $request->only(['titulo','tipo','zona','precio','area','descripcion','estado','agente_id']);
-        if (Auth::user()->esAgente()) {$data['agente_id'] = Auth::id();}
-            if ($request->hasFile('imagen')) {
-                $data['imagen'] = $request->file('imagen')->store('propiedades', 'public');
-            }
-        
+        if (Auth::user()->esAgente()) {
+            $data['agente_id'] = Auth::id();
+        }
+
+        if ($request->hasFile('imagen')) {
+            $data['imagen'] = $this->uploadImageToDisks($request->file('imagen'));
+        }
+
         $data['latitud']  = $request->latitud  ?: null;
         $data['longitud'] = $request->longitud ?: null;
         $prop = Propiedad::create($data);
@@ -67,10 +70,10 @@ class PropiedadController extends Controller
         if ($request->hasFile('imagen')) {
 
             if ($propiedad->imagen) {
-                Storage::disk('public')->delete($propiedad->imagen);
+                $this->deleteImageFromDisks($propiedad->imagen);
             }
 
-            $datos['imagen'] = $request->file('imagen')->store('propiedades', 'public');
+            $datos['imagen'] = $this->uploadImageToDisks($request->file('imagen'));
         }
 
         $propiedad->update($datos);
@@ -82,6 +85,11 @@ class PropiedadController extends Controller
     public function destroy(Propiedad $propiedad)
     {
         $titulo = $propiedad->titulo;
+
+        if ($propiedad->imagen) {
+            $this->deleteImageFromDisks($propiedad->imagen);
+        }
+
         $propiedad->delete();
         RegistroActividad::log('Propiedad eliminada', "Se eliminó: \"$titulo\".");
         return back()->with('success','Propiedad eliminada correctamente.');
@@ -272,5 +280,55 @@ class PropiedadController extends Controller
             'propiedades', 'q', 'tipo', 'estado',
             'precioMax', 'areaMin', 'totalPropiedades'
         ));
+    }
+
+    private function uploadImageToDisks($file): string
+    {
+        $path = $file->store('propiedades', 'public');
+
+        try {
+            if (config('filesystems.disks.s3.bucket')) {
+                Storage::disk('s3')->putFileAs('propiedades', $file, basename($path), 'public');
+            }
+        } catch (\Throwable $e) {
+            // Si falla S3, se mantiene la copia local.
+        }
+
+        return $path;
+    }
+
+    private function deleteImageFromDisks(?string $imagen): void
+    {
+        if (!$imagen) {
+            return;
+        }
+
+        if (preg_match('/^https?:\/\//i', $imagen)) {
+            $path = ltrim(parse_url($imagen, PHP_URL_PATH) ?: '', '/');
+            if (str_starts_with($path, 'storage/')) {
+                $path = substr($path, strlen('storage/'));
+                Storage::disk('public')->delete($path);
+            } else {
+                try {
+                    if (config('filesystems.disks.s3.bucket')) {
+                        Storage::disk('s3')->delete($path);
+                    }
+                } catch (\Throwable $e) {
+                    // Ignorar si S3 no está disponible.
+                }
+            }
+
+            return;
+        }
+
+        Storage::disk('public')->delete($imagen);
+
+        try {
+            if (config('filesystems.disks.s3.bucket')) {
+                Storage::disk('s3')->delete($imagen);
+            }
+        } catch (\Throwable $e) {
+            // Ignorar si S3 no está disponible.
+        }
     }
 }

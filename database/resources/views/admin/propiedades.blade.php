@@ -95,7 +95,7 @@
                             data-descripcion="{{ $p->descripcion }}"
                             data-estado="{{ $p->estado }}"
                             data-agente="{{ $p->agente_id }}"
-                            data-imagen="{{ $p->imagen ? \Illuminate\Support\Facades\Storage::url($p->imagen) : '' }}"
+                            data-imagen="{{ $p->imagen_url ?: '' }}"
                             data-lat="{{ $p->latitud }}"
                             data-lng="{{ $p->longitud }}"
                         >

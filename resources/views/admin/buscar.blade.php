@@ -279,7 +279,7 @@
                 {{-- Color por tipo --}}
                 <div class="w-full sm:w-32 flex-shrink-0 relative" style="background:{{ $p->tipo==='Venta' ? '#1e3a5f' : ($p->tipo==='Alquiler' ? '#0f4c35' : '#2e1a5f') }};display:flex;align-items:center;justify-content:center;overflow:hidden;">
                     @if($p->imagen)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($p->imagen) }}" alt="{{ $p->titulo }}" class="w-full h-48 object-cover rounded-t-lg sm:h-full sm:rounded-l-lg sm:rounded-tr-none">
+                        <img src="{{ $p->imagen_url }}" alt="{{ $p->titulo }}" class="w-full h-48 object-cover rounded-t-lg sm:h-full sm:rounded-l-lg sm:rounded-tr-none">
                     @else
                         <i class="ti ti-building-estate" style="font-size:32px;color:rgba(255,255,255,0.2)"></i>
                     @endif
@@ -337,7 +337,7 @@
                                     '{{ addslashes($p->descripcion) }}',
                                     '{{ $p->estado }}',
                                     '{{ $p->agente_id }}',
-                                    '{{ $p->imagen ? \Illuminate\Support\Facades\Storage::url($p->imagen) : '' }}'
+                                    '{{ $p->imagen_url ?: '' }}'
                                 )"
                                 style="
                                     padding:8px 16px;

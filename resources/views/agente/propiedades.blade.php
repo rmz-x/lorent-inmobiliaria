@@ -267,7 +267,7 @@
                         data-area="{{ $p->area }}"
                         data-descripcion="{{ $p->descripcion }}"
                         data-estado="{{ $p->estado }}"
-                        data-imagen="{{ $p->imagen ? \Illuminate\Support\Facades\Storage::url($p->imagen) : '' }}"
+                        data-imagen="{{ $p->imagen_url ?: '' }}"
                         data-lat="{{ $p->latitud }}"
                         data-lng="{{ $p->longitud }}">
                         ✏️ Editar

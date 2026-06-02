@@ -289,7 +289,7 @@
                     position:relative; overflow:hidden;
                 ">
                     @if($p->imagen)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($p->imagen) }}" alt="{{ $p->titulo }}" class="w-full h-48 object-cover rounded-t-lg sm:h-full sm:rounded-l-lg sm:rounded-tr-none">
+                        <img src="{{ $p->imagen_url }}" alt="{{ $p->titulo }}" class="w-full h-48 object-cover rounded-t-lg sm:h-full sm:rounded-l-lg sm:rounded-tr-none">
                     @else
                         <i class="ti ti-building-estate" style="font-size:32px;color:rgba(255,255,255,0.2)"></i>
                     @endif
