@@ -26,11 +26,84 @@
     gap: 14px;
     flex-wrap: wrap;
     align-items: flex-end;
+    justify-content: flex-start;
+}
+.filter-groups-container {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    flex: 1;
 }
 .filter-group {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    min-width: 160px;
+}
+.filter-actions {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+.export-actions {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+@media (max-width: 1200px) {
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-groups-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .filter-group {
+        width: 100%;
+    }
+    .filter-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    .export-actions {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-groups-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        align-items: flex-end;
+    }
+    .filter-group:nth-child(3) {
+        grid-column: 1;
+    }
+    .filter-actions {
+        grid-column: 2;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+    .export-actions {
+        grid-column: 1 / -1;
+        justify-content: center;
+        gap: 8px;
+    }
 }
 .filter-group label {
     font-size: 11px;
@@ -73,6 +146,41 @@
     white-space: nowrap;
 }
 .btn-limpiar:hover { border-color:#1a3d8f; color:#1a3d8f; }
+
+.btn-export {
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: filter 200ms ease;
+    white-space: nowrap;
+}
+
+.btn-export:hover { filter: brightness(0.92); }
+
+.btn-export-blue { background: #1d4ed8; }
+.btn-export-green { background: #16a34a; }
+.btn-export-gray  { background: #374151; }
+
+@media (max-width: 1200px) {
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-groups-container,
+    .filter-actions,
+    .export-actions {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+    }
+}
 
 /* Acción badge inline */
 .accion-badge {
@@ -189,35 +297,53 @@
 <div class="card" style="margin-bottom:20px">
     <p class="card-title" style="margin-bottom:16px">Filtrar registros</p>
     <form method="GET">
+        @php
+            $rolePrefix = explode('.', request()->route()->getName())[0] ?? 'admin';
+            $exportRoute = "{$rolePrefix}.reportes.export";
+        @endphp
         <div class="filter-bar">
-            <div class="filter-group">
-                <label>Tipo de acción</label>
-                <select name="accion">
-                    <option value="todas">Todas las acciones</option>
-                    @foreach($acciones as $a)
-                    <option value="{{ $a }}" {{ $filtroAccion===$a ? 'selected' : '' }}>{{ $a }}</option>
-                    @endforeach
-                </select>
+            <div class="filter-groups-container">
+                <div class="filter-group">
+                    <label>Tipo de acción</label>
+                    <select name="accion">
+                        <option value="todas">Todas las acciones</option>
+                        @foreach($acciones as $a)
+                        <option value="{{ $a }}" {{ $filtroAccion===$a ? 'selected' : '' }}>{{ $a }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Rol</label>
+                    <select name="rol">
+                        <option value="todos">Todos los roles</option>
+                        @foreach(['administrador','agente','asistente','cliente'] as $r)
+                        <option value="{{ $r }}" {{ $filtroRol===$r ? 'selected' : '' }}>{{ ucfirst($r) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Fecha</label>
+                    <input type="date" name="fecha" value="{{ $filtroFecha }}">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-filter">Filtrar</button>
+                    <a href="{{ request()->url() }}" class="btn-limpiar">Limpiar</a>
+                </div>
             </div>
 
-            <div class="filter-group">
-                <label>Rol</label>
-                <select name="rol">
-                    <option value="todos">Todos los roles</option>
-                    @foreach(['administrador','agente','asistente','cliente'] as $r)
-                    <option value="{{ $r }}" {{ $filtroRol===$r ? 'selected' : '' }}>{{ ucfirst($r) }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label>Fecha</label>
-                <input type="date" name="fecha" value="{{ $filtroFecha }}">
-            </div>
-
-            <div style="display:flex;gap:8px;align-items:flex-end">
-                <button type="submit" class="btn-filter">Filtrar</button>
-                <a href="{{ request()->url() }}" class="btn-limpiar">Limpiar</a>
+            <div class="export-actions">
+                <a href="{{ route($exportRoute, array_merge(request()->query(), ['type' => 'pdf'])) }}" class="btn-export btn-export-blue">
+                    Descargar PDF
+                </a>
+                <a href="{{ route($exportRoute, array_merge(request()->query(), ['type' => 'xlsx'])) }}" class="btn-export btn-export-green">
+                    Descargar Excel
+                </a>
+                <a href="{{ route($exportRoute, array_merge(request()->query(), ['type' => 'csv'])) }}" class="btn-export btn-export-gray">
+                    Descargar CSV
+                </a>
             </div>
         </div>
     </form>

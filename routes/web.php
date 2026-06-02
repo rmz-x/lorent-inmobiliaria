@@ -86,6 +86,8 @@ Route::middleware(['auth', 'role:administrador'])
         // Reportes
         Route::get('/reportes', [ReporteController::class, 'index'])
             ->name('reportes');
+        Route::get('/reportes/export/{type}', [ReporteController::class, 'export'])
+            ->name('reportes.export');
     });
 
 /*
@@ -166,6 +168,8 @@ Route::middleware(['auth', 'role:asistente,administrador'])
 
         Route::get('/reportes', [ReporteController::class, 'index'])
             ->name('reportes');
+        Route::get('/reportes/export/{type}', [ReporteController::class, 'export'])
+            ->name('reportes.export');
 
         Route::get('/calendario', [SolicitudController::class, 'calendarioAsistente'])
             ->name('calendario');
