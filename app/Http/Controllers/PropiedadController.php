@@ -6,6 +6,7 @@ use App\Models\Usuario;
 use App\Models\RegistroActividad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PropiedadController extends Controller
@@ -284,17 +285,21 @@ class PropiedadController extends Controller
 
     private function uploadImageToDisks($file): string
     {
-        $path = $file->store('propiedades', 'public');
+        $fileName = $file->hashName();
+        $path = 'propiedades/'.$fileName;
 
-        try {
-            if (config('filesystems.disks.s3.bucket')) {
-                Storage::disk('s3')->putFileAs('propiedades', $file, basename($path), 'public');
+        if (config('filesystems.disks.s3.bucket')) {
+            try {
+                $success = Storage::disk('s3')->putFileAs('propiedades', $file, $fileName);
+                if ($success) {
+                    return $path;
+                }
+            } catch (\Throwable $e) {
+                Log::error('S3 upload failed: '.$e->getMessage());
             }
-        } catch (\Throwable $e) {
-            // Si falla S3, se mantiene la copia local.
         }
 
-        return $path;
+        return $file->storeAs('propiedades', $fileName, 'public');
     }
 
     private function deleteImageFromDisks(?string $imagen): void

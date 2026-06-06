@@ -45,12 +45,12 @@ class Propiedad extends Model
             return Storage::disk('public')->url($this->imagen);
         }
 
-        try {
-            if (config('filesystems.disks.s3.bucket') && Storage::disk('s3')->exists($this->imagen)) {
+        if (config('filesystems.disks.s3.bucket')) {
+            try {
                 return Storage::disk('s3')->url($this->imagen);
+            } catch (\Throwable $e) {
+                // Si S3 no está disponible, continuar con la URL local.
             }
-        } catch (\Throwable $e) {
-            // Si S3 no está disponible, continuar con la URL local.
         }
 
         return Storage::url($this->imagen);
