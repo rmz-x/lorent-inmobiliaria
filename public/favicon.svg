@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Favicon profesional: monograma L + casa -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Lorent Inmobiliaria">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#g1)" />
+
+  <!-- Casa estilizada -->
+  <g transform="translate(10,12)" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 4 L36 16 L36 36 L8 36 L8 16 Z" fill="rgba(255,255,255,0.06)" />
+    <path d="M18 28 L18 20 L28 20 L28 28" />
+  </g>
+
+  <!-- Monograma L -->
+  <g transform="translate(18,18)">
+    <path d="M6 6 L6 30 L22 30" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+</svg>

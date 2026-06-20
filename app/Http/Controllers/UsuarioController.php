@@ -20,8 +20,11 @@ class UsuarioController extends Controller
             'nombre'    => 'required|min:3',
             'correo'    => 'required|email|unique:usuarios,correo',
             'usuario'   => 'required|min:3|unique:usuarios,usuario',
-            'contrasena'=> 'required|min:3',
+            'contrasena'=> ['required','string','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/'],
             'rol'       => 'required|in:administrador,agente,asistente,cliente',
+        ],[
+            'contrasena.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'contrasena.regex' => 'La contraseña debe contener mayúscula, minúscula, número y un carácter especial.',
         ]);
 
         $user = Usuario::create($request->only(['nombre','correo','usuario','contrasena','rol']));
@@ -70,11 +73,19 @@ class UsuarioController extends Controller
     public function actualizarPerfil(Request $request)
     {
         $usuario = Auth::user();
-        $request->validate([
+
+        $rules = [
             'nombre'  => 'required|min:3',
             'usuario' => 'required|min:3|unique:usuarios,usuario,'.$usuario->id,
             'estado'  => 'required|in:activo,inactivo',
-        ]);
+        ];
+        $messages = [];
+        if ($request->filled('contrasena_nueva')) {
+            $rules['contrasena_nueva'] = ['string','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/'];
+            $messages['contrasena_nueva.min'] = 'La contraseña debe tener al menos 8 caracteres.';
+            $messages['contrasena_nueva.regex'] = 'La contraseña debe contener mayúscula, minúscula, número y un carácter especial.';
+        }
+        $request->validate($rules, $messages);
 
         $data = [
             'nombre'  => $request->nombre,

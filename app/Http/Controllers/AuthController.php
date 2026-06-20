@@ -167,11 +167,12 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'contrasena' => 'required|min:6|confirmed',
+            'contrasena' => ['required','string','min:8','confirmed','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/'],
         ], [
             'contrasena.required' => 'La contraseña es obligatoria.',
             'contrasena.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'contrasena.confirmed' => 'Las contraseñas no coinciden.',
+            'contrasena.regex' => 'La contraseña debe contener mayúscula, minúscula, número y un carácter especial.',
         ]);
 
         $record = DB::table('password_reset_tokens')->where('email', $request->email)->first();
@@ -209,11 +210,11 @@ class AuthController extends Controller
                 'correo'    => 'required|email|unique:usuarios,correo',
                 'usuario'   => 'required|min:3|unique:usuarios,usuario|regex:/^\S+$/',
                 'contrasena'=> [
-                    'required',
-                    'string',
-                    'min:6',
-                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-                ],
+                        'required',
+                        'string',
+                        'min:8',
+                        'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/',
+                    ],
             ],
             [
                 'nombre.required'      => 'El nombre es obligatorio.',
@@ -226,8 +227,8 @@ class AuthController extends Controller
                 'usuario.unique'       => 'Este nombre de usuario ya existe.',
                 'usuario.regex'        => 'El usuario no puede contener espacios.',
                 'contrasena.required'  => 'La contraseña es obligatoria.',
-                'contrasena.min'       => 'La contraseña debe tener al menos 6 caracteres.',
-                'contrasena.regex'     => 'La contraseña debe contener mayúscula, minúscula y número.',
+                'contrasena.min'       => 'La contraseña debe tener al menos 8 caracteres.',
+                'contrasena.regex'     => 'La contraseña debe contener mayúscula, minúscula, número y un carácter especial.',
                 'contrasena.string'    => 'La contraseña debe ser un texto válido.',
             ]
         );

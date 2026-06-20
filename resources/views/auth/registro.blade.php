@@ -1,113 +1,118 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro — Lorent Inmobiliaria</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<main>
-    <div class="contenedor_todo w-full max-w-md mx-auto p-4">
-        <div class="caja_trasera">
-            <div class="caja_trasera_login">
-                <h3>¿Ya tienes cuenta?</h3>
-                <p>Inicia sesión para entrar en la página</p>
-                <button id="btn_iniciar-sesion">Iniciar Sesión</button>
-            </div>
-            <div class="caja_trasera_register">
-                <h3>¿Aún no tienes una cuenta?</h3>
-                <p>Regístrate para que puedas iniciar sesión</p>
-                <button id="btn_registrarse">Registrarse</button>
-            </div>
-        </div>
+...
+<div class="pw-wrapper" style="position:relative; display:block; width:100%; max-width:420px;">
+    <input
+        id="registerPassword"
+        name="contrasena"
+        type="password"
+        class="pw-input"
+        data-pw-enable="1"
+        placeholder="Contraseña"
+        required
+        autocomplete="new-password"
+        aria-describedby="pw-tooltip"
+    />
 
-        <div class="contenedor_login-register">
+    <button
+        type="button"
+        class="toggle-password"
+        aria-label="Mostrar contraseña"
+    >
+        <span class="eye-icon"></span>
+    </button>
 
-            {{-- LOGIN --}}
-            <form action="{{ route('login.post') }}" method="POST" class="formulario_login" id="login-panel">
-
-                @csrf
-                <h2>Iniciar Sesión</h2>
-
-                @if($errors->has('correo') || $errors->has('contrasena'))
-                    <div style="color:#e53935;font-size:12px;margin-bottom:10px">
-                        {{ $errors->first('correo') ?? $errors->first('contrasena') }}
-                    </div>
-                @endif
-
-                <input type="text"     name="correo"    placeholder="Correo Electrónico" value="{{ old('correo') }}">
-                <div class="password-wrapper">
-                    <input
-                        type="password"
-                        name="contrasena"
-                        id="loginPassword"
-                        placeholder="Contraseña"
-                        required
-                    >
-                    <button
-                        type="button"
-                        class="toggle-password"
-                        aria-label="Mostrar contraseña"
-                    >
-                        <span class="eye-icon"></span>
-                    </button>
-                </div>
-                <button type="submit">Entrar</button>
-            </form>
-
-            {{-- REGISTRO --}}
-            <form action="{{ route('registro.post') }}" method="POST" class="formulario_register" id="register-panel">
-                @csrf
-                <h2>Registrarse</h2>
-
-                @if($errors->any())
-                    <div style="color:#e53935;font-size:12px;margin-bottom:10px">
-                        <ul style="margin:0;padding-left:18px">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if(session('success'))
-                    <div style="color:#2e7d32;font-size:12px;margin-bottom:10px">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <input type="text"     name="nombre"    placeholder="Nombre Completo" value="{{ old('nombre') }}">
-                <input type="text"     name="usuario"   placeholder="Nombre de Usuario" value="{{ old('usuario') }}">
-                <input type="email"    name="correo"    placeholder="Correo Electrónico" value="{{ old('correo') }}">
-                <div class="password-wrapper">
-                    <input
-                        type="password"
-                        name="contrasena"
-                        id="registerPassword"
-                        placeholder="Contraseña"
-                        required
-                    >
-                    <button
-                        type="button"
-                        class="toggle-password"
-                        aria-label="Mostrar contraseña"
-                    >
-                        <span class="eye-icon"></span>
-                    </button>
-                </div>
-                <button type="submit">Registrarse</button>
-            </form>
-
+    <div id="pw-tooltip" class="pw-tooltip" role="status" aria-live="polite" style="display:none">
+        <div class="pw-tooltip-inner">
+                    <ul class="pw-list">
+                        <li data-rule="length" class="pw-item"><span class="pw-icon" aria-hidden="true"></span><span class="pw-text">Mínimo 8 caracteres</span></li>
+                        <li data-rule="upper" class="pw-item"><span class="pw-icon" aria-hidden="true"></span><span class="pw-text">Al menos una letra mayúscula (A-Z)</span></li>
+                        <li data-rule="number" class="pw-item"><span class="pw-icon" aria-hidden="true"></span><span class="pw-text">Al menos un número (0-9)</span></li>
+                        <li data-rule="special" class="pw-item"><span class="pw-icon" aria-hidden="true"></span><span class="pw-text">Al menos un carácter especial (# ? ! @)</span></li>
+                    </ul>
         </div>
     </div>
+</div>
+
 </main>
 
-<script src="{{ asset('js/scrip.js') }}"></script>
-<script src="{{ asset('js/compartido/password-toggle.js') }}"></script>
-<script src="{{ asset('js/auth/login.js') }}"></script>
+<!-- debug banner removed -->
+
+<style>
+.pw-tooltip {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    bottom: calc(100% + 8px);
+    min-width: 260px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 8px;
+    z-index: 1200;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-size: 13px;
+    color: #111827;
+}
+.pw-tooltip::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -6px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.06));
+}
+.pw-tooltip.pw-fixed { position: fixed; transform: none; }
+.pw-tooltip.pw-fixed::after{ bottom: auto; }
+.pw-tooltip.pw-below.pw-fixed::after{ top: -6px; bottom: auto; transform: translateX(-50%); border-width: 0 6px 6px 6px; border-color: transparent transparent #ffffff transparent; }
+.pw-tooltip.pw-fixed:not(.pw-below)::after{ top: 100%; bottom: auto; transform: translateX(-50%); border-width: 6px 6px 0 6px; border-color: #ffffff transparent transparent transparent; }
+.pw-tooltip-inner { padding: 6px 10px; }
+.pw-title { font-weight:600; margin-bottom:6px; font-size:13px; color:#0f172a; }
+.pw-list { list-style:none; margin:0; padding:0; }
+.pw-item { display:flex; align-items:center; gap:8px; color:#6b7280; margin:6px 0; }
+.pw-icon { width:18px; display:inline-flex; justify-content:center; align-items:center; color:#6b7280; }
+.pw-item.satisfied { color:#166534; }
+.pw-item.satisfied .pw-icon { color:#16a34a; }
+.pw-input { width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; }
+.pw-input:focus { outline: none; border-color:#60a5fa; box-shadow:0 0 0 3px rgba(96,165,250,0.12); }
+@media (max-width:420px){
+    .pw-tooltip{ left: 8px; transform: none; right: 8px; bottom: calc(100% + 8px); }
+    .pw-tooltip::after{ left: 24px; transform: none; }
+}
+
+/* Helper box under password for reliable, always-visible feedback */
+.pw-helper {
+    background: #f8fafc; /* soft tint */
+    border: 1px solid #e6e9ee;
+    border-radius: 12px;
+    padding: 6px 8px;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #374151;
+    max-width:420px;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+}
+.pw-helper.pw-hidden{ opacity:0; max-height:0; overflow:hidden; transform:translateY(-6px); transition:opacity .16s ease, transform .16s ease, max-height .16s ease }
+.pw-helper.pw-visible{ opacity:1; max-height:400px; transform:translateY(0); transition:opacity .16s ease, transform .16s ease, max-height .2s ease }
+.pw-helper .pw-list { margin:0; padding:0; list-style:none; font-size:13px }
+.pw-helper .pw-item { display:flex; gap:8px; align-items:center; color:#6b7280; margin:3px 0; font-size:13px; padding:4px 6px; border-radius:8px }
+.pw-helper .pw-icon { width:18px; display:inline-flex; justify-content:center; align-items:center; color:#ef4444; font-weight:700 }
+.pw-helper .pw-item.satisfied { color:#16A34A; /* bright green */ }
+.pw-helper .pw-item.satisfied .pw-icon { color:#16A34A }
+.pw-helper .pw-item, .pw-helper .pw-icon { transition: color .12s ease, background .12s ease }
+/* SVG icon sizing and satisfied highlight */
+.pw-icon svg { width:18px; height:18px; display:block }
+/* remove background on satisfied items to avoid layout shift; color handled by .pw-helper .pw-item.satisfied */
+.pw-item.satisfied .pw-text { color:#16A34A; font-weight:600 }
+</style>
+
+<script src="{{ asset('js/compartido/pw-tooltip.js') }}"></script>
+<script src="{{ asset('js/compartido/pw-helper.js') }}"></script>
+
+
 <script>
     // Si hay errores de validación, activar automáticamente el formulario de registro
     @if($errors->any())
@@ -132,3 +137,7 @@
         });
     @endif
 </script>
+
+<script src="{{ asset('js/scrip.js') }}"></script>
+<script src="{{ asset('js/compartido/password-toggle.js') }}"></script>
+<script src="{{ asset('js/auth/login.js') }}"></script>

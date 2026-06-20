@@ -28,6 +28,8 @@ use App\Http\Controllers\ProspectoController;
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 
+// (debug route removed)
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');

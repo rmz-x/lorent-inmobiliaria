@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Lorent Inmobiliaria')</title>
+    <!-- Favicon / icono de la pestaña -->
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('icons/icons2-180.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons/icons2-32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icons/icons2-16.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.svg') }}">
+    <meta name="theme-color" content="#4f46e5">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">

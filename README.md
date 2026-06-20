@@ -57,3 +57,20 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+## Notas del proyecto — Ayudante de contraseña
+
+Este proyecto incluye un pequeño ayudante del lado cliente que muestra los
+requisitos de la contraseña junto al campo correspondiente. Para activar el
+ayudante en un input específico, añade la clase `pw-input` y el atributo
+`data-pw-enable="1"`, por ejemplo:
+
+```html
+<input type="password" class="pw-input" data-pw-enable="1" />
+```
+
+Sólo los inputs marcados explícitamente mostrarán el ayudante; el panel de
+inicio de sesión no activa el ayudante por diseño para evitar mostrar elementos
+innecesarios cuando el usuario solo inicia sesión.
+

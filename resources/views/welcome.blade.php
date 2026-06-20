@@ -5,6 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('icons/icons2-180.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons/icons2-32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icons/icons2-16.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
+        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
