@@ -313,7 +313,6 @@
 .pw-helper.pw-visible{ opacity:1; max-height:400px; transform:translateY(0); transition:opacity .16s ease, transform .16s ease, max-height .2s ease }
 </style>
 
-<script src="{{ asset('js/compartido/pw-tooltip.js') }}"></script>
 <script src="{{ asset('js/compartido/pw-helper.js') }}"></script>
 
 <style>
