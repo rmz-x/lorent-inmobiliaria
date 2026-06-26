@@ -18,6 +18,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\ProspectoController;
 
 /*
@@ -237,4 +238,18 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/perfil', [UsuarioController::class, 'actualizarPerfil'])
         ->name('perfil.update');
+
+    // Página de prueba de voz (prototipo) - abre una UI simple para comandos por voz
+    Route::get('/voice', function () {
+        return view('compartido.voice');
+    })->name('voice.test');
+
+    // Endpoint para obtener reporte de propiedades (JSON) usado por la UI de voz
+    Route::get('/voice/report/propiedades', [\App\Http\Controllers\ReporteController::class, 'voiceReportProperties'])
+        ->name('voice.report.propiedades');
+
+    // Endpoint de voz basado en Gemini AI Studio
+    Route::post('/voice/gemini', [\App\Http\Controllers\ReporteController::class, 'voiceQuery'])
+        ->name('voice.gemini');
 });
+
