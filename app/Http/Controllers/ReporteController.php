@@ -137,20 +137,45 @@ Responde de forma natural, clara y breve.";
                     'message' => $e->getMessage(),
                 ]);
             }
-            return response()->json(['error' => 'Gemini API request failed'], 502);
+            $fallbackReply = $this->localVoiceFallback($query, $context);
+            return response()->json(['speech' => $fallbackReply]);
         }
 
         if (!$response->successful()) {
+            $responseBody = null;
+            try {
+                $responseBody = $response->json();
+            } catch (\Throwable $e) {
+                $responseBody = $response->body();
+            }
+
             if (function_exists('logger')) {
                 logger('Gemini request error', [
                     'url' => $endpoint,
                     'status' => $response->status(),
-                    'body' => $response->body(),
+                    'body' => $responseBody,
                 ]);
             }
+
+            $fallbackReply = $this->localVoiceFallback($query, $context);
+            if ($fallbackReply !== null) {
+                return response()->json(['speech' => $fallbackReply]);
+            }
+
+            $statusCode = $response->status();
+            if ($statusCode === 429) {
+                return response()->json([
+                    'error' => 'Gemini API request failed',
+                    'status' => 429,
+                    'body' => $responseBody,
+                    'message' => 'Demasiadas solicitudes a Gemini. Revisa tu cuota o espera unos segundos.',
+                ], 429);
+            }
+
             return response()->json([
                 'error' => 'Gemini API request failed',
-                'status' => $response->status(),
+                'status' => $statusCode,
+                'body' => $responseBody,
             ], 502);
         }
 
@@ -162,10 +187,8 @@ Responde de forma natural, clara y breve.";
                     'response' => $response->json(),
                 ]);
             }
-            return response()->json([
-                'error' => 'Gemini API response did not include text',
-                'body' => $response->json(),
-            ], 502);
+            $fallbackReply = $this->localVoiceFallback($query, $context);
+            return response()->json(['speech' => $fallbackReply]);
         }
 
         return response()->json(['speech' => $replyText]);
@@ -305,6 +328,29 @@ Responde de forma natural, clara y breve.";
         }
 
         return '';
+    }
+
+    private function localVoiceFallback(string $query, array $context): ?string
+    {
+        $lower = mb_strtolower($query, 'UTF-8');
+
+        if (str_contains($lower, 'inicio') || str_contains($lower, 'sesion') || str_contains($lower, 'login')) {
+            return "Hay {$context['totalLogins']} inicios de sesión registrados, de los cuales {$context['totalLoginsToday']} son de hoy.";
+        }
+
+        if (str_contains($lower, 'fallido') || str_contains($lower, 'intento fallido')) {
+            return "Hay {$context['totalFailed']} intentos fallidos registrados, y {$context['totalFailedToday']} intentos fallidos hoy.";
+        }
+
+        if (str_contains($lower, 'propiedad') || str_contains($lower, 'propiedades')) {
+            return "Se han registrado {$context['totalProps']} propiedades en total, y {$context['totalPropsToday']} de ellas hoy.";
+        }
+
+        if (str_contains($lower, 'evento') || str_contains($lower, 'actividad') || str_contains($lower, 'registro')) {
+            return "Hoy hay {$context['totalLoginsToday']} inicios de sesión y {$context['totalPropsToday']} propiedades registradas. Revisa el panel para más detalles.";
+        }
+
+        return 'Lo siento, en este momento no puedo consultar la IA. Por favor intenta de nuevo en unos instantes.';
     }
 
     /**
