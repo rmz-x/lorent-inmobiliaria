@@ -140,28 +140,43 @@
 @keyframes mic-pulse { 0%{ box-shadow: 0 12px 28px rgba(79,70,229,0.36), 0 0 0 0 rgba(99,102,241,0.06);} 50%{ box-shadow: 0 16px 34px rgba(79,70,229,0.44), 0 0 0 10px rgba(99,102,241,0.10);} 100%{ box-shadow: 0 12px 28px rgba(79,70,229,0.36), 0 0 0 0 rgba(99,102,241,0.06);} }
 .btn-voice.listening .mic-thumb { animation: mic-pulse 1.2s infinite; }
 /* Floating voice button and panel */
-.floating-voice-btn { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(90deg,#4f46e5,#6366f1); color:#fff; border:none; padding:6px 10px; border-radius:10px; font-weight:700; box-shadow:0 8px 20px rgba(79,70,229,0.16); cursor:pointer; }
-.floating-voice-btn .fv-icon { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; }
+.floating-voice-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,#1e40af,#2563eb); color:#fff; border:none; padding:8px 12px; border-radius:16px; font-weight:700; box-shadow:0 12px 28px rgba(37,99,235,0.30), 0 0 0 1px rgba(59,130,246,0.15); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, filter .18s ease; }
+.floating-voice-btn:hover { transform:translateY(-1px); box-shadow:0 18px 40px rgba(37,99,235,0.42), 0 0 0 2px rgba(59,130,246,0.18); background:linear-gradient(135deg,#1d4ed8,#1e40af); filter:brightness(1.08); }
+.floating-voice-btn .fv-icon { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,0.22); }
 .floating-voice-btn .fv-label { font-size:13px; color:#fff; }
-.voice-panel { position:fixed; top:80px; right:28px; width:320px; max-width:calc(100% - 48px); background:#fff; color:#0b1220; border-radius:12px; box-shadow:0 20px 50px rgba(2,6,23,0.24); z-index:1000; overflow:hidden; animation:fadeIn .18s ease; }
-.voice-panel.dark { background:#0b1220; color:#fff; }
-.voice-panel .vp-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(15,23,42,0.04); }
-.voice-panel.dark .vp-header { border-bottom-color: rgba(255,255,255,0.04); }
-.voice-panel .vp-title { font-weight:800; }
-.voice-panel .vp-status { font-size:13px; color:#6b7280; }
-.voice-panel .vp-body { padding:12px 14px; display:grid; gap:10px; }
-.mic-visual { display:flex; align-items:center; gap:10px; }
-.mic-circle { width:44px; height:44px; border-radius:50%; background:rgba(99,102,241,0.12); display:flex; align-items:center; justify-content:center; }
-.mic-waves { width:48px; height:44px; position:relative; }
-.mic-waves::after, .mic-waves::before { content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); border-radius:50%; }
-.mic-waves::before { width:48px; height:44px; box-shadow:0 0 0 0 rgba(99,102,241,0.12); }
-.mic-waves::after { width:28px; height:26px; box-shadow:0 0 0 0 rgba(99,102,241,0.10); }
-.voice-panel.listening .mic-waves::before { animation:wave 1.2s infinite; }
-.voice-panel.listening .mic-waves::after { animation:wave 1.2s infinite .2s; }
-.vp-transcript { font-size:14px; color:#0f1724; min-height:38px; }
-.vp-feedback { min-height:32px; }
-.vp-feedback .ok { background:#ecfdf5; color:#065f46; padding:8px 10px; border-radius:8px; display:inline-block; }
-.vp-feedback .err { background:#fff1f2; color:#9f1239; padding:8px 10px; border-radius:8px; display:inline-block; }
+.voice-panel { position:fixed; top:64px; right:20px; width:340px; max-width:calc(100% - 40px); background:linear-gradient(180deg, rgba(10,20,45,0.97), rgba(16,42,77,0.96)); color:#f8fbff; border-radius:26px; box-shadow:0 34px 98px rgba(7,18,54,0.30); z-index:1000; overflow:hidden; animation:fadeIn .18s ease; border:1px solid rgba(96,165,250,0.18); backdrop-filter: blur(20px); }
+.voice-panel.dark { background:linear-gradient(180deg, rgba(8,14,34,0.96), rgba(15,27,55,0.94)); color:#f8fcff; }
+.voice-panel .vp-header { display:flex; align-items:flex-start; justify-content:space-between; padding:16px 18px; background:linear-gradient(135deg, rgba(59,130,246,0.92), rgba(168,85,247,0.92)); color:#fff; box-shadow: inset 0 -1px 0 rgba(255,255,255,0.08); }
+.voice-panel.dark .vp-header { background:linear-gradient(135deg, rgba(67,56,202,0.94), rgba(37,99,235,0.92)); }
+.voice-panel .vp-title { font-weight:600; font-size:14px; letter-spacing:.01em; }
+.voice-panel .vp-subtitle { font-size:12px; color:rgba(255,255,255,0.88); margin-top:3px; }
+.voice-panel .vp-status { font-size:11px; color:rgba(255,255,255,0.92); font-weight:500; background:rgba(255,255,255,0.10); padding:7px 11px; border-radius:999px; white-space:nowrap; }
+.voice-panel .vp-body { padding:18px 20px 20px; display:grid; gap:14px; text-align:center; }
+.assistant-sphere-container { display:flex; justify-content:center; padding:8px 0 0; }
+.assistant-sphere { position: relative; width:132px; height:132px; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+.sphere-core { width:86px; height:86px; border-radius:50%; background: radial-gradient(circle at 30% 22%, rgba(255,255,255,0.95) 0%, rgba(147,197,253,0.30) 17%, rgba(129,140,248,0.55) 38%, rgba(168,85,247,0.78) 62%, rgba(49,46,129,1) 100%); box-shadow: 0 0 0 20px rgba(148,187,255,0.08), 0 26px 60px rgba(59,130,246,0.30), inset 0 0 24px rgba(255,255,255,0.32); position:relative; z-index:2; transition:transform .28s ease, box-shadow .28s ease, background .28s ease; }
+.sphere-core::before { content:''; position:absolute; top:10%; left:14%; width:28px; height:28px; border-radius:50%; background: rgba(255,255,255,0.85); filter: blur(2px); opacity:0.9; }
+.sphere-core::after { content:''; position:absolute; bottom:14%; right:14%; width:20px; height:20px; border-radius:50%; background: rgba(255,255,255,0.32); filter: blur(3px); opacity:0.75; }
+.sphere-ring { position:absolute; border-radius:50%; opacity:0.75; pointer-events:none; }
+.ring-outer { width:148px; height:148px; border:1px solid rgba(96,165,250,0.32); top:-8px; left:-8px; animation: ringSpin 9s linear infinite; }
+.ring-inner { width:102px; height:102px; border:1px solid rgba(168,85,247,0.60); top:14px; left:14px; animation: ringGlow 2.6s ease-in-out infinite; }
+.assistant-sphere::before { content:''; position:absolute; inset:0; border-radius:50%; box-shadow: 0 0 0 26px rgba(96,165,250,0.10), 0 0 0 42px rgba(168,85,247,0.08); }
+.assistant-sphere::after { content:''; position:absolute; inset:10px; border-radius:50%; box-shadow: 0 0 0 20px rgba(59,130,246,0.10); opacity:0.45; filter: blur(8px); }
+.assistant-sphere.idle .sphere-core { animation: idleGlow 4s ease-in-out infinite; }
+.assistant-sphere.listening .sphere-core { animation: listeningPulse 1.2s ease-in-out infinite; }
+.assistant-sphere.processing .sphere-core { animation: thinkingPulse 1.8s ease-in-out infinite; }
+.assistant-sphere.speaking .sphere-core { animation: speakingPulse 1.2s ease-in-out infinite; background: radial-gradient(circle at 30% 22%, rgba(255,255,255,0.95) 0%, rgba(237,233,254,0.20) 15%, rgba(167,139,250,0.50) 38%, rgba(99,102,241,0.82) 68%, rgba(49,46,129,1) 100%); box-shadow: 0 0 0 26px rgba(167,139,250,0.22), 0 30px 64px rgba(59,130,246,0.30), inset 0 0 56px rgba(255,255,255,0.32); transform: scale(1.04); }
+.vp-transcript { font-size:14px; color:#f8fbff; min-height:50px; line-height:1.5; text-align:center; font-weight:700; }
+.vp-feedback { display:none !important; }
+.vp-feedback .ok { background:#ecfdf5; color:#065f46; padding:8px 10px; border-radius:10px; display:inline-block; }
+.vp-feedback .err { background:#fef2f2; color:#b91c1c; padding:8px 10px; border-radius:10px; display:inline-block; }
+.source-note { display:none; }
+@keyframes idleGlow { 0%,100%{ transform: scale(1); box-shadow: 0 0 0 16px rgba(96,165,250,0.12), 0 18px 44px rgba(37,99,235,0.20); } 50%{ transform: scale(1.03); box-shadow: 0 0 0 22px rgba(96,165,250,0.14), 0 22px 52px rgba(37,99,235,0.24); } }
+@keyframes listeningPulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.07); } }
+@keyframes thinkingPulse { 0%,100%{ transform: scale(1); } 40%{ transform: scale(1.06); } 80%{ transform: scale(1.02); } }
+@keyframes speakingPulse { 0%,100%{ transform: scale(1); } 30%{ transform: scale(1.08); } 60%{ transform: scale(1.03); } }
+@keyframes ringSpin { 0%{ transform: rotate(0deg); opacity:0.6; } 100%{ transform: rotate(360deg); opacity:0.6; } }
+@keyframes ringGlow { 0%,100%{ opacity:0.45; } 50%{ opacity:0.75; } }
 @keyframes wave { 0%{ box-shadow:0 0 0 0 rgba(99,102,241,0.12);} 50%{ box-shadow:0 0 0 10px rgba(99,102,241,0.06);} 100%{ box-shadow:0 0 0 0 rgba(99,102,241,0.00);} }
 @keyframes fadeIn { from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
 .btn-filter {
@@ -229,6 +244,27 @@
 
 /* Mobile card design */
 @media (max-width: 640px) {
+    .voice-panel {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 100%;
+    }
+    .voice-panel .vp-body {
+        text-align: center;
+    }
+    .vp-transcript {
+        text-align: center;
+        font-weight: 700;
+    }
+    .voice-panel .vp-header {
+        justify-content: center;
+        text-align: center;
+    }
+    .voice-panel .vp-status {
+        margin: 8px auto 0;
+    }
     .table-container {
         display: block !important;
         border: none !important;
@@ -384,7 +420,7 @@
 
     <!-- Floating IA Voz button (top-right of this card) and panel -->
     <div style="position:absolute;top:12px;right:16px;z-index:40;">
-        <button id="voice-float-btn" class="floating-voice-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Abrir Reporte IA Voz" title="Abrir Reporte IA Voz">
+        <button id="voice-float-btn" class="floating-voice-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Abrir Asistente IA" title="Abrir Asistente IA">
             <span class="fv-icon" aria-hidden="true">
                 <!-- Google-style search-by-voice mic icon (white) -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
@@ -393,23 +429,24 @@
                     <path d="M12 17v3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
             </span>
-            <span class="fv-label">Reporte IA Voz</span>
+            <span class="fv-label">Asistente IA</span>
         </button>
     </div>
 
     <div id="voice-panel" class="voice-panel" style="display:none;">
         <div class="vp-header">
-            <div class="vp-title">IA Voz</div>
+            <div>
+                <div class="vp-title">Asistente IA</div>
+            </div>
             <div class="vp-status" id="voice-panel-status">Inactivo</div>
         </div>
         <div class="vp-body">
-            <div class="mic-visual">
-                <div class="mic-circle" id="mic-circle">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="3" width="6" height="8" rx="3" fill="#2563eb" />
-                    </svg>
+            <div class="assistant-sphere-container">
+                <div id="assistant-sphere" class="assistant-sphere idle" aria-hidden="true">
+                    <div class="sphere-ring ring-outer"></div>
+                    <div class="sphere-ring ring-inner"></div>
+                    <div class="sphere-core"></div>
                 </div>
-                <div class="mic-waves" id="mic-waves"></div>
             </div>
             <div class="vp-transcript" id="voice-transcript">Habla ahora...</div>
             <div id="voice-feedback" class="vp-feedback" aria-live="polite"></div>
@@ -514,8 +551,14 @@
     const panelStatus = document.getElementById('voice-panel-status');
     const transcriptEl = document.getElementById('voice-transcript');
     const feedbackEl = document.getElementById('voice-feedback');
-    const micWaves = document.getElementById('mic-waves');
+    const sphereEl = document.getElementById('assistant-sphere');
     if(!form || !voiceBtn || !voicePanel) return;
+
+    function setSphereState(state){
+        if(!sphereEl) return;
+        sphereEl.classList.remove('idle','listening','processing','speaking');
+        sphereEl.classList.add(state || 'idle');
+    }
 
     const accionSelect = form.querySelector('select[name="accion"]');
     const rolSelect = form.querySelector('select[name="rol"]');
@@ -540,7 +583,7 @@
         recognition.maxAlternatives = 1;
     }
 
-    function showPanel(){ voicePanel.style.display = 'block'; voiceBtn.setAttribute('aria-expanded','true'); }
+    function showPanel(){ voicePanel.style.display = 'block'; voiceBtn.setAttribute('aria-expanded','true'); setSphereState('idle'); }
     function hidePanel(){
         clearTimeout(inactivityTimer);
         inactivityTimer = null;
@@ -553,6 +596,7 @@
         panelStatus.textContent = 'Inactivo';
         feedbackEl.innerHTML = '';
         voicePanel.classList.remove('listening');
+        setSphereState('idle');
         stopDotsAnimation();
     }
 
@@ -561,6 +605,11 @@
             if(recognizing && recognition) recognition.stop(); else startListening();
         } else { showPanel(); startListening(); }
     });
+
+    function updateSourceIndicator(src){
+        // ahora solo usamos el estado visual del panel y no el punto en el botón.
+        // Esto permite mantener el botón compacto sin elementos extra.
+    }
 
     async function startListening(){
         finalTranscript = '';
@@ -572,6 +621,7 @@
             return;
         }
         panelStatus.innerHTML = 'Escuchando<span class="dots">...</span>';
+        setSphereState('listening');
         startDotsAnimation();
         voicePanel.classList.add('listening');
         try{ recognition.start(); }
@@ -586,20 +636,19 @@
     function stopListening(){ try{ if(recognition) recognition.stop(); }catch(e){} }
 
     if(recognition){
-        recognition.onstart = ()=>{ recognizing = true; panelStatus.innerHTML = 'Escuchando<span class="dots">...</span>'; voicePanel.classList.add('listening'); };
-        recognition.onresult = (event)=>{ let interim=''; for(let i=event.resultIndex;i<event.results.length;i++){ const res=event.results[i]; if(res.isFinal){ finalTranscript += res[0].transcript + ' '; } else { interim += res[0].transcript; } } transcriptEl.textContent = (finalTranscript + interim).trim() || '...'; clearTimeout(inactivityTimer); inactivityTimer = setTimeout(()=>{ stopListening(); }, 5000); };
-        recognition.onerror = (e)=>{ recognizing=false; voicePanel.classList.remove('listening'); stopDotsAnimation(); panelStatus.textContent='Error: '+(e.error||'desconocido'); feedbackEl.innerHTML='<div class="err">No pude entender la voz. Intenta de nuevo.</div>'; setTimeout(()=>{ panelStatus.textContent='Inactivo'; },2000); };
-        recognition.onend = ()=>{ recognizing=false; voicePanel.classList.remove('listening'); stopDotsAnimation(); const text = finalTranscript.trim(); if(text.length){ panelStatus.textContent='Procesando...'; handleCommand(text); } else { panelStatus.textContent='Inactivo'; inactivityTimer = setTimeout(()=> hidePanel(),2500); } };
+        recognition.onstart = ()=>{ recognizing = true; panelStatus.innerHTML = 'Escuchando<span class="dots">...</span>'; voicePanel.classList.add('listening'); setSphereState('listening'); };
+        recognition.onresult = (event)=>{ let interim=''; for(let i=event.resultIndex;i<event.results.length;i++){ const res=event.results[i]; if(res.isFinal){ finalTranscript += res[0].transcript + ' '; } else { interim += res[0].transcript; } } const textSoFar = (finalTranscript + interim).trim(); transcriptEl.textContent = textSoFar || '...'; clearTimeout(inactivityTimer); inactivityTimer = setTimeout(()=>{ stopListening(); }, 5000); };
+        recognition.onerror = (e)=>{ recognizing=false; voicePanel.classList.remove('listening'); stopDotsAnimation(); panelStatus.textContent='Error: '+(e.error||'desconocido'); setSphereState('idle'); setTimeout(()=>{ panelStatus.textContent='Inactivo'; },2000); };
+        recognition.onend = ()=>{ recognizing=false; voicePanel.classList.remove('listening'); stopDotsAnimation(); const text = finalTranscript.trim(); if(text.length){ panelStatus.textContent='Procesando...'; setSphereState('processing'); handleCommand(text); } else { panelStatus.textContent='Inactivo'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(),2500); } };
     }
 
-    function handleCommand(text){
+    async function handleCommand(text){
         const trimmed = text.trim();
-        feedbackEl.innerHTML = '<div class="ok">Transcripción: ' + escapeHtml(trimmed) + '</div>';
 
         if (isGreeting(trimmed.toLowerCase())) {
             const greetingReply = '¡Hola! Estoy lista para ayudarte con reportes y datos de propiedades.';
-            feedbackEl.innerHTML = '<div class="ok">' + escapeHtml(greetingReply) + '</div>';
-            speak(greetingReply);
+            panelStatus.textContent = 'Procesando...';
+            await playPollySpeech(greetingReply);
             return;
         }
 
@@ -611,8 +660,7 @@
             ];
             const shortReply = shortReplies[Math.floor(Math.random() * shortReplies.length)];
             feedbackEl.innerHTML = '<div class="err">' + escapeHtml(shortReply) + '</div>';
-            speak(shortReply);
-            inactivityTimer = setTimeout(()=> hidePanel(), 3000);
+            await playPollySpeech(shortReply);
             return;
         }
 
@@ -652,9 +700,48 @@
         return greetings.includes(normalized);
     }
 
-    async function fetchAndSpeakReport(){ panelStatus.textContent='Obteniendo reporte...'; try{ const res = await fetch('/voice/report/propiedades',{ headers:{'X-Requested-With':'XMLHttpRequest','Accept':'application/json'}, credentials:'same-origin' }); if(!res.ok) throw new Error('HTTP '+res.status); const data = await res.json(); const speech = buildSpeechFromReport(data); speak(speech); feedbackEl.innerHTML = '<div class="ok">Reporte leído por voz.</div>'; panelStatus.textContent = 'Listo'; }catch(e){ feedbackEl.innerHTML = '<div class="err">Error obteniendo reporte.</div>'; panelStatus.textContent = 'Error'; } }
+    async function fetchAndSpeakReport(){ panelStatus.textContent='Obteniendo reporte...'; try{ const res = await fetch('/voice/report/propiedades',{ headers:{'X-Requested-With':'XMLHttpRequest','Accept':'application/json'}, credentials:'same-origin' }); if(!res.ok) throw new Error('HTTP '+res.status); const data = await res.json(); const speech = buildSpeechFromReport(data); updateSourceIndicator('polly'); await playPollySpeech(speech); }catch(e){ panelStatus.textContent = 'Error'; } }
 
     function getCsrfToken(){ const tokenMeta = document.querySelector('meta[name="csrf-token"]'); if(tokenMeta){ return tokenMeta.getAttribute('content'); } const match = document.cookie.match(/(^|;)\s*XSRF-TOKEN=([^;]+)/); return match ? decodeURIComponent(match[2]) : null; }
+
+    async function playPollySpeech(text){
+        if(!text) return;
+        const token = getCsrfToken();
+        if(!token){
+            console.error('No CSRF token available for Polly');
+            panelStatus.textContent = 'Error';
+            return;
+        }
+
+        try{
+            const res = await fetch('/voice/polly', {
+                method:'POST',
+                headers:{
+                    'X-Requested-With':'XMLHttpRequest',
+                    'X-CSRF-TOKEN': token,
+                    'Accept':'application/json',
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({ text }),
+                credentials:'same-origin'
+            });
+            const data = await res.json();
+            if(!res.ok || !data.audio){
+                console.error('Polly response failed', res.status, data);
+                panelStatus.textContent = 'Error';
+                throw new Error(data.error || 'Fallo Polly');
+            }
+            const audio = new Audio('data:audio/mpeg;base64,' + data.audio);
+            audio.onended = ()=>{ panelStatus.textContent = 'Listo'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(), 1200); };
+            audio.onerror = (err)=>{ console.error('Audio playback error', err); panelStatus.textContent = 'Error'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(), 1200); };
+            await audio.play();
+            panelStatus.textContent = 'Hablando...';
+            setSphereState('speaking');
+        }catch(e){
+            console.error('Polly playback failed', e);
+            panelStatus.textContent = 'Error';
+        }
+    }
 
     async function fetchVoiceQuery(q){
         clearTimeout(inactivityTimer);
@@ -668,6 +755,7 @@
                 inactivityTimer = setTimeout(()=> hidePanel(), 3000);
                 return;
             }
+            panelStatus.textContent = 'Procesando...';
             const res = await fetch('/voice/gemini', {
                 method: 'POST',
                 headers: {
@@ -690,16 +778,17 @@
                 return;
             }
             const reply = data && data.speech ? data.speech : '';
+            const source = data && data.source ? data.source : 'gemini';
+            console.debug('Gemini voice response', { source, payload: data });
+            updateSourceIndicator(source);
             if(reply){
-                speak(reply);
-                feedbackEl.innerHTML = '<div class="ok">' + escapeHtml(reply) + '</div>';
+                await playPollySpeech(reply);
             } else {
-                const errorMsg = data && data.error ? data.error : 'Sin respuesta de Gemini.';
-                feedbackEl.innerHTML = '<div class="err">' + escapeHtml(errorMsg) + '</div>';
+                const errorMsg = data && data.error ? data.error : 'Sin respuesta válida.';
                 console.error('Gemini returned no speech', data);
+                panelStatus.textContent = 'Error';
+                inactivityTimer = setTimeout(()=> hidePanel(), 3000);
             }
-            panelStatus.textContent = 'Listo';
-            inactivityTimer = setTimeout(()=> hidePanel(), 3000);
         }catch(e){
             console.error(e);
             feedbackEl.innerHTML = '<div class="err">Error consultando Gemini: ' + escapeHtml(e.message || String(e)) + '</div>';
@@ -708,38 +797,9 @@
         }
     }
 
-    let selectedVoice = null;
-    if (window.speechSynthesis) {
-        window.speechSynthesis.onvoiceschanged = loadVoices;
-        loadVoices();
-        setTimeout(loadVoices, 500);
-    }
-
-    function loadVoices() {
-        const voices = window.speechSynthesis.getVoices() || [];
-        selectedVoice = findFemaleSpanishVoice(voices) || findAnySpanishVoice(voices);
-    }
-
-    function findFemaleSpanishVoice(voices) {
-        const normalized = (text) => (text || '').toLowerCase();
-        const femaleHint = ['female', 'woman', 'mujer', 'feminine', 'maria', 'sofia', 'lucia', 'silvia', 'ines', 'laura', 'emilia', 'valentina', 'alejandra', 'carmen', 'angela', 'marina', 'ana', 'paola', 'adriana', 'helena', 'carla', 'riana', 'laura', 'isabel', 'natalia', 'sofia'];
-
-        return voices.find(voice => {
-            const name = normalized(voice.name);
-            const uri = normalized(voice.voiceURI || '');
-            const lang = normalized(voice.lang);
-            const isSpanish = lang.startsWith('es');
-            return isSpanish && femaleHint.some(hint => name.includes(hint) || uri.includes(hint));
-        });
-    }
-
-    function findAnySpanishVoice(voices) {
-        return voices.find(voice => (voice.lang || '').toLowerCase().startsWith('es'));
-    }
-
     function buildSpeechFromReport(data){ const total = data.totalProps ?? 0; const hoy = data.totalHoy ?? 0; let text = `Hay ${total} propiedades registradas.`; if(hoy>0) text += ` Hoy se registraron ${hoy} propiedades.`; if(Array.isArray(data.latest) && data.latest.length>0){ text += ' Últimas propiedades registradas: '; const items = data.latest.map((r,idx)=>{ const desc = r.descripcion ? r.descripcion.replace(/\s+/g,' ').slice(0,80) : ''; return `${idx+1}: ${desc}`; }); text += items.join('; '); } return text; }
 
-    function speak(text){ if(!window.speechSynthesis){ feedbackEl.innerHTML='<div class="err">SpeechSynthesis no disponible.</div>'; return; } const u = new SpeechSynthesisUtterance(text); if(selectedVoice){ u.voice = selectedVoice; u.lang = selectedVoice.lang || 'es-ES'; } else { u.lang='es-ES'; } u.rate=1.15; u.pitch=1.1; u.volume=1.0; u.onend = ()=>{ inactivityTimer = setTimeout(()=> hidePanel(), 2000); }; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); }
+    async function speak(text){ await playPollySpeech(text); }
 
     function startDotsAnimation(){ const dotEl = panelStatus.querySelector('.dots'); if(!dotEl) return; let n=0; dotEl.textContent=''; dotsTimer = setInterval(()=>{ n=(n+1)%4; dotEl.textContent='.'.repeat(n); },400); }
     function stopDotsAnimation(){ if(dotsTimer){ clearInterval(dotsTimer); dotsTimer=null; const dotEl=panelStatus.querySelector('.dots'); if(dotEl) dotEl.textContent=''; } }

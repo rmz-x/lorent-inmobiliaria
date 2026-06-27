@@ -1,0 +1,6 @@
+Patch: add source indicator and UI updates
+Files changed:
+- app/Http/Controllers/ReporteController.php (include 'source' in JSON)
+- resources/views/compartido/reportes.blade.php (UI: indicator, CSS, JS updates)
+
+Run notes: apply_patch executed via replace/patch tools.

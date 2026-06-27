@@ -1,0 +1,15 @@
+*** Begin Patch
+*** Update File: d:\PROYECTO-V7.0\resources\views\compartido\reportes.blade.php
+@@
+-        <div class="vp-header">
+-            <div class="vp-title">IA Voz</div>
+-            <div class="vp-status" id="voice-panel-status">Inactivo</div>
+-        </div>
++        <div class="vp-header">
++            <div class="vp-title">IA Voz</div>
++            <div style="display:flex;align-items:center;gap:8px">
++                <span id="voice-source-indicator" class="voice-source-indicator" title="Fuente de respuesta" aria-hidden="true"></span>
++                <div class="vp-status" id="voice-panel-status">Inactivo</div>
++            </div>
++        </div>
+*** End Patch

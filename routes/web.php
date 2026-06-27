@@ -251,5 +251,9 @@ Route::middleware(['auth'])->group(function () {
     // Endpoint de voz basado en Gemini AI Studio
     Route::post('/voice/gemini', [\App\Http\Controllers\ReporteController::class, 'voiceQuery'])
         ->name('voice.gemini');
+
+    // Endpoint de voz usando Amazon Polly
+    Route::post('/voice/polly', [\App\Http\Controllers\ReporteController::class, 'voicePolly'])
+        ->name('voice.polly');
 });
 

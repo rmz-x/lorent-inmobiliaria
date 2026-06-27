@@ -121,32 +121,51 @@
             }
         }
 
-        let selectedVoice = null;
-        if (window.speechSynthesis) {
-            window.speechSynthesis.onvoiceschanged = loadVoices;
-            loadVoices();
-            setTimeout(loadVoices, 500);
+        function getCsrfToken() {
+            const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+            if (tokenMeta) {
+                return tokenMeta.getAttribute('content');
+            }
+            const match = document.cookie.match(/(^|;)\s*XSRF-TOKEN=([^;]+)/);
+            return match ? decodeURIComponent(match[2]) : null;
         }
 
-        function loadVoices() {
-            const voices = window.speechSynthesis.getVoices() || [];
-            selectedVoice = findFemaleSpanishVoice(voices) || findAnySpanishVoice(voices);
-        }
+        async function playPollySpeech(text) {
+            if (!text) return;
+            log('Generando voz Polly...');
+            const token = getCsrfToken();
+            if (!token) {
+                log('No CSRF token available for Polly');
+                return;
+            }
 
-        function findFemaleSpanishVoice(voices) {
-            const normalized = (text) => (text || '').toLowerCase();
-            const femaleHint = ['female', 'woman', 'mujer', 'feminine', 'maria', 'sofia', 'lucia', 'silvia', 'ines', 'laura', 'emilia', 'valentina', 'alejandra', 'carmen', 'angela', 'marina', 'ana', 'paola', 'adriana', 'helena', 'carla', 'natalia', 'isabel'];
-            return voices.find(voice => {
-                const name = normalized(voice.name);
-                const uri = normalized(voice.voiceURI || '');
-                const lang = normalized(voice.lang);
-                const isSpanish = lang.startsWith('es');
-                return isSpanish && femaleHint.some(hint => name.includes(hint) || uri.includes(hint));
-            });
-        }
+            try {
+                const res = await fetch('/voice/polly', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text }),
+                    credentials: 'same-origin'
+                });
 
-        function findAnySpanishVoice(voices) {
-            return voices.find(voice => (voice.lang || '').toLowerCase().startsWith('es'));
+                const data = await res.json();
+                if (!res.ok || !data.audio) {
+                    log('Error Polly: ' + (data.error || res.status));
+                    return;
+                }
+
+                const audio = new Audio('data:audio/mpeg;base64,' + data.audio);
+                audio.onended = () => { log('Polly finalizó.'); };
+                audio.onerror = (err) => { log('Error reproducción Polly: ' + err.message); };
+                await audio.play();
+                log('Reproduciendo Polly.');
+            } catch (e) {
+                log('Polly request failed: ' + e.message);
+            }
         }
 
         function buildSpeechFromReport(data){
@@ -166,21 +185,8 @@
             return text;
         }
 
-        function speak(text){
-            if (!window.speechSynthesis) { log('SpeechSynthesis no disponible en este navegador.'); return; }
-            const u = new SpeechSynthesisUtterance(text);
-            if (selectedVoice) {
-                u.voice = selectedVoice;
-                u.lang = selectedVoice.lang || 'es-ES';
-            } else {
-                u.lang = 'es-ES';
-            }
-            u.rate = 1.15;
-            u.pitch = 1.1;
-            u.volume = 1.0;
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(u);
-            log('Hablando: ' + text);
+        async function speak(text){
+            await playPollySpeech(text);
         }
     </script>
 </body>

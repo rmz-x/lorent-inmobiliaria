@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
+use Aws\Polly\PollyClient;
 use App\Exports\ReporteExport;
 
 class ReporteController extends Controller
@@ -99,9 +100,9 @@ class ReporteController extends Controller
 
         $systemPrompt = "Eres un asistente de voz para un dashboard inmobiliario. Responde siempre en español.
 Usa únicamente los datos que te entrega el servidor. No inventes cifras ni supongas información adicional.
-Responde de forma natural, clara y breve.";
+Responde en oraciones completas y termina siempre con un punto.";
 
-        $userPrompt = "Pregunta: {$query}\n\nDatos disponibles:\n" . $this->formatVoiceContext($context) . "\n\nResponde en un texto natural en español.";
+        $userPrompt = "Pregunta: {$query}\n\nDatos disponibles:\n" . $this->formatVoiceContext($context) . "\n\nResponde en un texto natural en español con oraciones completas y terminadas en punto.";
 
         $endpoint = "{$apiUrl}/{$model}:generateContent";
         $payload = [
@@ -138,7 +139,20 @@ Responde de forma natural, clara y breve.";
                 ]);
             }
             $fallbackReply = $this->localVoiceFallback($query, $context);
-            return response()->json(['speech' => $fallbackReply]);
+            if ($fallbackReply !== null) {
+                return response()->json([
+                    'speech' => $fallbackReply,
+                    'source' => 'fallback',
+                    'reason' => 'request_exception',
+                    'reason_detail' => $e->getMessage(),
+                ]);
+            }
+            return response()->json([
+                'error' => 'Gemini request exception',
+                'source' => 'gemini',
+                'reason' => 'request_exception',
+                'reason_detail' => $e->getMessage(),
+            ], 502);
         }
 
         if (!$response->successful()) {
@@ -159,7 +173,12 @@ Responde de forma natural, clara y breve.";
 
             $fallbackReply = $this->localVoiceFallback($query, $context);
             if ($fallbackReply !== null) {
-                return response()->json(['speech' => $fallbackReply]);
+                return response()->json([
+                    'speech' => $fallbackReply,
+                    'source' => 'fallback',
+                    'reason' => 'gemini_http_error',
+                    'reason_detail' => $responseBody,
+                ]);
             }
 
             $statusCode = $response->status();
@@ -169,6 +188,8 @@ Responde de forma natural, clara y breve.";
                     'status' => 429,
                     'body' => $responseBody,
                     'message' => 'Demasiadas solicitudes a Gemini. Revisa tu cuota o espera unos segundos.',
+                    'source' => 'gemini',
+                    'reason' => 'gemini_rate_limit',
                 ], 429);
             }
 
@@ -176,10 +197,13 @@ Responde de forma natural, clara y breve.";
                 'error' => 'Gemini API request failed',
                 'status' => $statusCode,
                 'body' => $responseBody,
+                'source' => 'gemini',
+                'reason' => 'gemini_http_error',
             ], 502);
         }
 
         $replyText = $this->parseGeminiResponseText($response->json());
+        $replyText = $this->ensureCompleteSentence($replyText);
         if ($replyText === '') {
             if (function_exists('logger')) {
                 logger('Gemini response missing text', [
@@ -188,10 +212,85 @@ Responde de forma natural, clara y breve.";
                 ]);
             }
             $fallbackReply = $this->localVoiceFallback($query, $context);
-            return response()->json(['speech' => $fallbackReply]);
+            if ($fallbackReply !== null) {
+                return response()->json([
+                    'speech' => $fallbackReply,
+                    'source' => 'fallback',
+                    'reason' => 'gemini_parse_failure',
+                    'reason_detail' => $response->json(),
+                ]);
+            }
+            return response()->json([
+                'error' => 'Gemini response contained no valid text',
+                'source' => 'gemini',
+                'reason' => 'gemini_parse_failure',
+                'reason_detail' => $response->json(),
+            ], 502);
         }
 
-        return response()->json(['speech' => $replyText]);
+        return response()->json(['speech' => $replyText, 'source' => 'gemini', 'reason' => 'gemini_success']);
+    }
+
+    public function voicePolly(Request $request)
+    {
+        $text = trim((string) $request->input('text', ''));
+        if ($text === '') {
+            return response()->json(['error' => 'Missing text parameter'], 400);
+        }
+
+        $apiKey = env('AWS_ACCESS_KEY_ID');
+        $apiSecret = env('AWS_SECRET_ACCESS_KEY');
+        $region = trim((string) env('AWS_POLLY_REGION', env('AWS_DEFAULT_REGION', 'us-west-2')));
+        $voice = trim((string) env('AWS_POLLY_VOICE', 'Lucia'));
+        $engine = trim((string) env('AWS_POLLY_ENGINE', 'neural')) ?: 'neural';
+
+        if (!$apiKey || !$apiSecret) {
+            return response()->json(['error' => 'AWS credentials not configured'], 500);
+        }
+
+        try {
+            $client = new PollyClient([
+                'version' => 'latest',
+                'region' => $region,
+                'credentials' => [
+                    'key' => $apiKey,
+                    'secret' => $apiSecret,
+                ],
+            ]);
+
+            $result = $client->synthesizeSpeech([
+                'OutputFormat' => 'mp3',
+                'Text' => $text,
+                'VoiceId' => $voice,
+                'Engine' => $engine,
+                'TextType' => 'text',
+            ]);
+
+            $audioStream = $result->get('AudioStream');
+            if (!$audioStream) {
+                throw new \RuntimeException('No audio data returned by Polly');
+            }
+
+            $audio = $audioStream->getContents();
+            return response()->json([
+                'audio' => base64_encode($audio),
+                'voice' => $voice,
+                'region' => $region,
+            ]);
+        } catch (\Throwable $e) {
+            if (function_exists('logger')) {
+                logger('Polly synthesis failed', [
+                    'message' => $e->getMessage(),
+                    'text' => $text,
+                    'region' => $region,
+                    'voice' => $voice,
+                ]);
+            }
+            return response()->json([
+                'error' => 'Polly synthesis failed',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     private function collectVoiceContext(): array
@@ -264,93 +363,150 @@ Responde de forma natural, clara y breve.";
 
     private function parseGeminiResponseText(array $json): string
     {
-        if (!isset($json['candidates'][0]['content'])) {
-            return '';
+        if (isset($json['candidates']) && is_array($json['candidates'])) {
+            $collected = [];
+            foreach ($json['candidates'] as $candidate) {
+                if (!is_array($candidate) || !isset($candidate['content'])) {
+                    continue;
+                }
+                $collected[] = $this->extractGeminiText($candidate['content']);
+            }
+            $text = trim(preg_replace('/\s+/u', ' ', implode(' ', array_filter($collected))));
+            return $text;
         }
 
-        $content = $json['candidates'][0]['content'];
-        if (is_string($content)) {
-            return trim($content);
-        }
-
-        if (is_array($content)) {
-            if (isset($content['text']) && is_string($content['text'])) {
-                return trim($content['text']);
-            }
-
-            if (isset($content['parts']) && is_array($content['parts'])) {
-                foreach ($content['parts'] as $part) {
-                    if (is_string($part)) {
-                        return trim($part);
-                    }
-                    if (is_array($part)) {
-                        if (isset($part['text']) && is_string($part['text'])) {
-                            return trim($part['text']);
-                        }
-                        if (isset($part['output_text']) && is_string($part['output_text'])) {
-                            return trim($part['output_text']);
-                        }
-                    }
-                }
-            }
-
-            if (isset($content[0]) && is_array($content[0])) {
-                foreach ($content as $contentItem) {
-                    if (!is_array($contentItem)) {
-                        continue;
-                    }
-
-                    if (isset($contentItem['text']) && is_string($contentItem['text'])) {
-                        return trim($contentItem['text']);
-                    }
-
-                    if (isset($contentItem['output_text']) && is_string($contentItem['output_text'])) {
-                        return trim($contentItem['output_text']);
-                    }
-
-                    if (isset($contentItem['parts']) && is_array($contentItem['parts'])) {
-                        foreach ($contentItem['parts'] as $part) {
-                            if (is_string($part)) {
-                                return trim($part);
-                            }
-                            if (is_array($part)) {
-                                if (isset($part['text']) && is_string($part['text'])) {
-                                    return trim($part['text']);
-                                }
-                                if (isset($part['output_text']) && is_string($part['output_text'])) {
-                                    return trim($part['output_text']);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if (isset($json['content'])) {
+            return trim(preg_replace('/\s+/u', ' ', $this->extractGeminiText($json['content'])));
         }
 
         return '';
     }
 
+    private function extractGeminiText(mixed $content): string
+    {
+        $parts = [];
+
+        if (is_string($content)) {
+            return $content;
+        }
+
+        if (!is_array($content)) {
+            return '';
+        }
+
+        if (isset($content['text']) && is_string($content['text'])) {
+            $parts[] = $content['text'];
+        }
+
+        if (isset($content['output_text']) && is_string($content['output_text'])) {
+            $parts[] = $content['output_text'];
+        }
+
+        if (isset($content['parts']) && is_array($content['parts'])) {
+            foreach ($content['parts'] as $part) {
+                $partText = $this->extractGeminiText($part);
+                if ($partText !== '') {
+                    $parts[] = $partText;
+                }
+            }
+        }
+
+        if ($this->isSequentialArray($content)) {
+            foreach ($content as $item) {
+                $itemText = $this->extractGeminiText($item);
+                if ($itemText !== '') {
+                    $parts[] = $itemText;
+                }
+            }
+        }
+
+        return trim(preg_replace('/\s+/u', ' ', implode(' ', array_filter($parts))));
+    }
+
+    private function isSequentialArray(array $array): bool
+    {
+        return array_keys($array) === range(0, count($array) - 1);
+    }
+
+    private function ensureCompleteSentence(string $text): string
+    {
+        $trimmed = trim($text);
+        if ($trimmed === '') {
+            return '';
+        }
+        $lastChar = mb_substr($trimmed, -1);
+        if (!in_array($lastChar, ['.', '!', '?'], true)) {
+            $trimmed .= '.';
+        }
+        return $trimmed;
+    }
+
     private function localVoiceFallback(string $query, array $context): ?string
     {
-        $lower = mb_strtolower($query, 'UTF-8');
+        $normalized = $this->normalizeText($query);
 
-        if (str_contains($lower, 'inicio') || str_contains($lower, 'sesion') || str_contains($lower, 'login')) {
+        $isSession = $this->containsAny($normalized, ['inicio de sesión', 'inicios de sesión', 'sesion', 'sesiones', 'login', 'logins']);
+        $isFailed = $this->containsAny($normalized, ['fallido', 'fallidos', 'intento fallido', 'intentos fallidos', 'error de acceso']);
+        $isProperty = $this->containsAny($normalized, ['propiedad', 'propiedades', 'registradas', 'inmueble', 'vivienda']);
+        $isActivity = $this->containsAny($normalized, ['actividad', 'reporte', 'reportes', 'evento', 'eventos', 'registro', 'registros']);
+        $isToday = $this->containsAny($normalized, ['hoy', 'solo hoy', 'de hoy', 'este dia', 'esta mañana', 'esta tarde', 'esta noche']);
+        $isTotal = $this->containsAny($normalized, ['total', 'en total', 'hasta ahora', 'todos', 'todo', 'sumados']);
+
+        if ($isSession) {
+            if ($isToday && !$isTotal) {
+                return "Hoy se registraron {$context['totalLoginsToday']} inicios de sesión.";
+            }
+            if ($isTotal && !$isToday) {
+                return "Hay {$context['totalLogins']} inicios de sesión registrados en total.";
+            }
             return "Hay {$context['totalLogins']} inicios de sesión registrados, de los cuales {$context['totalLoginsToday']} son de hoy.";
         }
 
-        if (str_contains($lower, 'fallido') || str_contains($lower, 'intento fallido')) {
-            return "Hay {$context['totalFailed']} intentos fallidos registrados, y {$context['totalFailedToday']} intentos fallidos hoy.";
+        if ($isFailed) {
+            if ($isToday && !$isTotal) {
+                return "Hoy se registraron {$context['totalFailedToday']} intentos fallidos.";
+            }
+            if ($isTotal && !$isToday) {
+                return "Hay {$context['totalFailed']} intentos fallidos registrados en total.";
+            }
+            return "Hay {$context['totalFailed']} intentos fallidos registrados, y {$context['totalFailedToday']} de ellos fueron hoy.";
         }
 
-        if (str_contains($lower, 'propiedad') || str_contains($lower, 'propiedades')) {
+        if ($isProperty) {
+            if ($isToday && !$isTotal) {
+                return "Hoy se registraron {$context['totalPropsToday']} propiedades.";
+            }
+            if ($isTotal && !$isToday) {
+                return "Hay {$context['totalProps']} propiedades registradas en total.";
+            }
             return "Se han registrado {$context['totalProps']} propiedades en total, y {$context['totalPropsToday']} de ellas hoy.";
         }
 
-        if (str_contains($lower, 'evento') || str_contains($lower, 'actividad') || str_contains($lower, 'registro')) {
-            return "Hoy hay {$context['totalLoginsToday']} inicios de sesión y {$context['totalPropsToday']} propiedades registradas. Revisa el panel para más detalles.";
+        if ($isActivity) {
+            if ($isToday) {
+                return "Hoy hay {$context['totalLoginsToday']} inicios de sesión y {$context['totalPropsToday']} propiedades registradas.";
+            }
+            return "En el panel hay datos recientes sobre {$context['totalLogins']} inicios de sesión y {$context['totalProps']} propiedades registradas.";
         }
 
-        return 'Lo siento, en este momento no puedo consultar la IA. Por favor intenta de nuevo en unos instantes.';
+        return 'No tengo una respuesta exacta para eso ahora. Intenta preguntar de nuevo.';
+    }
+
+    private function normalizeText(string $text): string
+    {
+        $text = mb_strtolower($text, 'UTF-8');
+        $text = str_replace(['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü', '¿', '?', '¡', '!'], ['a', 'e', 'i', 'o', 'u', 'n', 'u', '', '', '', ''], $text);
+        return preg_replace('/\s+/u', ' ', trim($text));
+    }
+
+    private function containsAny(string $text, array $words): bool
+    {
+        foreach ($words as $word) {
+            if (str_contains($text, $word)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
