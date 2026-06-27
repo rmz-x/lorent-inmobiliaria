@@ -140,45 +140,80 @@
 @keyframes mic-pulse { 0%{ box-shadow: 0 12px 28px rgba(79,70,229,0.36), 0 0 0 0 rgba(99,102,241,0.06);} 50%{ box-shadow: 0 16px 34px rgba(79,70,229,0.44), 0 0 0 10px rgba(99,102,241,0.10);} 100%{ box-shadow: 0 12px 28px rgba(79,70,229,0.36), 0 0 0 0 rgba(99,102,241,0.06);} }
 .btn-voice.listening .mic-thumb { animation: mic-pulse 1.2s infinite; }
 /* Floating voice button and panel */
-.floating-voice-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,#1e40af,#2563eb); color:#fff; border:none; padding:8px 12px; border-radius:16px; font-weight:700; box-shadow:0 12px 28px rgba(37,99,235,0.30), 0 0 0 1px rgba(59,130,246,0.15); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, filter .18s ease; }
-.floating-voice-btn:hover { transform:translateY(-1px); box-shadow:0 18px 40px rgba(37,99,235,0.42), 0 0 0 2px rgba(59,130,246,0.18); background:linear-gradient(135deg,#1d4ed8,#1e40af); filter:brightness(1.08); }
-.floating-voice-btn .fv-icon { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,0.22); }
+.floating-voice-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,#5b21b6,#4338ca); color:#fff; border:none; padding:10px 14px; border-radius:22px; font-weight:700; box-shadow:0 18px 48px rgba(88,70,204,0.30), 0 0 0 1px rgba(167,139,250,0.16); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, filter .18s ease; }
+.floating-voice-btn:hover { transform:translateY(-2px); box-shadow:0 22px 52px rgba(88,70,204,0.38), 0 0 0 2px rgba(167,139,250,0.20); background:linear-gradient(135deg,#4f46e5,#4338ca); filter:brightness(1.05); }
+.floating-voice-btn .fv-icon { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.20); box-shadow: inset 0 2px 6px rgba(255,255,255,0.35); }
 .floating-voice-btn .fv-label { font-size:13px; color:#fff; }
-.voice-panel { position:fixed; top:64px; right:20px; width:340px; max-width:calc(100% - 40px); background:linear-gradient(180deg, rgba(10,20,45,0.97), rgba(16,42,77,0.96)); color:#f8fbff; border-radius:26px; box-shadow:0 34px 98px rgba(7,18,54,0.30); z-index:1000; overflow:hidden; animation:fadeIn .18s ease; border:1px solid rgba(96,165,250,0.18); backdrop-filter: blur(20px); }
-.voice-panel.dark { background:linear-gradient(180deg, rgba(8,14,34,0.96), rgba(15,27,55,0.94)); color:#f8fcff; }
-.voice-panel .vp-header { display:flex; align-items:flex-start; justify-content:space-between; padding:16px 18px; background:linear-gradient(135deg, rgba(59,130,246,0.92), rgba(168,85,247,0.92)); color:#fff; box-shadow: inset 0 -1px 0 rgba(255,255,255,0.08); }
-.voice-panel.dark .vp-header { background:linear-gradient(135deg, rgba(67,56,202,0.94), rgba(37,99,235,0.92)); }
-.voice-panel .vp-title { font-weight:600; font-size:14px; letter-spacing:.01em; }
-.voice-panel .vp-subtitle { font-size:12px; color:rgba(255,255,255,0.88); margin-top:3px; }
-.voice-panel .vp-status { font-size:11px; color:rgba(255,255,255,0.92); font-weight:500; background:rgba(255,255,255,0.10); padding:7px 11px; border-radius:999px; white-space:nowrap; }
-.voice-panel .vp-body { padding:18px 20px 20px; display:grid; gap:14px; text-align:center; }
-.assistant-sphere-container { display:flex; justify-content:center; padding:8px 0 0; }
-.assistant-sphere { position: relative; width:132px; height:132px; display:flex; align-items:center; justify-content:center; margin:0 auto; }
-.sphere-core { width:86px; height:86px; border-radius:50%; background: radial-gradient(circle at 30% 22%, rgba(255,255,255,0.95) 0%, rgba(147,197,253,0.30) 17%, rgba(129,140,248,0.55) 38%, rgba(168,85,247,0.78) 62%, rgba(49,46,129,1) 100%); box-shadow: 0 0 0 20px rgba(148,187,255,0.08), 0 26px 60px rgba(59,130,246,0.30), inset 0 0 24px rgba(255,255,255,0.32); position:relative; z-index:2; transition:transform .28s ease, box-shadow .28s ease, background .28s ease; }
-.sphere-core::before { content:''; position:absolute; top:10%; left:14%; width:28px; height:28px; border-radius:50%; background: rgba(255,255,255,0.85); filter: blur(2px); opacity:0.9; }
-.sphere-core::after { content:''; position:absolute; bottom:14%; right:14%; width:20px; height:20px; border-radius:50%; background: rgba(255,255,255,0.32); filter: blur(3px); opacity:0.75; }
-.sphere-ring { position:absolute; border-radius:50%; opacity:0.75; pointer-events:none; }
-.ring-outer { width:148px; height:148px; border:1px solid rgba(96,165,250,0.32); top:-8px; left:-8px; animation: ringSpin 9s linear infinite; }
-.ring-inner { width:102px; height:102px; border:1px solid rgba(168,85,247,0.60); top:14px; left:14px; animation: ringGlow 2.6s ease-in-out infinite; }
-.assistant-sphere::before { content:''; position:absolute; inset:0; border-radius:50%; box-shadow: 0 0 0 26px rgba(96,165,250,0.10), 0 0 0 42px rgba(168,85,247,0.08); }
-.assistant-sphere::after { content:''; position:absolute; inset:10px; border-radius:50%; box-shadow: 0 0 0 20px rgba(59,130,246,0.10); opacity:0.45; filter: blur(8px); }
-.assistant-sphere.idle .sphere-core { animation: idleGlow 4s ease-in-out infinite; }
+.voice-panel { position:fixed; top:84px; right:28px; width:min(410px, calc(100vw - 36px)); background:#07143c; color:#eef2ff; border-radius:26px; box-shadow:0 24px 70px rgba(20,42,104,0.28), 0 8px 22px rgba(14,28,78,0.16); z-index:1000; overflow:hidden; animation:panelReveal .24s cubic-bezier(.2,.8,.2,1); border:1px solid rgba(88,112,218,0.42); backdrop-filter: blur(22px); transform-origin:88% 0; }
+.voice-panel::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,255,255,0.22), transparent 18%, transparent 82%, rgba(255,255,255,0.10)); opacity:.22; pointer-events:none; }
+.voice-panel::after { content:''; position:absolute; inset:auto 0 0; height:54%; background:linear-gradient(180deg, transparent, rgba(41,89,194,0.32)); pointer-events:none; }
+.voice-panel.dark { background:#07143c; color:#eef2ff; }
+.voice-panel .vp-header { position:relative; z-index:2; min-height:72px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:18px 22px; background:linear-gradient(135deg, #426ee8 0%, #5360dc 54%, #6545c4 100%); color:#fff; box-shadow: inset 0 -1px 0 rgba(0,0,0,0.16); border-bottom:1px solid rgba(5,15,55,0.38); }
+.voice-panel .vp-header::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 18% 0%, rgba(255,255,255,0.30), transparent 31%), radial-gradient(circle at 92% 28%, rgba(183,163,255,0.28), transparent 28%); pointer-events:none; }
+.voice-panel .vp-header::after { content:''; position:absolute; left:0; right:0; top:0; height:2px; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.82), transparent); opacity:.55; pointer-events:none; }
+.voice-panel.dark .vp-header { background:linear-gradient(135deg, rgba(19,83,184,0.94), rgba(54,103,212,0.90)); }
+.voice-panel .vp-title { position:relative; z-index:1; font-weight:800; font-size:20px; line-height:1; letter-spacing:0; }
+.voice-panel .vp-subtitle { font-size:12px; color:rgba(255,255,255,0.92); margin-top:3px; }
+.voice-panel .vp-status { position:relative; z-index:1; font-size:14px; line-height:1; color:#fff; font-weight:800; background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.10); padding:12px 18px; border-radius:999px; white-space:nowrap; backdrop-filter: blur(12px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.16); }
+.voice-panel .vp-body { position:relative; z-index:1; min-height:310px; padding:0 22px 24px; display:grid; grid-template-rows:1fr auto; gap:4px; text-align:center; background:linear-gradient(180deg, #081236 0%, #142861 100%); overflow:hidden; }
+.voice-panel .vp-body::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 40%, rgba(78,91,245,0.30), transparent 34%), radial-gradient(circle at 50% 56%, rgba(32,169,255,0.18), transparent 46%), radial-gradient(circle at 88% 24%, rgba(151,64,255,0.24), transparent 18%), radial-gradient(circle at 12% 36%, rgba(41,213,255,0.14), transparent 22%); pointer-events:none; }
+.voice-panel .vp-body::after { content:''; position:absolute; inset:16px 16px 72px; background-image:radial-gradient(circle, rgba(255,255,255,0.86) 0 1px, transparent 1.5px), radial-gradient(circle, rgba(97,145,255,0.72) 0 1.2px, transparent 1.8px); background-size:58px 64px, 82px 70px; background-position:5px 12px, 31px 4px; opacity:.20; animation:starDrift 12s linear infinite; pointer-events:none; }
+.assistant-sphere-container { position:relative; display:flex; justify-content:center; align-items:center; min-height:232px; padding-top:8px; isolation:isolate; }
+.assistant-sphere-container::before { content:''; position:absolute; left:50%; top:52%; width:118%; height:54%; transform:translate(-50%, -50%); background:radial-gradient(ellipse at center, rgba(88,99,255,0.42), rgba(42,75,181,0.16) 42%, transparent 71%); border-radius:50%; filter:blur(2px); pointer-events:none; }
+.assistant-sphere { position:relative; width:282px; height:218px; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+.assistant-sphere::before { content:''; position:absolute; width:226px; height:226px; border-radius:50%; background:repeating-radial-gradient(circle, transparent 0 22px, rgba(96,129,255,0.24) 23px 24px, transparent 25px 34px); opacity:.66; animation:ringSpin 22s linear infinite; pointer-events:none; }
+.assistant-sphere::after { content:''; position:absolute; width:292px; height:164px; border-radius:50%; border:1px solid rgba(113,88,255,0.24); box-shadow:0 0 24px rgba(80,106,255,0.28), inset 0 0 22px rgba(28,219,255,0.08); transform:rotate(-12deg); animation:orbitTilt 8s ease-in-out infinite; pointer-events:none; }
+.sphere-core { width:124px; height:124px; position:relative; z-index:4; border-radius:50%; filter:drop-shadow(0 0 18px rgba(117,113,255,0.50)); }
+.sphere-blob { position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 28% 20%, #ffffff 0 10%, #e5f0ff 11% 18%, rgba(126,188,255,0.92) 29%, rgba(121,111,246,0.95) 48%, rgba(242,98,255,0.78) 72%, rgba(103,51,230,0.86) 100%); box-shadow:0 0 0 2px rgba(255,255,255,0.56), 0 0 34px rgba(255,255,255,0.44), 0 0 70px rgba(94,88,255,0.56), inset -22px -24px 42px rgba(78,33,175,0.36), inset 16px 18px 36px rgba(255,255,255,0.36); animation:blobMorph 6s ease-in-out infinite, orbGlow 2.6s ease-in-out infinite; }
+.sphere-blob::before { content:''; position:absolute; width:40px; height:30px; top:15px; left:20px; border-radius:50%; background:rgba(255,255,255,0.92); filter:blur(5px); transform:rotate(-30deg); }
+.sphere-blob::after { content:''; position:absolute; width:34px; height:24px; right:20px; bottom:29px; border-radius:50%; background:rgba(255,199,255,0.52); filter:blur(7px); }
+.sphere-ring { position:absolute; z-index:2; border-radius:50%; opacity:.72; pointer-events:none; }
+.ring-outer { width:226px; height:226px; border:1px solid rgba(92,127,255,0.32); box-shadow:0 0 24px rgba(73,106,255,0.22); animation:ringSpin 15s linear infinite; }
+.ring-inner { width:168px; height:168px; border:1px solid rgba(80,216,255,0.24); box-shadow:inset 0 0 18px rgba(75,107,255,0.22); animation:ringGlow 3.2s ease-in-out infinite; }
+.sphere-particle { position:absolute; z-index:3; border-radius:50%; background:rgba(255,255,255,0.92); box-shadow:0 0 14px rgba(255,255,255,0.76), 0 0 32px rgba(58,207,255,0.50); opacity:.95; pointer-events:none; }
+.particle-1 { width:7px; height:7px; top:18%; left:14%; animation:particleFloat 5.5s ease-in-out infinite; }
+.particle-2 { width:5px; height:5px; top:12%; right:17%; animation:particleFloat 4.8s ease-in-out infinite .8s; }
+.particle-3 { width:6px; height:6px; bottom:21%; left:12%; animation:particleFloat 6.4s ease-in-out infinite .5s; }
+.particle-4 { width:7px; height:7px; bottom:22%; right:13%; animation:particleFloat 5.9s ease-in-out infinite .3s; }
+.particle-5 { width:5px; height:5px; top:47%; left:3%; animation:particleFloat 4.2s ease-in-out infinite .6s; }
+.sphere-wave { position:absolute; z-index:3; left:50%; top:50%; height:3px; border-radius:999px; background:linear-gradient(90deg, transparent 0%, rgba(62,219,255,0.14) 7%, rgba(60,231,255,0.98) 24%, rgba(255,255,255,0.98) 48%, rgba(255,86,255,0.98) 74%, rgba(103,88,255,0.22) 93%, transparent 100%); box-shadow:0 0 16px rgba(61,226,255,0.78), 0 0 28px rgba(235,83,255,0.44); opacity:.96; filter:blur(.2px); pointer-events:none; }
+.wave-1 { width:330px; transform:translateX(-50%); animation:wavePulse 2.2s ease-in-out infinite; }
+.wave-2 { width:296px; transform:translateX(-50%) translateY(-7px) rotate(-2deg); opacity:.52; animation:wavePulseAlt 2.7s ease-in-out infinite .22s; }
+.wave-3 { width:310px; transform:translateX(-50%) translateY(8px) rotate(2deg); opacity:.44; animation:wavePulseAlt 2.5s ease-in-out infinite .45s; }
+.assistant-sphere.idle .sphere-blob { animation: blobMorph 6s ease-in-out infinite; }
+.assistant-sphere.listening .sphere-blob { animation: blobMorph 5s ease-in-out infinite; }
+.assistant-sphere.processing .sphere-blob { animation: blobMorph 4.2s ease-in-out infinite; }
+.assistant-sphere.speaking .sphere-blob { animation: blobMorph 3.8s ease-in-out infinite; }
 .assistant-sphere.listening .sphere-core { animation: listeningPulse 1.2s ease-in-out infinite; }
 .assistant-sphere.processing .sphere-core { animation: thinkingPulse 1.8s ease-in-out infinite; }
-.assistant-sphere.speaking .sphere-core { animation: speakingPulse 1.2s ease-in-out infinite; background: radial-gradient(circle at 30% 22%, rgba(255,255,255,0.95) 0%, rgba(237,233,254,0.20) 15%, rgba(167,139,250,0.50) 38%, rgba(99,102,241,0.82) 68%, rgba(49,46,129,1) 100%); box-shadow: 0 0 0 26px rgba(167,139,250,0.22), 0 30px 64px rgba(59,130,246,0.30), inset 0 0 56px rgba(255,255,255,0.32); transform: scale(1.04); }
-.vp-transcript { font-size:14px; color:#f8fbff; min-height:50px; line-height:1.5; text-align:center; font-weight:700; }
+.assistant-sphere.speaking .sphere-core { animation: speakingPulse 1.2s ease-in-out infinite; background: radial-gradient(circle at 35% 30%, #ffffff 0%, #ede9fe 16%, #c4b5fd 44%, #7c3aed 72%, #312e81 100%); box-shadow: 0 0 0 24px rgba(192,132,252,0.24), 0 28px 64px rgba(79,70,229,0.32), inset 0 0 48px rgba(255,255,255,0.52); transform: scale(1.04); }
+.vp-transcript { position:relative; z-index:2; display:flex; align-items:center; justify-content:center; min-height:50px; color:#fff; font-size:21px; line-height:1.2; text-align:center; font-weight:500; text-shadow:0 8px 24px rgba(0,0,0,0.20); overflow:hidden; }
 .vp-feedback { display:none !important; }
-.vp-feedback .ok { background:#ecfdf5; color:#065f46; padding:8px 10px; border-radius:10px; display:inline-block; }
-.vp-feedback .err { background:#fef2f2; color:#b91c1c; padding:8px 10px; border-radius:10px; display:inline-block; }
+.vp-feedback .ok { background:rgba(16,185,129,0.14); color:#d1fae5; padding:8px 10px; border-radius:12px; display:inline-block; }
+.vp-feedback .err { background:rgba(248,113,113,0.14); color:#fee2e2; padding:8px 10px; border-radius:12px; display:inline-block; }
 .source-note { display:none; }
-@keyframes idleGlow { 0%,100%{ transform: scale(1); box-shadow: 0 0 0 16px rgba(96,165,250,0.12), 0 18px 44px rgba(37,99,235,0.20); } 50%{ transform: scale(1.03); box-shadow: 0 0 0 22px rgba(96,165,250,0.14), 0 22px 52px rgba(37,99,235,0.24); } }
-@keyframes listeningPulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.07); } }
-@keyframes thinkingPulse { 0%,100%{ transform: scale(1); } 40%{ transform: scale(1.06); } 80%{ transform: scale(1.02); } }
-@keyframes speakingPulse { 0%,100%{ transform: scale(1); } 30%{ transform: scale(1.08); } 60%{ transform: scale(1.03); } }
-@keyframes ringSpin { 0%{ transform: rotate(0deg); opacity:0.6; } 100%{ transform: rotate(360deg); opacity:0.6; } }
-@keyframes ringGlow { 0%,100%{ opacity:0.45; } 50%{ opacity:0.75; } }
-@keyframes wave { 0%{ box-shadow:0 0 0 0 rgba(99,102,241,0.12);} 50%{ box-shadow:0 0 0 10px rgba(99,102,241,0.06);} 100%{ box-shadow:0 0 0 0 rgba(99,102,241,0.00);} }
-@keyframes fadeIn { from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
+@keyframes idleGlow { 0%,100%{ transform: scale(1); box-shadow: 0 0 0 16px rgba(99,102,241,0.10), 0 18px 48px rgba(79,70,229,0.22); } 50%{ transform: scale(1.03); box-shadow: 0 0 0 24px rgba(99,102,241,0.12), 0 24px 56px rgba(79,70,229,0.28); } }
+@keyframes listeningPulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.08); } }
+@keyframes thinkingPulse { 0%,100%{ transform: scale(1); } 40%{ transform: scale(1.07); } 80%{ transform: scale(1.03); } }
+@keyframes speakingPulse { 0%,100%{ transform: scale(1); } 30%{ transform: scale(1.09); } 60%{ transform: scale(1.05); } }
+@keyframes ringSpin { 0%{ transform: rotate(0deg); opacity:0.7; } 100%{ transform: rotate(360deg); opacity:0.7; } }
+@keyframes ringGlow { 0%,100%{ opacity:0.45; } 50%{ opacity:0.82; } }
+@keyframes orbitTilt { 0%,100%{ transform:rotate(-12deg) scale(1); opacity:.58; } 50%{ transform:rotate(12deg) scale(1.04); opacity:.82; } }
+@keyframes wavePulse { 0%,100%{ opacity:.78; transform:translateX(-50%) scaleX(.94); } 50%{ opacity:1; transform:translateX(-50%) scaleX(1.08); } }
+@keyframes wavePulseAlt { 0%,100%{ filter:blur(.6px); opacity:.38; } 50%{ filter:blur(.1px); opacity:.82; } }
+@keyframes orbGlow { 0%,100%{ filter:saturate(1) brightness(1); } 50%{ filter:saturate(1.2) brightness(1.08); } }
+@keyframes blobMorph { 0%,100%{ transform:scale(1) rotate(0deg); }
+    25%{ transform:scale(1.025) rotate(2deg); }
+    50%{ transform:scale(.985) rotate(-2deg); }
+    75%{ transform:scale(1.018) rotate(1deg); }
+}
+@keyframes particleFloat { 0%,100%{ transform: translateY(0) translateX(0); opacity:0.9; }
+    50%{ transform: translateY(-14px) translateX(8px); opacity:1; }
+}
+@keyframes starDrift { from{ background-position:5px 12px, 31px 4px; } to{ background-position:67px 80px, 119px 78px; } }
+@keyframes panelReveal { from{ opacity:0; transform:translateY(-12px) scale(.96); } to{ opacity:1; transform:translateY(0) scale(1); } }
+@keyframes panelRevealMobile { from{ opacity:0; transform:translateX(-50%) translateY(-12px) scale(.96); } to{ opacity:1; transform:translateX(-50%) translateY(0) scale(1); } }
+@keyframes fadeIn { from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:translateY(0);} }
 .btn-filter {
     background: #1a3d8f; color: #fff; border: none;
     padding: 8px 20px; border-radius: 8px; font-size: 13px;
@@ -245,25 +280,62 @@
 /* Mobile card design */
 @media (max-width: 640px) {
     .voice-panel {
+        top: 76px;
         left: 50%;
         right: auto;
         transform: translateX(-50%);
+        animation: panelRevealMobile .28s cubic-bezier(.2,.8,.2,1);
         width: calc(100% - 32px);
         max-width: 100%;
-    }
-    .voice-panel .vp-body {
-        text-align: center;
-    }
-    .vp-transcript {
-        text-align: center;
-        font-weight: 700;
+        border-radius: 28px;
     }
     .voice-panel .vp-header {
-        justify-content: center;
-        text-align: center;
+        min-height: 86px;
+        padding: 20px;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .voice-panel .vp-title {
+        font-size: 23px;
     }
     .voice-panel .vp-status {
-        margin: 8px auto 0;
+        padding: 13px 22px;
+        font-size: 17px;
+    }
+    .voice-panel .vp-body {
+        min-height: 330px;
+        padding: 0 16px 26px;
+        text-align: center;
+    }
+    .assistant-sphere-container {
+        min-height: 230px;
+    }
+    .assistant-sphere {
+        width: min(292px, 100%);
+        height: 218px;
+    }
+    .sphere-core {
+        width: 116px;
+        height: 116px;
+    }
+    .ring-outer {
+        width: 218px;
+        height: 218px;
+    }
+    .ring-inner {
+        width: 160px;
+        height: 160px;
+    }
+    .wave-1,
+    .wave-2,
+    .wave-3 {
+        width: 360px;
+    }
+    .vp-transcript {
+        min-height: 50px;
+        font-size: 21px;
+        text-align: center;
+        font-weight: 400;
     }
     .table-container {
         display: block !important;
@@ -443,9 +515,19 @@
         <div class="vp-body">
             <div class="assistant-sphere-container">
                 <div id="assistant-sphere" class="assistant-sphere idle" aria-hidden="true">
+                    <div class="sphere-particle particle-1"></div>
+                    <div class="sphere-particle particle-2"></div>
+                    <div class="sphere-particle particle-3"></div>
+                    <div class="sphere-particle particle-4"></div>
+                    <div class="sphere-particle particle-5"></div>
+                    <div class="sphere-wave wave-1"></div>
+                    <div class="sphere-wave wave-2"></div>
+                    <div class="sphere-wave wave-3"></div>
                     <div class="sphere-ring ring-outer"></div>
                     <div class="sphere-ring ring-inner"></div>
-                    <div class="sphere-core"></div>
+                    <div class="sphere-core">
+                        <div class="sphere-blob"></div>
+                    </div>
                 </div>
             </div>
             <div class="vp-transcript" id="voice-transcript">Habla ahora...</div>
@@ -576,6 +658,7 @@
     let dotsTimer = null;
     let recognition = null;
     let finalTranscript = '';
+    const audioCache = new Map();
     if(supportsSR){
         recognition = new SpeechRecognition();
         recognition.lang = 'es-ES';
@@ -583,7 +666,12 @@
         recognition.maxAlternatives = 1;
     }
 
-    function showPanel(){ voicePanel.style.display = 'block'; voiceBtn.setAttribute('aria-expanded','true'); setSphereState('idle'); }
+    function showPanel(){
+        voicePanel.style.display = 'block';
+        document.body.classList.add('voice-panel-open');
+        voiceBtn.setAttribute('aria-expanded','true');
+        setSphereState('idle');
+    }
     function hidePanel(){
         clearTimeout(inactivityTimer);
         inactivityTimer = null;
@@ -591,6 +679,7 @@
             try{ recognition.stop(); } catch(e){}
         }
         voicePanel.style.display = 'none';
+        document.body.classList.remove('voice-panel-open');
         voiceBtn.setAttribute('aria-expanded','false');
         transcriptEl.textContent = 'Habla ahora...';
         panelStatus.textContent = 'Inactivo';
@@ -637,7 +726,7 @@
 
     if(recognition){
         recognition.onstart = ()=>{ recognizing = true; panelStatus.innerHTML = 'Escuchando<span class="dots">...</span>'; voicePanel.classList.add('listening'); setSphereState('listening'); };
-        recognition.onresult = (event)=>{ let interim=''; for(let i=event.resultIndex;i<event.results.length;i++){ const res=event.results[i]; if(res.isFinal){ finalTranscript += res[0].transcript + ' '; } else { interim += res[0].transcript; } } const textSoFar = (finalTranscript + interim).trim(); transcriptEl.textContent = textSoFar || '...'; clearTimeout(inactivityTimer); inactivityTimer = setTimeout(()=>{ stopListening(); }, 5000); };
+        recognition.onresult = (event)=>{ let interim=''; for(let i=event.resultIndex;i<event.results.length;i++){ const res=event.results[i]; if(res.isFinal){ finalTranscript += res[0].transcript + ' '; } else { interim += res[0].transcript; } } const textSoFar = (finalTranscript + interim).trim(); transcriptEl.textContent = textSoFar || '...'; clearTimeout(inactivityTimer); inactivityTimer = setTimeout(()=>{ stopListening(); }, 1200); };
         recognition.onerror = (e)=>{ recognizing=false; voicePanel.classList.remove('listening'); stopDotsAnimation(); panelStatus.textContent='Error: '+(e.error||'desconocido'); setSphereState('idle'); setTimeout(()=>{ panelStatus.textContent='Inactivo'; },2000); };
         recognition.onend = ()=>{ recognizing=false; voicePanel.classList.remove('listening'); stopDotsAnimation(); const text = finalTranscript.trim(); if(text.length){ panelStatus.textContent='Procesando...'; setSphereState('processing'); handleCommand(text); } else { panelStatus.textContent='Inactivo'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(),2500); } };
     }
@@ -706,6 +795,11 @@
 
     async function playPollySpeech(text){
         if(!text) return;
+        const cachedAudio = audioCache.get(text);
+        if(cachedAudio){
+            playAudioSource(cachedAudio);
+            return;
+        }
         const token = getCsrfToken();
         if(!token){
             console.error('No CSRF token available for Polly');
@@ -731,16 +825,23 @@
                 panelStatus.textContent = 'Error';
                 throw new Error(data.error || 'Fallo Polly');
             }
-            const audio = new Audio('data:audio/mpeg;base64,' + data.audio);
-            audio.onended = ()=>{ panelStatus.textContent = 'Listo'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(), 1200); };
-            audio.onerror = (err)=>{ console.error('Audio playback error', err); panelStatus.textContent = 'Error'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(), 1200); };
-            await audio.play();
-            panelStatus.textContent = 'Hablando...';
-            setSphereState('speaking');
+            const audioSource = 'data:audio/mpeg;base64,' + data.audio;
+            audioCache.set(text, audioSource);
+            playAudioSource(audioSource);
         }catch(e){
             console.error('Polly playback failed', e);
             panelStatus.textContent = 'Error';
         }
+    }
+
+    async function playAudioSource(audioSource){
+        const audio = new Audio(audioSource);
+        audio.onended = ()=>{ panelStatus.textContent = 'Listo'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(), 1200); };
+        audio.onerror = (err)=>{ console.error('Audio playback error', err); panelStatus.textContent = 'Error'; setSphereState('idle'); inactivityTimer = setTimeout(()=> hidePanel(), 1200); };
+        panelStatus.textContent = 'Hablando...';
+        setSphereState('speaking');
+        try { await audio.play(); }
+        catch(e){ console.error('Audio play failed', e); panelStatus.textContent = 'Error'; setSphereState('idle'); }
     }
 
     async function fetchVoiceQuery(q){

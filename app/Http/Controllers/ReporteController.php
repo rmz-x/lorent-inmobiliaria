@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RegistroActividad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -82,6 +83,16 @@ class ReporteController extends Controller
             return response()->json(['error' => 'Missing q parameter'], 400);
         }
 
+        $context = $this->collectVoiceContext();
+        $localReply = $this->localVoiceFallback($query, $context, false);
+        if ($localReply !== null) {
+            return response()->json([
+                'speech' => $localReply,
+                'source' => 'local',
+                'reason' => 'local_fast_match',
+            ]);
+        }
+
         $apiKey = env('GEMINI_API_KEY');
         $apiUrl = rtrim((string) env('GEMINI_API_URL', ''), '/');
         $model = trim((string) env('GEMINI_MODEL', ''));
@@ -96,13 +107,11 @@ class ReporteController extends Controller
             return response()->json(['error' => 'GEMINI_MODEL not configured in .env'], 500);
         }
 
-        $context = $this->collectVoiceContext();
-
-        $systemPrompt = "Eres un asistente de voz para un dashboard inmobiliario. Responde siempre en español.
+        $systemPrompt = "Eres un asistente de voz para un dashboard inmobiliario. Responde siempre en español y nunca contestes en otro idioma.
 Usa únicamente los datos que te entrega el servidor. No inventes cifras ni supongas información adicional.
-Responde en oraciones completas y termina siempre con un punto.";
+Responde con frases completas, terminadas en punto. Si no tienes información suficiente, di que no puedes responder con seguridad y termina con un punto.";
 
-        $userPrompt = "Pregunta: {$query}\n\nDatos disponibles:\n" . $this->formatVoiceContext($context) . "\n\nResponde en un texto natural en español con oraciones completas y terminadas en punto.";
+        $userPrompt = "Pregunta: {$query}\n\nDatos disponibles:\n" . $this->formatVoiceContext($context) . "\n\nResponde con un texto natural en español, usando oraciones completas y terminando siempre con un punto. No cambies de idioma.";
 
         $endpoint = "{$apiUrl}/{$model}:generateContent";
         $payload = [
@@ -121,13 +130,14 @@ Responde en oraciones completas y termina siempre con un punto.";
                 ],
             ],
             'generationConfig' => [
-                'temperature' => 0.2,
-                'maxOutputTokens' => 350,
+                'temperature' => 0.25,
+                'maxOutputTokens' => 180,
             ],
         ];
 
         try {
-            $response = Http::timeout(30)
+            $response = Http::connectTimeout(5)
+                ->timeout(12)
                 ->acceptJson()
                 ->asJson()
                 ->post($endpoint . '?key=' . urlencode($apiKey), $payload);
@@ -243,9 +253,19 @@ Responde en oraciones completas y termina siempre con un punto.";
         $region = trim((string) env('AWS_POLLY_REGION', env('AWS_DEFAULT_REGION', 'us-west-2')));
         $voice = trim((string) env('AWS_POLLY_VOICE', 'Lucia'));
         $engine = trim((string) env('AWS_POLLY_ENGINE', 'neural')) ?: 'neural';
+        $cacheKey = 'voice_polly_' . sha1($region . '|' . $voice . '|' . $engine . '|' . $text);
 
         if (!$apiKey || !$apiSecret) {
             return response()->json(['error' => 'AWS credentials not configured'], 500);
+        }
+
+        if ($cachedAudio = Cache::get($cacheKey)) {
+            return response()->json([
+                'audio' => $cachedAudio,
+                'voice' => $voice,
+                'region' => $region,
+                'cached' => true,
+            ]);
         }
 
         try {
@@ -272,10 +292,14 @@ Responde en oraciones completas y termina siempre con un punto.";
             }
 
             $audio = $audioStream->getContents();
+            $encodedAudio = base64_encode($audio);
+            Cache::put($cacheKey, $encodedAudio, now()->addDay());
+
             return response()->json([
-                'audio' => base64_encode($audio),
+                'audio' => $encodedAudio,
                 'voice' => $voice,
                 'region' => $region,
+                'cached' => false,
             ]);
         } catch (\Throwable $e) {
             if (function_exists('logger')) {
@@ -441,7 +465,7 @@ Responde en oraciones completas y termina siempre con un punto.";
         return $trimmed;
     }
 
-    private function localVoiceFallback(string $query, array $context): ?string
+    private function localVoiceFallback(string $query, array $context, bool $allowGeneric = true): ?string
     {
         $normalized = $this->normalizeText($query);
 
@@ -489,7 +513,7 @@ Responde en oraciones completas y termina siempre con un punto.";
             return "En el panel hay datos recientes sobre {$context['totalLogins']} inicios de sesión y {$context['totalProps']} propiedades registradas.";
         }
 
-        return 'No tengo una respuesta exacta para eso ahora. Intenta preguntar de nuevo.';
+        return $allowGeneric ? 'No tengo una respuesta exacta para eso ahora. Intenta preguntar de nuevo.' : null;
     }
 
     private function normalizeText(string $text): string
