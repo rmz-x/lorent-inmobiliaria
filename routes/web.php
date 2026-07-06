@@ -20,6 +20,8 @@ use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\ProspectoController;
+use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\RecomendacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +91,8 @@ Route::middleware(['auth', 'role:administrador'])
         // Reportes
         Route::get('/reportes', [ReporteController::class, 'index'])
             ->name('reportes');
+        Route::get('/reportes/tendencias', [ReporteController::class, 'tendencias'])
+            ->name('reportes.tendencias');
         Route::get('/reportes/export/{type}', [ReporteController::class, 'export'])
             ->name('reportes.export');
     });
@@ -171,6 +175,8 @@ Route::middleware(['auth', 'role:asistente,administrador'])
 
         Route::get('/reportes', [ReporteController::class, 'index'])
             ->name('reportes');
+        Route::get('/reportes/tendencias', [ReporteController::class, 'tendencias'])
+            ->name('reportes.tendencias');
         Route::get('/reportes/export/{type}', [ReporteController::class, 'export'])
             ->name('reportes.export');
 
@@ -196,6 +202,14 @@ Route::middleware(['auth'])
 
         Route::get('/propiedades', [PropiedadController::class, 'disponibles'])
             ->name('propiedades');
+
+        // CU22: Visualizar mapa general de propiedades
+        Route::get('/mapa-general', [PropiedadController::class, 'mapaGeneral'])
+            ->name('mapa');
+
+        // CU24: Recomendar propiedades
+        Route::get('/recomendaciones', [RecomendacionController::class, 'index'])
+            ->name('recomendaciones');
 
         Route::get('/propiedades/{propiedad}', [PropiedadController::class, 'detalle'])
             ->name('propiedades.detalle');
@@ -233,6 +247,15 @@ Route::middleware(['auth'])
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/notificaciones', [NotificacionController::class, 'index'])
+        ->name('notificaciones');
+
+    Route::patch('/notificaciones/{notificacion}/leer', [NotificacionController::class, 'marcarLeida'])
+        ->name('notificaciones.leer');
+
+    Route::patch('/notificaciones/leer-todas', [NotificacionController::class, 'marcarTodas'])
+        ->name('notificaciones.leer-todas');
+
     Route::get('/perfil', [UsuarioController::class, 'perfil'])
         ->name('perfil');
 
@@ -256,4 +279,3 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/voice/polly', [\App\Http\Controllers\ReporteController::class, 'voicePolly'])
         ->name('voice.polly');
 });
-

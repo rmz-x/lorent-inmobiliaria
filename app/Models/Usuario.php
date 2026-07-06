@@ -23,6 +23,14 @@ class Usuario extends Authenticatable
         return $this->hasMany(SolicitudVisita::class, 'cliente_id');
     }
 
+    public function notificaciones() {
+        return $this->hasMany(Notificacion::class, 'usuario_id');
+    }
+
+    public function recomendaciones() {
+        return $this->hasMany(Recomendacion::class, 'cliente_id');
+    }
+
     public function seguimientosComoCliente() {
         return $this->hasMany(Seguimiento::class, 'cliente_id');
     }

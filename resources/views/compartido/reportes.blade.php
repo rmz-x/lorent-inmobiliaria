@@ -442,6 +442,7 @@
         @php
             $rolePrefix = explode('.', request()->route()->getName())[0] ?? 'admin';
             $exportRoute = "{$rolePrefix}.reportes.export";
+            $trendRoute = "{$rolePrefix}.reportes.tendencias";
         @endphp
         <div class="filter-bar">
             <div class="filter-groups-container">
@@ -477,6 +478,9 @@
             </div>
 
             <div class="export-actions">
+                <a href="{{ route($trendRoute) }}" class="btn-export btn-export-gray">
+                    Ver tendencias
+                </a>
                 <a href="{{ route($exportRoute, array_merge(request()->query(), ['type' => 'pdf'])) }}" class="btn-export btn-export-blue">
                     Descargar PDF
                 </a>
@@ -659,6 +663,11 @@
     let recognition = null;
     let finalTranscript = '';
     const audioCache = new Map();
+    const voiceExportUrls = {
+        pdf: @json(route($exportRoute, array_merge(request()->query(), ['type' => 'pdf']))),
+        excel: @json(route($exportRoute, array_merge(request()->query(), ['type' => 'xlsx']))),
+        csv: @json(route($exportRoute, array_merge(request()->query(), ['type' => 'csv']))),
+    };
     if(supportsSR){
         recognition = new SpeechRecognition();
         recognition.lang = 'es-ES';
@@ -753,7 +762,41 @@
             return;
         }
 
+        const requestedExport = detectExportCommand(trimmed);
+        if (requestedExport) {
+            await downloadReportByVoice(requestedExport);
+            return;
+        }
+
         fetchVoiceQuery(trimmed);
+    }
+
+    function normalizeVoiceText(text){
+        return text
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[¿?!.]/g, '')
+            .trim()
+            .toLowerCase();
+    }
+
+    function detectExportCommand(text){
+        const normalized = normalizeVoiceText(text);
+        const wantsDownload = ['descarga', 'descargar', 'exporta', 'exportar', 'baja', 'generar', 'genera'].some(word => normalized.includes(word));
+        const wantsReport = ['reporte', 'reportes', 'informe', 'actividad'].some(word => normalized.includes(word));
+        if (!wantsDownload || !wantsReport) return null;
+        if (normalized.includes('excel') || normalized.includes('xlsx')) return 'excel';
+        if (normalized.includes('csv')) return 'csv';
+        if (normalized.includes('pdf')) return 'pdf';
+        return 'pdf';
+    }
+
+    async function downloadReportByVoice(type){
+        const url = voiceExportUrls[type] || voiceExportUrls.pdf;
+        const label = type === 'excel' ? 'Excel' : type.toUpperCase();
+        panelStatus.textContent = 'Preparando descarga...';
+        window.open(url, '_blank');
+        await playPollySpeech('Listo. Estoy descargando el reporte en ' + label + '.');
     }
 
     function isGreeting(text){
@@ -865,7 +908,12 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ q }),
+                body: JSON.stringify({
+                    q,
+                    accion: accionSelect ? accionSelect.value : 'todas',
+                    rol: rolSelect ? rolSelect.value : 'todos',
+                    fecha: fechaInput ? fechaInput.value : ''
+                }),
                 credentials: 'same-origin'
             });
             let data = null;

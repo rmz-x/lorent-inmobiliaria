@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Propiedad;
 use App\Models\Usuario;
 use App\Models\RegistroActividad;
+use App\Models\Notificacion;
+use App\Models\HistorialCliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -48,6 +50,16 @@ class PropiedadController extends Controller
         $data['longitud'] = $request->longitud ?: null;
         $prop = Propiedad::create($data);
         RegistroActividad::log('Propiedad registrada', "Se registró: \"{$prop->titulo}\" ({$prop->tipo}) en {$prop->zona}.");
+
+        $this->usuariosActivosPorRol(['cliente'])
+            ->pluck('id')
+            ->each(fn ($clienteId) => Notificacion::crearPara(
+                $clienteId,
+                'nueva_propiedad',
+                "Nueva propiedad disponible: {$prop->titulo} en {$prop->zona}.",
+                $prop->id
+            ));
+
         return back()->with('success','Propiedad registrada correctamente.');
     }
 
@@ -66,6 +78,7 @@ class PropiedadController extends Controller
         ]);
 
         $propiedad = Propiedad::findOrFail($id);
+        $estadoAnterior = $propiedad->estado;
         $datos = $request->except('imagen');
 
         if ($request->hasFile('imagen')) {
@@ -78,6 +91,32 @@ class PropiedadController extends Controller
         }
 
         $propiedad->update($datos);
+
+        if ($estadoAnterior !== $propiedad->estado) {
+            $tipoNotificacion = 'cambio_estado';
+
+            $mensaje = match ($propiedad->estado) {
+                'Vendido' => "La propiedad {$propiedad->titulo} ya fue vendida.",
+                'Reservado' => "La propiedad {$propiedad->titulo} quedó reservada.",
+                default => "La propiedad {$propiedad->titulo} cambió de estado a {$propiedad->estado}.",
+            };
+
+            $destinatarios = $this->usuariosActivosPorRol(['cliente', 'administrador', 'asistente'])
+                ->pluck('id')
+                ->push($propiedad->agente_id)
+                ->filter()
+                ->unique();
+
+            foreach ($destinatarios as $destinatarioId) {
+                Notificacion::crearPara(
+                    (int) $destinatarioId,
+                    $tipoNotificacion,
+                    $mensaje,
+                    $propiedad->id
+                );
+            }
+        }
+
         RegistroActividad::log('Propiedad modificada', "Se modificó ID {$propiedad->id}: \"{$propiedad->titulo}\".");
         return back()->with('success','Propiedad actualizada correctamente.');
     }
@@ -150,7 +189,49 @@ class PropiedadController extends Controller
     public function detalle(Propiedad $propiedad)
     {
         $propiedad->load('agente');
+
+        if (Auth::user()?->esCliente()) {
+            HistorialCliente::create([
+                'cliente_id' => Auth::id(),
+                'propiedad_id' => $propiedad->id,
+                'accion' => 'vista',
+            ]);
+        }
+
         return view('cliente.detalle', compact('propiedad'));
+    }
+
+    public function mapaGeneral(Request $request)
+    {
+        $tipo = $request->query('tipo', 'Todas');
+        if (!in_array($tipo, ['Todas', 'Venta', 'Alquiler', 'Anticretico'])) {
+            $tipo = 'Todas';
+        }
+
+        $query = Propiedad::with('agente')
+            ->where('estado', 'Disponible')
+            ->whereNotNull('latitud')
+            ->whereNotNull('longitud');
+
+        if ($tipo !== 'Todas') {
+            $query->where('tipo', $tipo);
+        }
+
+        $propiedades = $query->orderBy('id', 'desc')->get();
+        $propiedadesMapa = $propiedades->map(fn ($propiedad) => [
+            'id' => $propiedad->id,
+            'titulo' => $propiedad->titulo,
+            'tipo' => $propiedad->tipo,
+            'zona' => $propiedad->zona,
+            'precio' => number_format((float) $propiedad->precio, 0, ',', '.'),
+            'area' => $propiedad->area,
+            'latitud' => (float) $propiedad->latitud,
+            'longitud' => (float) $propiedad->longitud,
+            'imagen_url' => $propiedad->imagen_url,
+            'detalle_url' => route('cliente.propiedades.detalle', $propiedad),
+        ])->values();
+
+        return view('cliente.mapa-general', compact('propiedades', 'propiedadesMapa', 'tipo'));
     }
 
     //buscar propiedades para el administrador
@@ -335,5 +416,15 @@ class PropiedadController extends Controller
         } catch (\Throwable $e) {
             // Ignorar si S3 no está disponible.
         }
+    }
+
+    private function usuariosActivosPorRol(array $roles)
+    {
+        return Usuario::whereIn('rol', $roles)
+            ->where(function ($query) {
+                $query->whereNull('estado')
+                    ->orWhere('estado', '')
+                    ->orWhereRaw('LOWER(estado) = ?', ['activo']);
+            });
     }
 }

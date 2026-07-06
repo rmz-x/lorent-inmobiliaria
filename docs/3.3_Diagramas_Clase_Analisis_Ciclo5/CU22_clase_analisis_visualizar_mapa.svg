@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="470" viewBox="0 0 1320 470">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="55" y="62" font-family="Times New Roman, serif" font-size="34" font-weight="700">DIAGRAMA DE CLASE ANALISIS</text>
+<rect x="55" y="108" width="1210" height="310" fill="none" stroke="#111827" stroke-width="1.6"/>
+<path d="M55 108 H270 L248 136 H55 Z" fill="#ffffff" stroke="#111827" stroke-width="1.4"/>
+<text x="63" y="130" font-family="Times New Roman, serif" font-size="15" font-weight="700">sd diagrama de clase analisis</text>
+<circle cx="190" cy="205" r="18" fill="#fde7b3" stroke="#6b7280" stroke-width="2"/>
+<line x1="190" y1="223" x2="190" y2="277" stroke="#374151" stroke-width="2"/>
+<line x1="160" y1="243" x2="220" y2="243" stroke="#374151" stroke-width="2"/>
+<line x1="190" y1="277" x2="161" y2="321" stroke="#374151" stroke-width="2"/>
+<line x1="190" y1="277" x2="219" y2="321" stroke="#374151" stroke-width="2"/>
+<text x="190" y="349" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#111827">Cliente</text>
+<rect x="365" y="185" width="200" height="174" rx="6" fill="#eadfce" stroke="#6b7280" stroke-width="2"/>
+<line x1="365" y1="243" x2="565" y2="243" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="365" y1="277" x2="565" y2="277" stroke="#6b7280" stroke-width="1.4"/>
+<text x="465" y="207" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">CU22 Visualizar mapa::</text>
+<text x="465" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">UI_mapa</text>
+<text x="379" y="301" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ abrirMapa(): void</text>
+<text x="379" y="323" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ filtrarMapa(): void</text>
+<text x="379" y="345" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ verDetalle(): void</text>
+<rect x="580" y="185" width="200" height="174" rx="6" fill="#eadfce" stroke="#6b7280" stroke-width="2"/>
+<line x1="580" y1="243" x2="780" y2="243" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="580" y1="277" x2="780" y2="277" stroke="#6b7280" stroke-width="1.4"/>
+<text x="680" y="207" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">CU22 Visualizar mapa::</text>
+<text x="680" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">propiedadController</text>
+<text x="594" y="301" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ buscar(): void</text>
+<text x="594" y="323" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ disponibles(): void</text>
+<text x="594" y="345" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ detalle(): void</text>
+<rect x="795" y="185" width="200" height="244" rx="6" fill="#eadfce" stroke="#6b7280" stroke-width="2"/>
+<line x1="795" y1="243" x2="995" y2="243" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="795" y1="369" x2="995" y2="369" stroke="#6b7280" stroke-width="1.4"/>
+<text x="895" y="207" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">CU22 Visualizar mapa::</text>
+<text x="895" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">Propiedad</text>
+<text x="809" y="267" font-family="Arial, sans-serif" font-size="14" fill="#7f1d1d">- id: int</text>
+<text x="809" y="289" font-family="Arial, sans-serif" font-size="14" fill="#7f1d1d">- titulo: string</text>
+<text x="809" y="311" font-family="Arial, sans-serif" font-size="14" fill="#7f1d1d">- zona: string</text>
+<text x="809" y="333" font-family="Arial, sans-serif" font-size="14" fill="#7f1d1d">- latitud: decimal</text>
+<text x="809" y="355" font-family="Arial, sans-serif" font-size="14" fill="#7f1d1d">- longitud: decimal</text>
+<text x="809" y="393" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ get(): void</text>
+<text x="809" y="415" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ consultarPorFiltros(): void</text>
+<rect x="1010" y="185" width="200" height="152" rx="6" fill="#eadfce" stroke="#6b7280" stroke-width="2"/>
+<line x1="1010" y1="243" x2="1210" y2="243" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="1010" y1="277" x2="1210" y2="277" stroke="#6b7280" stroke-width="1.4"/>
+<text x="1110" y="207" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">CU22 Visualizar mapa::</text>
+<text x="1110" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#111827">ServicioMapa</text>
+<text x="1024" y="301" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ cargarTiles(): void</text>
+<text x="1024" y="323" font-family="Arial, sans-serif" font-size="14" fill="#166534">+ renderizarMarcadores(): void</text>
+<line x1="240" y1="255" x2="365" y2="255" stroke="#6b7280" stroke-width="2"/>
+<line x1="565" y1="255" x2="580" y2="255" stroke="#6b7280" stroke-width="2"/>
+<line x1="780" y1="255" x2="795" y2="255" stroke="#6b7280" stroke-width="2"/>
+<line x1="995" y1="255" x2="1010" y2="255" stroke="#6b7280" stroke-width="2"/>
+</svg>

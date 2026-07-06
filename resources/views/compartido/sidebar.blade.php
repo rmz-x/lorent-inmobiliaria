@@ -2,6 +2,9 @@
 $rol = auth()->user()->rol; 
 $ruta = Route::currentRouteName(); 
 $pendientes = 0;
+$notificacionesPendientes = \Illuminate\Support\Facades\Schema::hasTable('notificaciones')
+    ? \App\Models\Notificacion::where('usuario_id', auth()->id())->where('leida', false)->count()
+    : 0;
 if ($rol === 'agente') {
     $pendientes = \App\Models\SolicitudVisita::where('estado', 'Pendiente')->whereHas('propiedad', function($q) { $q->where('agente_id', auth()->id()); })->count();
 } elseif ($rol === 'asistente') {
@@ -42,6 +45,10 @@ if ($rol === 'agente') {
         <a href="{{ route('admin.reportes') }}" class="nav-item {{ str_starts_with($ruta,'admin.reportes') ? 'active':'' }}">
             <span class="nav-dot" style="background:#FAC775"></span>Reportes
         </a>
+        <a href="{{ route('notificaciones') }}" class="nav-item {{ str_starts_with($ruta,'notificaciones') ? 'active':'' }}">
+            <span class="nav-dot" style="background:#38bdf8"></span>Notificaciones
+            @if($notificacionesPendientes > 0)<span style="margin-left:auto;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;padding:2px 7px">{{ $notificacionesPendientes }}</span>@endif
+        </a>
 
     @elseif($rol === 'agente')
         <p class="nav-section">Gestión</p>
@@ -68,6 +75,10 @@ if ($rol === 'agente') {
         <a href="{{ route('agente.calendario') }}" class="nav-item {{ str_starts_with($ruta,'agente.calendario') ? 'active':'' }}">
             <span class="nav-dot" style="background:#818cf8"></span>Calendario
         </a>
+        <a href="{{ route('notificaciones') }}" class="nav-item {{ str_starts_with($ruta,'notificaciones') ? 'active':'' }}">
+            <span class="nav-dot" style="background:#38bdf8"></span>Notificaciones
+            @if($notificacionesPendientes > 0)<span style="margin-left:auto;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;padding:2px 7px">{{ $notificacionesPendientes }}</span>@endif
+        </a>
 
     @elseif($rol === 'asistente')
         <p class="nav-section">Operaciones</p>
@@ -87,6 +98,10 @@ if ($rol === 'agente') {
         </a>
         <a href="{{ route('asistente.reportes') }}" class="nav-item {{ str_starts_with($ruta,'asistente.reportes') ? 'active':'' }}">
             <span class="nav-dot" style="background:#AFA9EC"></span>Reportes
+        </a>
+        <a href="{{ route('notificaciones') }}" class="nav-item {{ str_starts_with($ruta,'notificaciones') ? 'active':'' }}">
+            <span class="nav-dot" style="background:#38bdf8"></span>Notificaciones
+            @if($notificacionesPendientes > 0)<span style="margin-left:auto;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;padding:2px 7px">{{ $notificacionesPendientes }}</span>@endif
         </a>
     @endif
 
@@ -115,6 +130,16 @@ if ($rol === 'agente') {
         </a>
         <a href="{{ route('cliente.buscar') }}" class="nav-item {{ str_starts_with($ruta,'cliente.buscar') ? 'active':'' }}">
             <span class="nav-dot" style="background:#F4C0D1"></span>Buscar
+        </a>
+        <a href="{{ route('cliente.mapa') }}" class="nav-item {{ str_starts_with($ruta,'cliente.mapa') ? 'active':'' }}">
+            <span class="nav-dot" style="background:#38bdf8"></span>Mapa general
+        </a>
+        <a href="{{ route('cliente.recomendaciones') }}" class="nav-item {{ str_starts_with($ruta,'cliente.recomendaciones') ? 'active':'' }}">
+            <span class="nav-dot" style="background:#AFA9EC"></span>Recomendaciones
+        </a>
+        <a href="{{ route('notificaciones') }}" class="nav-item {{ str_starts_with($ruta,'notificaciones') ? 'active':'' }}">
+            <span class="nav-dot" style="background:#38bdf8"></span>Notificaciones
+            @if($notificacionesPendientes > 0)<span style="margin-left:auto;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;padding:2px 7px">{{ $notificacionesPendientes }}</span>@endif
         </a>
         <a href="{{ route('cliente.solicitudes') }}" class="nav-item {{ str_starts_with($ruta,'cliente.solicitudes') ? 'active':'' }}">
             <span class="nav-dot" style="background:#FAC775"></span>Mis solicitudes

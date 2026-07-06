@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="780" viewBox="0 0 1320 780">
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L12,4.5 L0,9 Z" fill="#111827"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<text x="70" y="42" font-family="Times New Roman, serif" font-size="32" font-weight="700" fill="#111827">ANALISIS DE PAQUETES ACTUALIZADO - CICLO 5</text>
+<path d="M70 100 V74 Q70 70 74 70 H183.25 Q187.25 70 187.25 74 V100 H401 Q405 100 405 104 V206 Q405 210 401 210 H74 Q70 210 70 206 Z" fill="#ffef72" stroke="#111827" stroke-width="3"/>
+<line x1="70" y1="100" x2="187.25" y2="100" stroke="#111827" stroke-width="3"/>
+<text x="237.5" y="149" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">GESTION DE USUARIOS</text>
+<text x="237.5" y="177" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">Y SEGURIDAD</text>
+<path d="M630 100 V74 Q630 70 634 70 H725.75 Q729.75 70 729.75 74 V100 H911 Q915 100 915 104 V206 Q915 210 911 210 H634 Q630 210 630 206 Z" fill="#ffef72" stroke="#111827" stroke-width="3"/>
+<line x1="630" y1="100" x2="729.75" y2="100" stroke="#111827" stroke-width="3"/>
+<text x="772.5" y="149" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">GESTION DE</text>
+<text x="772.5" y="177" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">PROPIEDADES</text>
+<path d="M70 330 V304 Q70 300 74 300 H183.25 Q187.25 300 187.25 304 V330 H401 Q405 330 405 334 V441 Q405 445 401 445 H74 Q70 445 70 441 Z" fill="#ffef72" stroke="#111827" stroke-width="3"/>
+<line x1="70" y1="330" x2="187.25" y2="330" stroke="#111827" stroke-width="3"/>
+<text x="237.5" y="381.5" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">BUSQUEDA Y CONSULTA</text>
+<text x="237.5" y="409.5" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">DE INMUEBLES</text>
+<path d="M590 330 V304 Q590 300 594 300 H685.75 Q689.75 300 689.75 304 V330 H871 Q875 330 875 334 V436 Q875 440 871 440 H594 Q590 440 590 436 Z" fill="#ffef72" stroke="#111827" stroke-width="3"/>
+<line x1="590" y1="330" x2="689.75" y2="330" stroke="#111827" stroke-width="3"/>
+<text x="732.5" y="379" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">CRM Y GESTION</text>
+<text x="732.5" y="407" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">DE CLIENTES</text>
+<path d="M970 330 V304 Q970 300 974 300 H1060.5 Q1064.5 300 1064.5 304 V330 H1236 Q1240 330 1240 334 V461 Q1240 465 1236 465 H974 Q970 465 970 461 Z" fill="#ffef72" stroke="#111827" stroke-width="3"/>
+<line x1="970" y1="330" x2="1064.5" y2="330" stroke="#111827" stroke-width="3"/>
+<text x="1105" y="377.5" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">REPORTES Y</text>
+<text x="1105" y="405.5" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">ADMINISTRACION</text>
+<text x="1105" y="433.5" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">DEL SISTEMA</text>
+<path d="M395 590 V564 Q395 560 399 560 H496 Q500 560 500 564 V590 H691 Q695 590 695 594 V696 Q695 700 691 700 H399 Q395 700 395 696 Z" fill="#ffef72" stroke="#111827" stroke-width="3"/>
+<line x1="395" y1="590" x2="500" y2="590" stroke="#111827" stroke-width="3"/>
+<text x="545" y="639" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">AGENDA Y GESTION</text>
+<text x="545" y="667" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">DE VISITAS</text>
+<path d="M900 585 V559 Q900 555 904 555 H1015 Q1019 555 1019 559 V585 H1236 Q1240 585 1240 589 V701 Q1240 705 1236 705 H904 Q900 705 900 701 Z" fill="#fff176" stroke="#111827" stroke-width="3"/>
+<line x1="900" y1="585" x2="1019" y2="585" stroke="#111827" stroke-width="3"/>
+<text x="1070" y="625" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">INTELIGENCIA Y</text>
+<text x="1070" y="653" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">ASISTENCIA</text>
+<text x="1070" y="681" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#0f172a">PERSONALIZADA</text>
+<path d="M405 140 L630 140" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M238 210 L238 300" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M772 210 L772 300" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M915 140 L1120 140 L1120 270 L1105 300" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M590 370 L405 370" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M875 370 L970 370" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M238 445 L238 625 L395 625" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M735 440 L735 625 L695 625" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M970 625 L695 625" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M970 555 L1105 555 L1105 465" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M900 630 L695 630" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M900 610 L835 610 L835 440 L875 395" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M1030 555 L1105 465" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M970 585 L915 585 L915 370 L875 370" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+<path d="M900 585 L790 520 L540 520 L540 370 L405 370" fill="none" stroke="#111827" stroke-width="3" stroke-dasharray="10 10" marker-end="url(#arrow)"/>
+</svg>

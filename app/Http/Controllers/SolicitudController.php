@@ -5,6 +5,9 @@ use App\Models\Solicitud;
 use App\Models\SolicitudVisita;
 use App\Models\Propiedad;
 use App\Models\RegistroActividad;
+use App\Models\Notificacion;
+use App\Models\Usuario;
+use App\Models\HistorialCliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +31,7 @@ class SolicitudController extends Controller
             'mensaje'         => 'required|min:5',
         ]);
 
-        SolicitudVisita::create([
+        $solicitud = SolicitudVisita::create([
             'propiedad_id'    => $request->propiedad_id,
             'cliente_id'      => Auth::id(),
             'fecha_solicitada'=> $request->fecha_solicitada,
@@ -39,6 +42,29 @@ class SolicitudController extends Controller
         $prop = Propiedad::find($request->propiedad_id);
         RegistroActividad::log('Solicitud de visita enviada',
             "Cliente solicitó visita para \"{$prop->titulo}\" el {$request->fecha_solicitada}.");
+
+        HistorialCliente::create([
+            'cliente_id' => Auth::id(),
+            'propiedad_id' => $prop->id,
+            'accion' => 'visita_solicitada',
+        ]);
+
+        Notificacion::crearPara(
+            $prop->agente_id,
+            'recordatorio',
+            "Nueva solicitud de visita para {$prop->titulo}.",
+            $prop->id
+        );
+
+        Usuario::where('rol', 'asistente')
+            ->where('estado', 'activo')
+            ->pluck('id')
+            ->each(fn ($asistenteId) => Notificacion::crearPara(
+                $asistenteId,
+                'recordatorio',
+                "Nueva solicitud pendiente para {$prop->titulo}.",
+                $prop->id
+            ));
 
         return redirect()->route('cliente.propiedades')
                          ->with('success','Solicitud enviada. Un agente te contactará pronto.');
@@ -63,6 +89,15 @@ class SolicitudController extends Controller
         $request->validate(['estado' => 'required|in:Aceptada,Rechazada']);
         $solicitud->update(['estado' => $request->estado]);
         $msg = $request->estado === 'Aceptada' ? 'Visita confirmada.' : 'Visita cancelada.';
+
+        $solicitud->load('propiedad');
+        Notificacion::crearPara(
+            $solicitud->cliente_id,
+            'cambio_estado',
+            "Tu visita para {$solicitud->propiedad->titulo} fue actualizada a: {$request->estado}.",
+            $solicitud->propiedad_id
+        );
+
         return back()->with('success', $msg);
     }
 
@@ -92,6 +127,15 @@ class SolicitudController extends Controller
         $solicitud = SolicitudVisita::findOrFail($id);
         $solicitud->estado = $request->estado;
         $solicitud->save();
+
+        $solicitud->load('propiedad');
+        Notificacion::crearPara(
+            $solicitud->cliente_id,
+            'cambio_estado',
+            "Tu visita para {$solicitud->propiedad->titulo} fue actualizada a: {$solicitud->estado}.",
+            $solicitud->propiedad_id
+        );
+
         return back()->with('success', 'Estado actualizado correctamente');
     }
 
@@ -104,6 +148,14 @@ class SolicitudController extends Controller
 
         $solicitud->update(['estado' => 'Rechazada']);
         RegistroActividad::log('Visita cancelada', 'El cliente canceló la solicitud #'.$id);
+
+        $solicitud->load('propiedad');
+        Notificacion::crearPara(
+            $solicitud->propiedad?->agente_id,
+            'cambio_estado',
+            "El cliente canceló la visita para {$solicitud->propiedad->titulo}.",
+            $solicitud->propiedad_id
+        );
 
         return back()->with('success', 'Solicitud cancelada.');
     }
@@ -127,6 +179,14 @@ class SolicitudController extends Controller
         RegistroActividad::log(
             'Visita reagendada',
             'El cliente reagendó la solicitud #'.$id.' para '.$request->fecha_solicitada
+        );
+
+        $solicitud->load('propiedad');
+        Notificacion::crearPara(
+            $solicitud->propiedad?->agente_id,
+            'recordatorio',
+            "El cliente reagendó la visita para {$solicitud->propiedad->titulo}.",
+            $solicitud->propiedad_id
         );
 
         return back()->with('success', 'Visita reagendada correctamente.');

@@ -30,6 +30,12 @@ class Propiedad extends Model
     public function solicitudes() {
         return $this->hasMany(SolicitudVisita::class, 'propiedad_id');
     }
+    public function notificaciones() {
+        return $this->hasMany(Notificacion::class, 'propiedad_id');
+    }
+    public function recomendaciones() {
+        return $this->hasMany(Recomendacion::class, 'propiedad_id');
+    }
 
     public function getImagenUrlAttribute(): ?string
     {
