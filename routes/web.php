@@ -203,18 +203,20 @@ Route::middleware(['auth'])
         Route::get('/propiedades', [PropiedadController::class, 'disponibles'])
             ->name('propiedades');
 
-        // CU22: Visualizar mapa general de propiedades
+        // CU22: Visualizar Mapa General de Propiedades
         Route::get('/mapa-general', [PropiedadController::class, 'mapaGeneral'])
             ->name('mapa');
 
-        // CU24: Recomendar propiedades
+        // CU24: Recomendar Propiedades
         Route::get('/recomendaciones', [RecomendacionController::class, 'index'])
             ->name('recomendaciones');
+        Route::post('/recomendaciones/{propiedad}/feedback', [RecomendacionController::class, 'feedback'])
+            ->name('recomendaciones.feedback');
 
         Route::get('/propiedades/{propiedad}', [PropiedadController::class, 'detalle'])
             ->name('propiedades.detalle');
 
-        // CU8: Buscar propiedades
+        // CU8: Buscar Propiedades
         Route::get('/buscar', [PropiedadController::class, 'buscar'])
             ->name('buscar');
 
@@ -247,6 +249,7 @@ Route::middleware(['auth'])
 
 Route::middleware(['auth'])->group(function () {
 
+    // CU23: Gestionar Notificaciones Automaticas
     Route::get('/notificaciones', [NotificacionController::class, 'index'])
         ->name('notificaciones');
 

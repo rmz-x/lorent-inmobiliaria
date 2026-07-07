@@ -13,6 +13,7 @@ class Recomendacion extends Model
         'propiedad_id',
         'puntuacion_recomendacion',
         'vista',
+        'feedback',
         'fecha_recomendacion',
     ];
 

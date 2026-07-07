@@ -14,6 +14,33 @@ Se agrega el módulo **Recomendaciones** dentro del menú del cliente.
 - Modelos: `Recomendacion`, `HistorialCliente`, `Propiedad`
 - Tablas: `recomendaciones`, `historial_cliente`, `propiedades`
 
+## Backend y lógica actual
+
+La lógica de recomendaciones se ejecuta en `app/Http/Controllers/RecomendacionController.php`.
+
+- `index()` obtiene el cliente autenticado y reconstruye sus preferencias desde el historial.
+- Si no hay historial suficiente, entrega propiedades disponibles ordenadas por popularidad (`solicitudes_count`).
+- Si hay historial, calcula un puntaje para cada propiedad usando `calcularPuntaje()`.
+- El puntaje se guarda o actualiza en la tabla `recomendaciones` y luego se ordenan las propiedades por `puntaje_recomendacion`.
+- La vista muestra las 8 propiedades con mayor puntaje.
+
+### Reglas de puntaje actuales
+
+- Base inicial: `45`
+- Coincidencia de tipo: `+25`
+- Coincidencia de zona: `+20`
+- Propiedad con coordenadas: `+10`
+- Propiedad con imagen: `+10`
+- Precio cercano al promedio del cliente:
+  - Si la diferencia es <= 10%: `+10`
+  - Si la diferencia es <= 25%: `+5`
+- Popularidad: `+4` por solicitud, hasta `+12`
+- Feedback del cliente:
+  - `like`: `+20`
+  - `dislike`: `-40`
+
+El resultado final se limita entre `0` y `100`.
+
 ## Criterio de recomendación
 
 El sistema calcula un puntaje de afinidad usando reglas simples:

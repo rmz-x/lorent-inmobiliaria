@@ -45,6 +45,57 @@ El sistema muestra una tabla con zona, tipo de propiedad, cantidad de propiedade
   - `GET /admin/reportes/tendencias`
   - `GET /asistente/reportes/tendencias`
 
+### Funcionamiento del backend
+
+1. El método `tendencias(Request $request)` recibe filtros opcionales `tipo` y `zona`.
+2. Llama a `buildMarketTrendRows($filtroTipo, $filtroZona)` para generar las filas de predicción.
+3. Recupera las zonas únicas disponibles desde `Propiedad` para el filtro del UI.
+4. Calcula el resumen de segmentos y agrega totales de tendencias y solicitudes.
+5. Devuelve la vista `resources/views/compartido/tendencias.blade.php` con los datos.
+
+### Lógica de cálculo en `buildMarketTrendRows()`
+
+- Obtiene todas las propiedades disponibles en `propiedades` con el contador `solicitudes_count`.
+- Filtra por tipo y zona solo si se proporcionan en la URL.
+- Agrupa las propiedades por segmento: `zona + tipo de propiedad`.
+- Para cada segmento calcula:
+  - `propiedades`: total de inmuebles en el segmento.
+  - `solicitudes`: suma de solicitudes de visita (`solicitudes_count`).
+  - `disponibles`: cantidad de propiedades con `estado = Disponible`.
+  - `noDisponibles`: propiedades fuera de stock o vendidas/alquiladas.
+  - `conMapa`: número de propiedades con latitud y longitud.
+  - `precio_promedio`: promedio redondeado del `precio` del segmento.
+
+### Fórmula de puntaje
+
+- `demandaScore = min(35, solicitudes * 7)`
+- `conversionScore = total > 0 ? min(25, round((noDisponibles / total) * 25)) : 0`
+- `disponibilidadScore = disponibles > 0 ? 10 : 0`
+- `mapaScore = total > 0 ? round((conMapa / total) * 10) : 0`
+- `volumenScore = min(15, total * 3)`
+- `probabilidad_venta = min(95, 15 + demandaScore + conversionScore + disponibilidadScore + mapaScore + volumenScore)`
+
+### Clasificación de tendencia
+
+- `Alta` si `probabilidad_venta >= 75`
+- `Media` si `probabilidad_venta >= 55`
+- `Estable` si no hay solicitudes (`solicitudes === 0`) y hay propiedades disponibles
+- `Baja` en todos los demás casos
+
+### Salida de cada segmento
+
+Cada fila de predicción incluye:
+
+- `zona`
+- `tipo_propiedad`
+- `propiedades`
+- `disponibles`
+- `solicitudes`
+- `precio_promedio`
+- `probabilidad_venta`
+- `dias_estimados_venta` (calculado como `max(15, 125 - probabilidad)`) 
+- `tendencia`
+
 ## Nota de base de datos
 
 No se agregaron migraciones nuevas para este caso de uso. La prediccion se calcula con tablas existentes: `propiedades`, `solicitudes_visita` y `registro_actividad`. La tabla `predicciones` puede mantenerse como propuesta documental si se desea guardar historicos en una version futura.

@@ -6,6 +6,7 @@ use App\Models\Notificacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+// CU23: Gestionar Notificaciones Automaticas
 class NotificacionController extends Controller
 {
     public function index()

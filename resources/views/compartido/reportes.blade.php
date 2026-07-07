@@ -782,8 +782,8 @@
 
     function detectExportCommand(text){
         const normalized = normalizeVoiceText(text);
-        const wantsDownload = ['descarga', 'descargar', 'exporta', 'exportar', 'baja', 'generar', 'genera'].some(word => normalized.includes(word));
-        const wantsReport = ['reporte', 'reportes', 'informe', 'actividad'].some(word => normalized.includes(word));
+        const wantsDownload = ['descarga', 'descargar', 'exporta', 'exportar', 'generar', 'genera', 'baja', 'baja', 'guardar'].some(word => normalized.includes(word));
+        const wantsReport = ['reporte', 'reportes', 'informe', 'informes', 'actividad', 'datos', 'dashboard'].some(word => normalized.includes(word));
         if (!wantsDownload || !wantsReport) return null;
         if (normalized.includes('excel') || normalized.includes('xlsx')) return 'excel';
         if (normalized.includes('csv')) return 'csv';

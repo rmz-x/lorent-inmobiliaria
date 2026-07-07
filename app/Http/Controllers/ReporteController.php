@@ -569,14 +569,42 @@ Responde con frases completas, terminadas en punto. Si no tienes información su
         $isProperty = $this->containsAny($normalized, ['propiedad', 'propiedades', 'registradas', 'inmueble', 'vivienda']);
         $isActivity = $this->containsAny($normalized, ['actividad', 'reporte', 'reportes', 'evento', 'eventos', 'registro', 'registros']);
         $isTrend = $this->containsAny($normalized, ['tendencia', 'tendencias', 'mercado', 'prediccion', 'predicciones', 'proyeccion']);
+        $isMarket = $this->containsAny($normalized, ['como va el mercado', 'como esta el mercado', 'estado del mercado', 'situacion del mercado', 'mercado inmobiliario', 'mercado de propiedades']);
+        $isDashboard = $this->containsAny($normalized, ['dashboard', 'panel', 'que hay en el dashboard', 'que muestra el dashboard', 'mostrar dashboard', 'mostrar panel', 'ver panel']);
         $isFilter = $this->containsAny($normalized, ['filtro', 'filtros', 'filtrado', 'aplicado', 'aplicados', 'accion', 'acciones', 'rol', 'roles', 'fecha']);
-        $isToday = $this->containsAny($normalized, ['hoy', 'solo hoy', 'de hoy', 'este dia', 'esta mañana', 'esta tarde', 'esta noche']);
+        $isExport = $this->containsAny($normalized, ['descargar', 'exportar', 'exporta', 'generar', 'genera', 'bajar', 'baja', 'guardar']);
+        $isLatest = $this->containsAny($normalized, ['ultima propiedad', 'ultimas propiedades', 'propiedad nueva', 'propiedades nuevas', 'nuevas propiedades', 'ultimos registros', 'ultimo registro', 'novedad', 'novedades']);
+        $isToday = $this->containsAny($normalized, ['hoy', 'solo hoy', 'de hoy', 'este dia', 'esta manana', 'esta tarde', 'esta noche']);
         $isTotal = $this->containsAny($normalized, ['total', 'en total', 'hasta ahora', 'todos', 'todo', 'sumados']);
 
         if ($isFilter && !empty($context['filters'])) {
             $filters = $context['filters'];
             $fecha = $filters['fecha'] ?: 'sin fecha especifica';
             return "Los filtros actuales son accion {$filters['accion']}, rol {$filters['rol']} y fecha {$fecha}. Con esos filtros hay {$filters['total']} registros.";
+        }
+
+        if ($isExport && $this->containsAny($normalized, ['reporte', 'reportes', 'informe', 'informes', 'actividad', 'datos', 'dashboard'])) {
+            return 'Puedo descargar el reporte en PDF, Excel o CSV. Di el tipo de archivo que quieres o usa los controles de exportacion del dashboard.';
+        }
+
+        if ($isLatest && !empty($context['latestProps'])) {
+            $latest = array_slice($context['latestProps'], 0, 3);
+            $items = [];
+            foreach ($latest as $item) {
+                $items[] = $item['nombre'] ?: 'Sin nombre';
+            }
+            $lista = implode(', ', $items);
+            return "Las últimas propiedades registradas son: {$lista}.";
+        }
+
+        if ($isMarket && !empty($context['topTrend'])) {
+            $trend = $context['topTrend'];
+            return "El mercado inmobiliario muestra una tendencia destacada en {$trend['zona']} para {$trend['tipo_propiedad']}, con probabilidad de venta del {$trend['probabilidad_venta']} por ciento.";
+        }
+
+        if ($isDashboard) {
+            $topTrend = !empty($context['topTrend']) ? " La tendencia mas fuerte es en {$context['topTrend']['zona']} para {$context['topTrend']['tipo_propiedad']}." : '';
+            return "En el dashboard hay {$context['totalProps']} propiedades registradas, {$context['totalLogins']} inicios de sesión totales y {$context['totalFailed']} intentos fallidos." . $topTrend;
         }
 
         if ($isTrend && !empty($context['topTrend'])) {

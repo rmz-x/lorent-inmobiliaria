@@ -2,72 +2,195 @@
 
 ## Objetivo
 
-Permitir que el administrador o asistente consulte informacion del sistema mediante comandos de voz y reciba respuestas habladas sobre reportes, actividad, propiedades y tendencias.
+Permitir que el administrador o asistente consulte información del sistema mediante comandos de voz y reciba respuestas habladas sobre reportes, actividad, propiedades y tendencias.
 
 ## Actores
 
 - Administrador
 - Asistente
 
-## Descripcion
+## Descripción
 
-El sistema incorpora un asistente de voz dentro del modulo de reportes. El usuario activa el microfono, realiza una consulta y el sistema procesa el texto reconocido. La respuesta puede generarse con datos locales o con Gemini, y luego reproducirse como audio mediante Amazon Polly.
+El sistema integra un asistente de voz en el módulo de reportes. El usuario activa el micrófono, realiza una consulta por voz y el frontend convierte el audio a texto con la Web Speech API.
+
+A partir de ese texto, el servidor decide si responde localmente o si debe enviar la consulta a Gemini para generar una respuesta más natural. Luego la respuesta puede reproducirse como audio usando Amazon Polly.
 
 ## Flujo principal
 
-1. El actor ingresa al modulo de reportes.
-2. Presiona el boton `Asistente IA`.
-3. El sistema solicita o usa el permiso de microfono del navegador.
-4. El actor realiza una pregunta por voz.
-5. El sistema convierte la voz a texto desde el navegador.
-6. El sistema consulta los datos internos del reporte.
-7. Si corresponde, envia el contexto a Gemini para generar una respuesta natural.
-8. El sistema convierte la respuesta a audio mediante Amazon Polly.
-9. El actor escucha la respuesta desde la interfaz.
+1. El actor abre el módulo de reportes.
+2. Presiona el botón de asistente de voz.
+3. El navegador solicita permiso para usar el micrófono.
+4. El actor habla y la voz se transforma a texto con Web Speech API.
+5. El frontend procesa el texto.
+6. Si la consulta corresponde a una pregunta común, el servidor responde localmente.
+7. Si no hay coincidencia local, el backend llama a Gemini.
+8. El sistema reproduce la respuesta por audio con Polly si es necesario.
+9. El actor escucha la respuesta y ve el texto en pantalla.
 
-## Comandos soportados
+## Detección local vs IA
 
-- Consultar propiedades registradas.
-- Consultar inicios de sesion e intentos fallidos.
-- Consultar actividad del dia.
-- Consultar tendencias del mercado.
-- Descargar reportes por voz.
+### Respuestas locales
 
-## Mejora agregada: descarga de reportes por voz
+El método `localVoiceFallback()` en `app/Http/Controllers/ReporteController.php` resuelve consultas frecuentes sin llamar a Gemini. Esto hace que la experiencia sea rápida y reduce la latencia.
 
-El asistente reconoce comandos como:
+Consultas que ya se resuelven localmente:
 
-- `Descargar reporte en PDF`.
-- `Exportar reporte en Excel`.
-- `Generar reporte CSV`.
+- `¿Cuántas propiedades hay hoy?`
+- `¿Cuántos inicios de sesión hubo?`
+- `Mostrar actividad de hoy`
+- `Mostrar el dashboard`
+- `¿Cuál es la tendencia más fuerte?`
+- `¿Qué filtros están aplicados?`
+- `¿Hay propiedades nuevas?`
+- `Descargar reporte en PDF/Excel/CSV`
 
-Cuando detecta el comando, abre la descarga correspondiente usando los filtros actuales del reporte.
+También responde preguntas de mercado con datos de la tendencia más fuerte.
 
-## Implementacion en el proyecto
+### Consulta con Gemini
 
-- Controlador: `app/Http/Controllers/ReporteController.php`
-- Metodos:
-  - `voiceQuery()`
-  - `voicePolly()`
-  - `voiceReportProperties()`
-  - `collectVoiceContext()`
-  - `localVoiceFallback()`
-- Vista principal: `resources/views/compartido/reportes.blade.php`
-- Rutas:
-  - `POST /voice/gemini`
-  - `POST /voice/polly`
-  - `GET /voice/report/propiedades`
-  - `GET /admin/reportes/export/{type}`
-  - `GET /asistente/reportes/export/{type}`
+Cuando la consulta no encaja con el fallback local, el backend usa `voiceQuery()` para enviar el texto a Gemini.
 
-## Servicios externos
+Este flujo es más flexible, pero también puede ser más lento porque depende de la llamada remota a la API.
 
-- Gemini API: genera respuestas naturales con contexto del sistema.
-- Amazon Polly: convierte las respuestas a audio.
-- Web Speech API del navegador: reconoce la voz del usuario.
+## Implementación en el proyecto
 
-## Requisitos
+### Frontend
 
-- Navegador compatible con reconocimiento de voz, preferentemente Chrome o Edge.
-- Variables `.env` configuradas para Gemini y Amazon Polly si se desea usar IA y voz sintetizada.
-- El sistema mantiene respuesta local para consultas basicas, incluso si Gemini no responde.
+Archivos clave:
+
+- `resources/views/compartido/reportes.blade.php`
+- `resources/views/compartido/voice.blade.php`
+
+Elementos principales:
+
+- `SpeechRecognition` captura audio y genera texto.
+- `handleCommand()` decide si es un saludo, un comando de descarga o una pregunta para Gemini.
+- `detectExportCommand()` identifica peticiones de exportación en PDF, Excel o CSV.
+- `downloadReportByVoice()` abre la descarga correspondiente.
+- `playPollySpeech()` envía texto a `POST /voice/polly` y reproduce el audio retornado.
+
+### Backend
+
+Controlador: `app/Http/Controllers/ReporteController.php`
+
+Métodos principales:
+
+- `voiceQuery(Request $request)`
+  - Recibe `q` con la pregunta por voz.
+  - Prueba `localVoiceFallback()` primero.
+  - Si hay respuesta local, la devuelve con `source: local`.
+  - Si no, valida la configuración de Gemini y llama a la API.
+  - Devuelve texto en JSON.
+
+- `voicePolly(Request $request)`
+  - Recibe `text` para convertir a audio.
+  - Usa AWS Polly para sintetizar voz.
+  - Devuelve audio en Base64.
+
+- `voiceReportProperties(Request $request)`
+  - Devuelve datos simples de propiedades para la UI de voz.
+
+- `collectVoiceContext(Request $request)`
+  - Construye el contexto con totales, filtros, últimos eventos y tendencias.
+  - Ese contexto alimenta a Gemini.
+
+- `localVoiceFallback(string $query, array $context, bool $allowGeneric = true)`
+  - Detecta patrones en la consulta.
+  - Responde localmente a consultas de sesión, fallos, propiedades, actividad, tendencias, filtros y descargas.
+
+- `formatVoiceContext(array $context)`
+  - Convierte el contexto en texto para enviar a Gemini.
+
+## Rutas
+
+Las rutas relevantes de `routes/web.php` son:
+
+- `GET /voice`
+  - Página de prueba de voz.
+- `GET /voice/report/propiedades`
+  - Endpoint JSON usado por la UI de voz.
+- `POST /voice/gemini`
+  - Endpoint para procesar preguntas con Gemini.
+- `POST /voice/polly`
+  - Endpoint para sintetizar audio con Amazon Polly.
+
+## Conexión a la API
+
+### Configuración necesaria en `.env`
+
+Para Gemini:
+
+- `GEMINI_API_KEY`
+- `GEMINI_API_URL`
+- `GEMINI_MODEL`
+
+Para Amazon Polly:
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_POLLY_REGION`
+- `AWS_POLLY_VOICE`
+- `AWS_POLLY_ENGINE`
+
+### Ejemplo de valores
+
+Gemini:
+
+- `GEMINI_API_URL=https://generativelanguage.googleapis.com/v1beta`
+- `GEMINI_MODEL=models/gemini-3.5-flash`
+
+Polly:
+
+- `AWS_POLLY_REGION=eu-west-1`
+- `AWS_POLLY_VOICE=Lucia`
+- `AWS_POLLY_ENGINE=neural`
+
+### Endpoint bien configurado
+
+`POST /voice/gemini` debe aceptar JSON correctamente y recibir el token CSRF.
+
+La petición que hace el frontend incluye:
+
+- `X-Requested-With: XMLHttpRequest`
+- `X-CSRF-TOKEN`
+- `Accept: application/json`
+- `Content-Type: application/json`
+
+Si la ruta no responde bien, el asistente de voz puede reconocer tu pregunta pero no dar respuesta.
+
+## Importante: rendimiento y experiencia
+
+### Qué responde rápido
+
+- Las consultas comunes se resuelven localmente y son casi instantáneas.
+- El sistema evita usar Gemini cuando no hace falta.
+
+### Qué usa IA
+
+- Gemini se usa solo cuando no hay respuesta local clara.
+- Estas consultas pueden tardar más por la red y la respuesta del servicio.
+- Por eso conviene mantener el conjunto de comandos locales ampliado.
+
+### Recomendación
+
+- Mantener las preguntas de datos comunes en `localVoiceFallback()`.
+- Reservar Gemini para preguntas más abiertas.
+- Seguir usando Polly para la voz, pero solo después de generar el texto.
+
+## Dónde va cada parte
+
+- Lógica de voz y AI: `app/Http/Controllers/ReporteController.php`
+- Interfaz dentro del módulo de reportes: `resources/views/compartido/reportes.blade.php`
+- Página de prueba de voz simple: `resources/views/compartido/voice.blade.php`
+- Rutas: `routes/web.php`
+
+## Conclusión
+
+CU26 combina:
+
+- reconocimiento de voz en el navegador,
+- respuestas locales rápidas en el servidor,
+- Gemini para consultas abiertas,
+- Amazon Polly para reproducir voz.
+
+Así se logra una experiencia que funciona rápido en lo común y sigue siendo inteligente cuando el usuario pregunta algo más complejo.

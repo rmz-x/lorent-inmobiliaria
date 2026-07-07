@@ -201,6 +201,7 @@ class PropiedadController extends Controller
         return view('cliente.detalle', compact('propiedad'));
     }
 
+    //CU22 Mapa General de propiedades disponibles para el cliente
     public function mapaGeneral(Request $request)
     {
         $tipo = $request->query('tipo', 'Todas');
