@@ -9,9 +9,3 @@ Cambios principales:
 - Se agregaron servicios externos para Gemini API, Amazon Polly, OpenStreetMap y AWS S3.
 - Se conecto el nuevo paquete con UI, Laravel, PostgreSQL y servicios externos.
 
-Para regenerar:
-
-```powershell
-cd "D:\\PROYECTO-V7.0"
-node docs/arquitectura_actualizada_ciclo5/generate_architecture_diagrams.cjs
-```

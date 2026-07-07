@@ -1,5 +1,5 @@
 -- =====================================================
--- SCRIPT LIMPIO PARA LORENT INMOBILIARIA
+-- SCRIPT PARA LORENT INMOBILIARIA
 -- =====================================================
 
 -- 1. TABLAS BASE (sin dependencias)
@@ -276,6 +276,11 @@ CREATE TABLE IF NOT EXISTS public.recomendaciones (
 
 CREATE INDEX IF NOT EXISTS idx_recomendaciones_cliente_id ON public.recomendaciones (cliente_id);
 CREATE INDEX IF NOT EXISTS idx_recomendaciones_fecha ON public.recomendaciones (fecha_recomendacion);
+
+-- Agregar columna para "me gusta / no me interesa"
+ALTER TABLE recomendaciones ADD COLUMN feedback VARCHAR(20) DEFAULT NULL;
+-- Agregar índice para consultas rápidas
+CREATE INDEX idx_recomendaciones_feedback ON recomendaciones (feedback);
 
 -- 3. PREDICCIONES (CU25)
 CREATE TABLE IF NOT EXISTS public.predicciones (
